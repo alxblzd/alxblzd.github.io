@@ -2,7 +2,7 @@
 title: Bienvenue sur ce wiki
 author: Alxblzd
 date: 2024-04-30 23:10:00 +0200
-categories: [Blogging, Tutorial, Wiki]
+categories: [Blogging, Tutorial]
 tags: [writing]
 render_with_liquid: false
 ---
