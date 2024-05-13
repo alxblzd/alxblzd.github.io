@@ -1,7 +1,7 @@
 ---
 title: Pfsense installation on proxmox in double nat setup
 author: Alxblzd
-date: 2024-02-18 23:10:00 +0200
+date: 2024-04-26 23:10:00 +0200
 categories: [Networking, Practical]
 tags: [writing]
 render_with_liquid: false
