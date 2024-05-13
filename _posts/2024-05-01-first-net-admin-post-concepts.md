@@ -1,6 +1,6 @@
 ---
-title: Writing a New Post
-author: cotes
+title: OSI layer basics
+author: Alxblzd
 date: 2024-02-18 23:10:00 +0200
 categories: [Networking, Concepts]
 tags: [network, mac, osi, layer]

@@ -1,6 +1,6 @@
 ---
-title: Writing a New Post
-author: cotes
+title: Pfsense installation on proxmox in double nat setup
+author: Alxblzd
 date: 2024-02-18 23:10:00 +0200
 categories: [Networking, Practical]
 tags: [writing]
