@@ -32,7 +32,6 @@ render_with_liquid: false
 - Lisez et acceptez le CLUF (Contrat de Licence Utilisateur Final).
 - Sélectionnez le(s) disque(s) dur(s) cible(s) pour l'installation. Notez que toutes les données existantes seront supprimées.
 
-![Sélection du disque](screenshot/pve-select-target-disk.png)
 
 ### 4. Configuration de Base
 
