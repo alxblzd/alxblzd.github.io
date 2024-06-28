@@ -62,19 +62,19 @@ render_with_liquid: false
       --ask-vault-password: Prompt for vault password
 
 # Variables:
-  # Connection:
+## Connection:
     ansible_connection: local or network_cli
     ansible_network_os: platform (Cisco -> ios)
     ansible_user: SSH username
     ansible_ssh_pass: SSH password
     ansible_ssh_private_key_file: SSH key file
 
-  # Execution:
+## Execution:
     ansible_command_timeout: execution timeout in seconds
     ansible_become: privilege escalation (yes or no)
     ansible_become_method: enable
 
-# Filters:
+## Filters:
   - Convert compatible data to JSON or YAML:
       example: "{{ output | to_json }}"
                "{{ output | to_yaml }}"
@@ -85,22 +85,22 @@ render_with_liquid: false
   - List all occurrences of a regex pattern:
       example: "{{ output | regex_findall('GigabitEthernet0\/0\/[0-9]{1,2}') }}"
 
-  # Common regex patterns:
-  ```md
-    .: match any single character
-    ^: match beginning of string
-    $: match end of string
-    |: equivalent to OR
-    []: match any character in set
-    [^ ]: match any character not in set
-    (): capture group
-    {n}: match exactly n occurrences
-    \s: match whitespace
-    \d: match digit
-    \w: match word character
+## Common regex patterns:
+```md
+.: match any single character
+^: match beginning of string
+$: match end of string
+|: equivalent to OR
+[]: match any character in set
+[^ ]: match any character not in set
+(): capture group
+{n}: match exactly n occurrences
+\s: match whitespace
+\d: match digit
+\w: match word character
 ```
-# Modules:
-  # ios_config:
+## Modules:
+ #### ios_config:
 ```yaml  
     - name: top level configuration
       ios_config:
@@ -117,7 +117,7 @@ render_with_liquid: false
       ios_config:
         save_when: modified
 ```
-  # ios_command:
+ ####  ios_command:
 ```yaml  
     - name: run commands
       ios_command:
@@ -125,7 +125,7 @@ render_with_liquid: false
           - show version
           - show vlans
 ```
-  # li_parse:
+ #### li_parse:
 ```yaml  
     - name: run command and parse with ntc_templates
       ansible.utils.cli_parse:
@@ -134,7 +134,7 @@ render_with_liquid: false
           name: ansible.netcommon.ntc_templates
       register: output
 ```
-  # debug:
+ #### debug:
 ```yaml
     - name: display result
       debug:
