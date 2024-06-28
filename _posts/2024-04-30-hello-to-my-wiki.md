@@ -1,28 +1,28 @@
 ---
-title: Bienvenue sur ce wiki
+title: Welcome on my posting website !
 author: Alxblzd
 date: 2024-04-30 23:10:00 +0200
 categories: [Blogging, Tutorial]
-tags: [writing]
+tags: [about]
 render_with_liquid: false
 ---
 
-Bienvenue sur mon wiki ! Cette première page vous guidera à travers l'utilisation de ce wiki et vous expliquera comment contribuer.
+## Welcome to my wiki! 
+This first page will guide you through using this wiki and explain how to contribute.
 
-## À propos du Wiki
+## About the Wiki
+This wiki is a space dedicated to documentation and tutorials on various topics. You can find tutorials, explanations, tips, and much more. Feel free to explore the different sections to find the information you need.
 
-Ce wiki est un espace dédié à la documentation et a des tutoriels sur divers sujets. Vous pouvez y trouver des tutoriels, des explications, des astuces et bien plus encore. N'hésitez pas à explorer les différentes sections pour trouver les informations dont vous avez besoin.
+## Who I Am
+I'm Alex, a Computer Engineering student in work-study program. Enthusiastic about networks, programming, and system architecture, I love experimenting with the latest tech in my home lab. Always eager to learn and innovate!
 
-## Comment contribuer
+## How to Contribute
+If you want to contribute to this wiki by adding content or making improvements, you can do so through comments if available.
 
-Si vous souhaitez contribuer à ce wiki en ajoutant du contenu ou en apportant des améliorations par commentaires si disponible
+## How to Navigate
+Use the navigation bar on the side to access different sections of the wiki. You can also use the search function to quickly find specific articles.
 
-## Comment naviguer
+## Need Help?
+Feel free to contact me for any assistance.
 
-Utilisez la barre de navigation sur le côté pour accéder aux différentes sections du wiki. Vous pouvez également utiliser la fonction de recherche pour trouver rapidement des articles spécifiques.
-
-## Besoin d'aide ?
-
-N'hésitez pas à me contacter pour toute demande d'aide 
-
-Maintenant que vous savez comment utiliser ce wiki, je vous souhaite une excellente lecture et une expérience enrichissante ! 
+Now that you know how to use this wiki, I wish you an excellent read and an enriching experience!

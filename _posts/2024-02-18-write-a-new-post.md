@@ -1,5 +1,5 @@
 ---
-title: Writing a New Post
+title: [TUTORIAL] How to write a Jekyll post
 author: cotes
 date: 2024-02-18 23:10:00 +0200
 categories: [Blogging, Tutorial]

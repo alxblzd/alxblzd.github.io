@@ -1,5 +1,5 @@
 ---
-title: OSI layer basics
+title: [WIKI] OSI layer basics
 author: Alxblzd
 date: 2024-04-28 23:10:00 +0200
 categories: [Networking, Concepts]

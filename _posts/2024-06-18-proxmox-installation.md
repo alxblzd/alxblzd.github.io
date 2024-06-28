@@ -1,88 +1,77 @@
 ---
-title: Writing a New Post
+title: [PROJECT] Proxmox Hypervisor for Homelab
 author: cotes
-date: 2024-02-18 23:10:00 +0200
-categories: [Blogging, Tutorial]
-tags: [writing]
+date: 2024-04-18 23:10:00 +0200
+categories: [Proxmox, Project]
+tags: [proxmox, hypervisor, homelab, project]
 render_with_liquid: false
 ---
-# Tuto Simplifié : Installation de Proxmox VE
+# Simplified Tutorial: Proxmox VE Installation
 
-## Prérequis
+## Prerequisites
 
-- Image ISO de l'installateur Proxmox VE
-- Clé USB ou CD-ROM pour l'installation
-- Serveur compatible (Debian Linux 64 bits)
+- Proxmox VE installer ISO image
+- USB drive or CD-ROM for installation
+- Compatible server (64-bit Debian Linux)
 
-## Étapes d'Installation
+## Installation Steps
 
-### 1. Préparation
+### 1. Preparation
 
-- Insérez le média d'installation préparé (USB ou CD-ROM) dans le serveur.
-- Assurez-vous que le démarrage à partir de ce média est activé dans les paramètres du firmware du serveur.
-- Désactivez le démarrage sécurisé (Secure Boot).
+- Insert the prepared installation media (USB or CD-ROM) into the server.
+- Ensure booting from this media is enabled in the server's firmware settings.
+- Disable Secure Boot.
 
-### 2. Démarrage de l'Installateur
+### 2. Start the Installer
 
-- Démarrez à partir du média d'installation.
-- Choisissez l'option `Install Proxmox VE (Graphical)` pour une installation graphique ou une des autres options si nécessaire.
+- Boot from the installation media.
+- Choose the `Install Proxmox VE (Graphical)` option for a graphical installation or one of the other options if necessary.
 
-### 3. Sélection du Disque Cible
+### 3. Select Target Disk
 
-- Lisez et acceptez le CLUF (Contrat de Licence Utilisateur Final).
-- Sélectionnez le(s) disque(s) dur(s) cible(s) pour l'installation. Notez que toutes les données existantes seront supprimées.
+- Read and accept the EULA (End User License Agreement).
+- Select the target hard disk(s) for the installation. Note that all existing data will be erased.
 
+### 4. Basic Configuration
 
-### 4. Configuration de Base
+- Select basic configuration options such as location, time zone, and keyboard layout.
 
-- Sélectionnez les options de configuration de base telles que la localisation, le fuseau horaire et la disposition du clavier.
+### 5. Set Password
 
+- Set the superuser (root) password and an email address to receive system notifications.
 
+### 6. Network Configuration
 
-### 5. Configuration du Mot de Passe
+- Configure the available network interfaces. You can specify an IPv4 or IPv6 address.
 
-- Définissez le mot de passe du superutilisateur (root) et une adresse e-mail pour recevoir les notifications système.
+### 7. Summary and Installation
 
+- Review the selected settings in the summary and make changes if necessary.
+- Click `Install` to begin the installation. Wait for the package copying to complete.
 
+### 8. Finalization
 
-### 6. Configuration du Réseau
+- Once the installation is complete, remove the installation media and reboot the system.
 
-- Configurez les interfaces réseau disponibles. Vous pouvez spécifier une adresse IPv4 ou IPv6.
+## Accessing the Management Interface
 
+- After rebooting, access the Proxmox VE web interface via the IP address defined during installation, e.g., `https://youripaddress:8006`.
+- Log in with the username root and the password set earlier.
 
-### 7. Récapitulatif et Installation
+- Download your subscription key to access the Enterprise repository, or configure a public repository for updates.
 
-- Vérifiez les paramètres sélectionnés dans le résumé et apportez les modifications si nécessaire.
-- Cliquez sur `Install` pour commencer l'installation. Attendez la fin de la copie des packages.
+## Advanced Configuration
 
+### LVM Advanced Options
 
+- **hdsize**: Set the total hard disk size to use.
+- **swapsize**: Set the swap partition size.
+- **maxroot**: Set the maximum size of the root partition.
+- **maxvz**: Set the maximum size of the data partition.
+- **minfree**: Set the free space to leave in the LVM volume group.
 
-### 8. Finalisation
-
-- Une fois l'installation terminée, retirez le média d'installation et redémarrez le système.
-
-
-## Accès à l'Interface de Gestion
-
-- Après le redémarrage, accédez à l'interface web de Proxmox VE via l'adresse IP définie durant l'installation, par exemple : `https://votreipaddress:8006`.
-- Connectez-vous avec le nom d'utilisateur root et le mot de passe défini.
-
-
-
-- Téléchargez votre clé de souscription pour accéder au dépôt Enterprise, ou configurez un dépôt public pour les mises à jour.
-
-## Configuration Avancée
-
-### Options Avancées LVM
-
-- **hdsize** : Définir la taille totale du disque dur à utiliser.
-- **swapsize** : Définir la taille de la partition swap.
-- **maxroot** : Définir la taille maximale de la partition root.
-- **maxvz** : Définir la taille maximale de la partition data.
-- **minfree** : Définir l'espace libre à laisser dans le groupe de volumes LVM.
-
-> Note : Pour plus de détails sur la configuration avancée, référez-vous à la documentation officielle de Proxmox VE.
+> Note: For more details on advanced configuration, refer to the official Proxmox VE documentation.
 
 ---
 
-Ce tutoriel couvre les étapes de base pour installer et configurer Proxmox VE. Pour une installation et une configuration plus détaillées, veuillez consulter la documentation officielle.
+This tutorial covers the basic steps to install and configure Proxmox VE. For more detailed installation and configuration, please consult the official documentation.
