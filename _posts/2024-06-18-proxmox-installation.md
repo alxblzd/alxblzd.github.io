@@ -38,39 +38,37 @@ render_with_liquid: false
 
 - Sélectionnez les options de configuration de base telles que la localisation, le fuseau horaire et la disposition du clavier.
 
-![Configuration de la localisation](screenshot/pve-select-location.png)
+
 
 ### 5. Configuration du Mot de Passe
 
 - Définissez le mot de passe du superutilisateur (root) et une adresse e-mail pour recevoir les notifications système.
 
-![Définition du mot de passe](screenshot/pve-set-password.png)
+
 
 ### 6. Configuration du Réseau
 
 - Configurez les interfaces réseau disponibles. Vous pouvez spécifier une adresse IPv4 ou IPv6.
 
-![Configuration du réseau](screenshot/pve-setup-network.png)
 
 ### 7. Récapitulatif et Installation
 
 - Vérifiez les paramètres sélectionnés dans le résumé et apportez les modifications si nécessaire.
 - Cliquez sur `Install` pour commencer l'installation. Attendez la fin de la copie des packages.
 
-![Résumé de l'installation](screenshot/pve-installation.png)
+
 
 ### 8. Finalisation
 
 - Une fois l'installation terminée, retirez le média d'installation et redémarrez le système.
 
-![Résumé de l'installation](screenshot/pve-install-summary.png)
 
 ## Accès à l'Interface de Gestion
 
 - Après le redémarrage, accédez à l'interface web de Proxmox VE via l'adresse IP définie durant l'installation, par exemple : `https://votreipaddress:8006`.
 - Connectez-vous avec le nom d'utilisateur root et le mot de passe défini.
 
-![Interface de gestion](screenshot/gui-login-window.png)
+
 
 - Téléchargez votre clé de souscription pour accéder au dépôt Enterprise, ou configurez un dépôt public pour les mises à jour.
 
