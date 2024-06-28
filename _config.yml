@@ -40,9 +40,10 @@ social:
     # The first element serves as the copyright owner's link
     - https://twitter.com/alxblzd # change to your twitter homepage
     - https://github.com/alxblzd # change to your github homepage
+    - https://linkedin.com/in/alexandre-balzard
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
-    - https://www.linkedin.com/in/alxblzd
+   
 
 google_site_verification: # fill in to your verification string
 
@@ -63,7 +64,7 @@ theme_mode:  [light]
 # will be added to all image (site avatar & posts' images) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-img_cdn:
+img_cdn: "https://alex.webguardx.com"
 
 # the avatar on sidebar, support local or CORS resources
 avatar: /img/avatar.png
