@@ -1,5 +1,5 @@
 ---
-title: [TUTORIAL] Pfsense installation on proxmox in double nat setup
+title: "[TUTORIAL] Pfsense installation on proxmox in double nat setup"
 author: Alxblzd
 date: 2024-04-26 23:10:00 +0200
 categories: [Networking, Practical]

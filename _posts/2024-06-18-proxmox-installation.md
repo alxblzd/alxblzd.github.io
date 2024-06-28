@@ -1,5 +1,5 @@
 ---
-title: [PROJECT] Proxmox Hypervisor for Homelab
+title: "[PROJECT] Proxmox Hypervisor for Homelab"
 author: cotes
 date: 2024-04-18 23:10:00 +0200
 categories: [Proxmox, Project]
