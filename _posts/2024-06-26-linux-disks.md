@@ -135,3 +135,33 @@ sudo mount /dev/vg_name/lv_name /mnt/lvm
 ```bash
 mount | grep /mnt/lvm
 ```
+
+# Chapter 8: Disk Usage
+
+#### Disk Usage Commands:
+
+    ```bash
+    # Show child directory sizes of current directory in bytes
+    du
+    
+    # Show human-readable directory sizes
+    du -h
+    
+    # Show size of current directory only (nesting depth=0)
+    du -d 0
+    
+    # Show child directory sizes of current directory in MB
+    du -BM
+    
+    # Show child directory sizes of the specified directory in bytes
+    du /path/to/directory
+    
+    # Show sizes of direct child directories only
+    du -d 1 .
+    
+    # Sort directories by size
+    du -BM -d 1 . | sort -n
+    
+    # Show sizes of all directories in root (/), sorted in reverse numerical order and view in less
+    du / | sort -nr | less
+    ```
