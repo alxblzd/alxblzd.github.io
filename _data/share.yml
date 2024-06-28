@@ -15,10 +15,6 @@ platforms:
     link: "https://t.me/share/url?url=URL&text=TITLE"
 
 
- - type: Linkedin
-   icon: "fab fa-linkedin"
-   link: "https://www.linkedin.com/sharing/share-offsite/?url=https://linkedin.com/in/alexandre-balzard"
-#
 
   # Uncomment below if you need to.
   #
