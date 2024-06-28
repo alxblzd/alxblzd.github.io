@@ -1,7 +1,7 @@
 ---
 title: "[PROJECT] Proxmox Hypervisor for Homelab"
-author: cotes
-date: 2024-04-18 23:10:00 +0200
+author: Alxblzd
+date: 2024-04-18 18:10:00 +0200
 categories: [Proxmox, Project]
 tags: [proxmox, hypervisor, homelab, project]
 render_with_liquid: false
