@@ -5,6 +5,8 @@ date: 2024-04-18 18:10:00 +0200
 categories: [Proxmox, Project]
 tags: [proxmox, hypervisor, homelab, project]
 render_with_liquid: false
+image: /assets/img/proxmox_logo.webp
+alt: "proxmox logo"
 ---
 # Simplified Tutorial: Proxmox VE Installation
 
@@ -33,7 +35,7 @@ In the quest for an efficient and versatile homelab setup, the Beelink EQ12 Pro 
 I found this mini pc used in France for $170, a pretty good deal. I  enhanced its by adding 32GB of DDR5 RAM for $65.
 
 
-![hardware](assets/img/eq_12_pro.jpg)
+![hardware](assets/img/eq_12_pro.webp)
 
 #### Pros
 - 2 x  2.5GbE LAN ports (Intel i225-V B3)
@@ -49,14 +51,14 @@ I found this mini pc used in France for $170, a pretty good deal. I  enhanced it
 
 I also have this type of HDD dock for adding more 3.5-inch storage. I can't really recommend it, but hey, it works.
 
-![hdd_dock](assets/img/hdd_dock.png)
+![hdd_dock](assets/img/hdd_dock.webp)
 
 
 #### The setup in place
 
 Look at this majestic cardboard-like setup.
 
-![setup](assets/img/setup.png)
+![setup](assets/img/setup.webp)
 
 
 

@@ -1,18 +1,4 @@
 <!doctype html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <!-- `site.alt_lang` can specify a language different from the UI -->
 <html lang="fr" >
   <head>
@@ -169,7 +155,7 @@
     } /* constructor() */
 
     get sysDarkPrefers() {
-      return window.matchMedia('(prefers-color-scheme: dark)');
+      return window.matchMedia('(prefers-color-scheme: light)');
     }
 
     get isSysDarkPrefer() {

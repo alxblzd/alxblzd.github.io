@@ -57,7 +57,7 @@ goatcounter:
   id: # fill in your Goatcounter ID
 
 
-theme_mode:  [light]
+theme_mode: #  [light | dark]
 
 # The CDN endpoint for images.
 # Notice that once it is assigned, the CDN url
