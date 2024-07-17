@@ -181,17 +181,17 @@ Here's how to install the adapter:
 
 
 The drive is held using an elastic strap, which was shipped with an nvme heatsink. Although the adapter comes with a screw, it didn't allow the drive to fit properly in my case, so I used the elastic strap instead.
-It's essential to manage the thermal to prevent the drive from constantly throttling due to high temperatures. For this, you can add a heat sink like this.
+
+I also had to help the thermal sto prevent the drive from constantly throttling due to high temperatures. For this, you can add a heat sink like this.
 ![Proxmox_drive](assets/img/proxmox/proxmox_drive3.webp)
 
 Space constraints are a significant issue here. The copper thermal covering was not helpful at all. 
 
-However, To improve temperatures, I added a thin thermal pad on top of the copper covering. After closing the case, I added another thin thermal pad on top of the 2280 NVMe drive.
+To improve temperatures, I added a thin thermal pad on top of the copper covering. After closing the case, I added another thin thermal pad on top of the 2280 NVMe drive.
 
 As you can see, this is not an optimal solution, The 2280 nvme is severly bended and hopefully the elastic strap on the 2230 NVMe drive prevent direct contact with the PCB underneath.
 However, in my case everything work flawelssly, I never go over 67°c on the nvme 2230 and 64 °c on the nvme 2280 after a disks stress test.
 
-![Proxmox_tordu](assets/img/proxmox/proxmox_tordu.webp)
 
 A little bit scary for the first start ;/
 
