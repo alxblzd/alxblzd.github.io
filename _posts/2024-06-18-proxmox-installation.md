@@ -30,7 +30,7 @@ Proxmox is like a playground for tech fans, mixing KVM and LXC into a user-frien
 
 # My Hardware 
 
-In the quest for an efficient and versatile homelab setup, the Beelink EQ12 Pro emerged as a promising candidate. Powered by an Intel Core i3 N3050 CPU from the Alder Lake-N series, this mini PC packs eight E-cores.
+In the quest for an efficient and versatile homelab setup, the Beelink EQ12 Pro emerged as a promising candidate. Powered by an Intel Core i3 N-305 CPU from the Alder Lake-N series, this mini PC packs eight E-cores.
 
 I found this mini pc used in France for $170, a pretty good deal. I  enhanced its by adding 32GB of DDR5 RAM for $65.
 
@@ -53,14 +53,8 @@ I also have this type of HDD dock for adding more 3.5-inch storage. I can't real
 
 ![hdd_dock](assets/img/hdd_dock.webp)
 
-
-#### The setup in place
-
-Look at this majestic cardboard-like setup.
-
-![setup](assets/img/setup.webp)
-
-
+I replaced the Wi-Fi card, which I no longer use because I only use Ethernet, with a secondary NVMe drive. 
+ou can see how I did that at the end of the installation, at the bottom of this chapter :
 
 
 ## Prerequisites
@@ -109,7 +103,8 @@ Before or after installing proxmox, you have to modifify some bios options, to m
 - You have the option to customize the default partition sizes
 - If you have the necessary hardware and knowledge, configuring ZFS for Proxmox can be recommended
 
-Personally, I prefer running Proxmox on a single SSD and configuring ZFS separately for my VMs on this mini PC. Given that the hardware isn't as robust as a server and there's no redundancy in my ZFS pool, I use ZFS primarily for RAID 0 to enhance storage speed. I keep backups of my VMs on separate storage outside of my ZFS pool in case of corruption or instability.
+Personally, I prefer running Proxmox on a single SSD and configuring ZFS separately for my VMs on this mini PC. Given that the hardware isn't as robust as a server (no raid controller, RAM without ECC, limited number of drives) 
+There is zero redundancy in my ZFS pool, I use it only to enhance storage speed with 2 nvme disks in RAID 0. I keep backups of my VMs on separate storage unrelated of my ZFS pool in case of corruption or instability.
 
 ![Disks](assets/img/proxmox/proxmox3.webp)
 
@@ -158,6 +153,47 @@ You can now connect to your newly created proxmox node ! :)
 ![Summary](assets/img/proxmox/proxmox9.webp)
 ![Summary](assets/img/proxmox/proxmox10.webp)
 
+
+## Adding Drives and ZFS storage
+
+
+As we seen previously, this mini pc have :
+- 1x sata 2.5 inches port
+- 1x Nvme 2280 port
+- and.... A 1x Wifi card in 2230 format
+
+The nvme port is a PCI 3.0 x1 lane which, suck, only 800 MB/s on average in read/write, while this nvme drive can do ~ 1500 MB/s easily, the drive is highly bottlenecked by this pci lane
+
+
+well,well,well
+this wifi card slot can be transformed and use as a storage, It's also a x1 pci 3.0 lane
+The goal is to have two nvme drive that can be used in stripped mode also called raid0 to improve storage speed.
+
+To do this, you need to purchase an "M2 A/E" key to "M2 M" key adapter. Given the limited space in these tiny PCs, you'll need to modify the PCB to fit a 2230 M.2 slot. 
+
+It won't be easy, but I assure you, it will work!
+
+These adapters cost only $5, and a 512 GB NVMe drive in 2230 format is around $30.
+![Thermal](assets/img/proxmox/proxmox_drive.webp)
+
+Here's how to install the adapter:
+![Proxmox_drive](assets/img/proxmox/proxmox_drive2.webp)
+
+
+The drive is held using an elastic strap, which was shipped with an nvme heatsink. Although the adapter comes with a screw, it didn't allow the drive to fit properly in my case, so I used the elastic strap instead.
+It's essential to manage the thermal to prevent the drive from constantly throttling due to high temperatures. For this, you can add a heat sink like this.
+![Proxmox_drive](assets/img/proxmox/proxmox_drive3.webp)
+
+Space constraints are a significant issue here. The copper thermal covering was not helpful at all. 
+
+However, To improve temperatures, I added a thin thermal pad on top of the copper covering. After closing the case, I added another thin thermal pad on top of the 2280 NVMe drive.
+
+As you can see, this is not an optimal solution, The 2280 nvme is severly bended and hopefully the elastic strap on the 2230 NVMe drive prevent direct contact with the PCB underneath.
+However, in my case everything work flawelssly, I never go over 67°c on the nvme 2230 and 64 °c on the nvme 2280 after a disks stress test.
+
+![Proxmox_tordu](assets/img/proxmox/proxmox_tordu.webp)
+
+A little bit scary for the first start ;/
 
 ---
 
