@@ -169,7 +169,7 @@ well,well,well
 this wifi card slot can be transformed and use as a storage, It's also a x1 pci 3.0 lane
 The goal is to have two nvme drive that can be used in stripped mode also called raid0 to improve storage speed.
 
-To do this, you need to purchase an "M2 A/E" key to "M2 M" key adapter. Given the limited space in these tiny PCs, you'll need to modify the PCB to fit a 2230 M.2 slot. 
+To do this, you need to purchase an "M2 A/E" key to "M2 M" key adapter. Given the limited space in these tiny PCs, you'll need to break the PCB at the 2230 size limit. 
 
 It won't be easy, but I assure you, it will work!
 
@@ -194,6 +194,10 @@ However, in my case everything work flawelssly, I never go over 67°c on the nvm
 ![Proxmox_tordu](assets/img/proxmox/proxmox_tordu.webp)
 
 A little bit scary for the first start ;/
+
+### How to make the RAID 0 pool 
+
+See you soon :)
 
 ---
 
