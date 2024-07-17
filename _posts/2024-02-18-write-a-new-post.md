@@ -13,6 +13,70 @@ This tutorial will guide you how to write a post in the _Chirpy_ template, and i
 
 Create a new file named `YYYY-MM-DD-TITLE.EXTENSION`{: .filepath} and put it in the `_posts`{: .filepath} of the root directory. Please note that the `EXTENSION`{: .filepath} must be one of `md`{: .filepath} and `markdown`{: .filepath}. If you want to save time of creating files, please consider using the plugin [`Jekyll-Compose`](https://github.com/jekyll/jekyll-compose) to accomplish this.
 
+
+## Media conversion
+
+How to convert png files to webp for this website
+
+```bash
+sudo apt install webp 
+sudo pacman -Syu webp
+```
+
+To convert an image to webp, the -q switch defines the output quality and -o specifies the output file.
+
+```bash
+cwebp -q 85 myimg.png -o myimg.webp
+```
+
+Custom script to change all .png file to .webp in a folder :
+
+```bash
+#!/bin/bash
+usage() {
+    echo "Usage: $0 [-q quality]"
+    echo "  -q quality : Set the quality for the webp conversion (default is 85)"
+    exit 1
+}
+
+quality=85
+
+while getopts "q:" opt; do
+    case ${opt} in
+        q )
+            quality=$OPTARG
+            ;;
+        \? )
+            usage
+            ;;
+    esac
+done
+
+current_dir=$(basename "$PWD")
+
+new_dir="${current_dir}_conv"
+
+mkdir -p "$new_dir"
+
+for file in *.png; do
+    if [ -f "$file" ]; then
+        new_file="${new_dir}/$(basename "${file%.png}.webp")"
+        cwebp -q "$quality" "$file" -o "$new_file"
+        echo "Converted $file to $new_file with quality $quality"
+    fi
+done
+
+for file in *.jpg *.jpeg; do
+    if [ -f "$file" ]; then
+        new_file="${new_dir}/$(basename "${file%.*}.webp")"
+        cwebp -q "$quality" "$file" -o "$new_file"
+        echo "Converted $file to $new_file with quality $quality"
+    fi
+done
+
+echo "Conversion complete!"
+exit 0
+```
 ## Front Matter
 
 Basically, you need to fill the [Front Matter](https://jekyllrb.com/docs/front-matter/) as below at the top of the post:
