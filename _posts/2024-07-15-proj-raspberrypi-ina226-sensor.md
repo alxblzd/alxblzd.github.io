@@ -118,6 +118,9 @@ For now, I've added argument passing to collect data in a more conventional mann
 
 The program is currently running quite fast, making it a good to be used as a Linux daemon. I’ll explore that further once the SQLite integration is complete.
 
+![program_example](assets/img/C_program_example.webp
+
+
 https://github.com/alxblzd/rpi-web-db-ina226
 
 
