@@ -103,7 +103,7 @@ I will add all the exact calculation If I can find it back, for the moment here 
 link :
 https://cdn.hackaday.io/files/1829407826904960/Xysemi_XR2981.pdf
 backup:
-[datasheet_pdf](assets/pdf/Xysemi_XR2981.pdf)
+![datasheet_pdf](assets/pdf/Xysemi_XR2981.pdf)
 
 
 ![chip_rpi_ups](assets/img/Chip_rpi_ups.webp)
@@ -118,7 +118,7 @@ For now, I've added argument passing to collect data in a more conventional mann
 
 The program is currently running quite fast, making it a good to be used as a Linux daemon. I’ll explore that further once the SQLite integration is complete.
 
-![program_example](assets/img/C_program_example.webp
+![program_example](assets/img/C_program_example.webp)
 
 
 https://github.com/alxblzd/rpi-web-db-ina226
