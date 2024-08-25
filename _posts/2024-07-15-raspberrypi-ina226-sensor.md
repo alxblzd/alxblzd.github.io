@@ -1,5 +1,5 @@
 ---
-title: "[PROJECT] Raspberry pi NVME and USP setup"
+title: "[PROJECT] Raspberry pi and UPS setup with power consumption monitoring"
 author: Alxblzd
 date: 2024-07-15 22:10:00 +0100
 categories: [Project, Electronic]
@@ -7,33 +7,42 @@ tags: [RPI, Raspberry, Disk, Electronic, Battery]
 render_with_liquid: false
 ---
 
-# Raspberry Pi with UPS, NVMe Drive, and INA226 Voltage Module
+# 
+# Mini project : Raspberry Pi with UPS, and INA226 Voltage I2C Module
+
+# Why ?
+
+It has been a while since I last worked with the I2C bus and basic programs for it, but I have a good reason for revisiting it now.
+
+My goal is to configure my Raspberry Pi as a backup for my primary Proxmox server. I intend to use it for several functions, backup website, backup file server, offering VPN access to my network if the Proxmox hypervisor fails. Additionally, I might explore creating a SDR with it in the future.
+
+One of the advantages of using the Raspberry Pi is that it's powered by an uninterruptible power supply (UPS) with two Li-Ion batteries. I want to monitor these batteries to ensure I can gracefully shut down the Pi if needed and to estimate how long it can run on battery power.
 
 
-# Why
+# Components
 
-This project began with a simple piece of wood and a sheet of plastic glass that were lying around my workspace. These materials sparked the idea of creating a custom board to house my Raspberry Pi and its components in a more organized and secure manner I was tired of having to put my rpi somewhere with the ugly nvme drive hanging out of it. 
+Core project :
+- A Raspberry Pi, here the 4B 2Gb, but it doesnt really matter
+- INA226 current/voltage module
+- Cheap aliexpress UPS module
+
+Optionally :
+- A 12v fan 
+- Breadboard
+- Module to power the breadboard
+- NVME to USB adapter
+- NVME Drive (overkill for rpi4)
+- Heatsink for the cpu
+
+# Building something to hold everything
+
+I had a piece of acrylic and some nice wood, which I assembled to create two base linked together. This setup allows me to securely mount everything using M2 stands and screws. On it, I placed the NVMe SSD, the UPS module, and provided space for a small breadboard to facilitate wiring and to accommodate the INA226 module.
+
+The result is this :
+
+#picture
 
 
-I also add a voltage module working with I2C bus, an INA226 that I always wanted to use to measure the power of one of my electronic project, This one was perfect because It is battery powered in case of a power loss,
-The module that can handle both power from the wall and from the battery in case of a power cut is called an uninterruptible power supply (UPS) and use 2x Lithium Ion 18650 battery, here is one of these module :
-
-# PHOTO
-
-In this post, I'll walk you into my process of transforming these materials into a practical setup, incorporating a Raspberry Pi, a UPS with 18650 lithium-ion battery, a 256GB NVMe drive via USB 3.0, and an INA226 voltage module for power metrics on a I2C bus.
-
-I'll also share some tips on the customizations and modifications needed to ensure stable system, especially after overclocking the Raspberry Pi.
-
-### Materials and Tools Needed
-
-- Wooden Board
-- Plastic Glass Sheet
-- M2 Support and Screws
-- Raspberry Pi 4/5/X
-- 5V UPS Module
-- 256GB NVMe Drive and adaptater
-- Voltage Module INA226
-- multiples tools, multimeter, soldering iron, hot glue, a drill
 
 
 Step-by-Step Assembly
