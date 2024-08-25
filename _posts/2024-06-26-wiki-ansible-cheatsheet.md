@@ -1,5 +1,5 @@
 ---
-title: "[TUTORIAL] Ansible cheatsheet"
+title: "[Wiki] Ansible cheatsheet"
 author: Alxblzd
 date: 2024-04-26 19:10:00 +0200
 categories: [Tutorial, Ansible]
