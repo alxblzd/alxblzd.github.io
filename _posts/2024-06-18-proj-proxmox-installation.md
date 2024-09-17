@@ -11,7 +11,7 @@ alt: "proxmox logo"
 # Simplified Tutorial: Proxmox VE Installation
 
 
-# What is Proxmox
+## What is Proxmox
 
 Proxmox is an open-source virtualization management platform that combines two virtualization technologies: - KVM for full virtualization 
 - LXC for container-based virtualization. 
@@ -22,13 +22,13 @@ You can have features like live migration, backups, and clustering out-of-the-bo
 
 It suitable for both enterprise and homelab environments. The platform is backed by a robust community.
 
-# Use Cases
+### Use Cases
 
 
 Proxmox is like a playground for tech fans, mixing KVM and LXC into a user-friendly web interface. You can test things, deploy VMs in a blink of an eye, improve your home network, and, of course, self-host almost everything!
 
 
-# My Hardware 
+### My Hardware 
 
 In the quest for an efficient and versatile homelab setup, the Beelink EQ12 Pro emerged as a promising candidate. Powered by an Intel Core i3 N-305 CPU from the Alder Lake-N series, this mini PC packs eight E-cores.
 
@@ -57,7 +57,7 @@ I replaced the Wi-Fi card, which I no longer use because I only use Ethernet, wi
 ou can see how I did that at the end of the installation, at the bottom of this chapter :
 
 
-## Prerequisites
+### Prerequisites
 
 - Proxmox VE installer ISO image
 - USB drive or CD-ROM for installation
@@ -154,7 +154,7 @@ You can now connect to your newly created proxmox node ! :)
 ![Summary](assets/img/proxmox/proxmox10.webp)
 
 
-## Adding Drives and ZFS storage
+## Adding NVME Drives 
 
 
 As we seen previously, this mini pc have :
@@ -195,9 +195,64 @@ However, in my case everything work flawelssly, I never go over 67°c on the nvm
 
 A little bit scary for the first start ;/
 
-### How to make the RAID 0 pool 
+### ZFS Storage in a RAID 0 pool 
 
-See you soon :)
+apt-get install zfsutils zfs-initramfs
+systemctl status zfs-import-cache.service
+
+systemctl list-units | grep zfs
+
+#### Pool creation
+
+
+```bash
+zpool create yourpoolname /dev/sdX /dev/sdY
+#in my case :
+zpool create ZFS_NVME_ARRAY /dev/nvme1n1 /dev/nvme0n1 
+```
+
+verify the pool has been created :
+```bash
+zpool status
+```
+
+##### What is a pool ?
+- Manages the physical storage devices
+- Define the configuration and redundancy (e.g., RAID-Z, mirroring, etc.) of the underlying disks
+
+
+
+#### Dataset creation
+let's create a dataset on this pool :
+
+```bash
+zfs create yourpoolname/datasetname
+#in my case :
+zfs create ZFS_NVME_ARRAY/vmdata
+```
+
+##### What is a dataset ? 
+- File systems or block storage devices created within the pool
+- Inherit many properties (e.g., compression, quotas) from the pool but can also have their own custom properties
+- Hierarchical storage structures inside the pool
+
+#### Setting ARC parameter
+
+ARC is an acronym for Adaptive Replacement Cache, an algorithm for caching data in DRAM.
+ZFS is known to use a good amount of RAM as cache, we can limit by tuning conf files.
+
+more infos on my ZFS cheatsheet
+
+
+dmesg | grep zfs
+zfs create tank/vmdata
+zfs create ZFS_NVME_ARRAY/vmdata
+zfs  list
+
+vim /etc/modprobe.d/zfs.conf
+
+cat /etc/modprobe.d/zfs.conf
+options zfs zfs_arc_max=4294967296
 
 ---
 
