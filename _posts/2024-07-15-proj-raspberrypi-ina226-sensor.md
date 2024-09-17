@@ -105,9 +105,10 @@ I will add all the exact calculation If I can find it back, for the moment here 
 link :
 https://cdn.hackaday.io/files/1829407826904960/Xysemi_XR2981.pdf
 backup:
-<object data="{{ site.url }}{{ site.baseurl }}/pdf/Xysemi_XR2981.pdf" width="1000" height="1000" type="application/pdf"></object>
 
+{% pdf "/pdf/Xysemi_XR2981.pdf" %}
 
+{% pdf "assets/pdf/Xysemi_XR2981.pdf" %}
 
 ![chip_rpi_ups](assets/img/Chip_rpi_ups.webp)
 
