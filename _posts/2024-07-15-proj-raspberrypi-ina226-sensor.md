@@ -99,7 +99,7 @@ To do this I need to change the value of the voltage divider for the XR2981 chip
 
 Since I didn’t have the right SMD resistors, I improvised with a basic resistor, as you can see in the second picture. It doesn’t look great, but it works
 
-I will add all the exact calculation If I can find it back, for the moment here is the datasheet, page "7", "OUTPUT VOLTAGE PROGRAMMING"
+You can find the exact calculation in the datasheet, page "7", "OUTPUT VOLTAGE PROGRAMMING"
 
 
 link :
@@ -113,6 +113,9 @@ backup:
 ![chip_rpi_ups](assets/img/Chip_rpi_ups.webp)
 
 ![rpi_ups](assets/img/rpi_ups.webp)
+
+
+<object data="../assets/pdf/Xysemi_XR2981.pdf" width="1000" height="1000" type='application/pdf'></object>
 
 
 # C Program
