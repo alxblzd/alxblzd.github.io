@@ -106,16 +106,13 @@ link :
 https://cdn.hackaday.io/files/1829407826904960/Xysemi_XR2981.pdf
 backup:
 
-{% pdf "/pdf/Xysemi_XR2981.pdf" %}
-
-{% pdf "assets/pdf/Xysemi_XR2981.pdf" %}
+<object data="assets/pdf/Xysemi_XR2981.pdf" width="250" height="250" type='application/pdf'></object>
 
 ![chip_rpi_ups](assets/img/Chip_rpi_ups.webp)
 
 ![rpi_ups](assets/img/rpi_ups.webp)
 
 
-<object data="../assets/pdf/Xysemi_XR2981.pdf" width="1000" height="1000" type='application/pdf'></object>
 
 
 # C Program
