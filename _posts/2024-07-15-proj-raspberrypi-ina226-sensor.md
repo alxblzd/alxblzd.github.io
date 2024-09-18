@@ -113,8 +113,6 @@ backup:
 ![rpi_ups](assets/img/rpi_ups.webp)
 
 
-
-
 # C Program
 I found a codebase that provides a solid foundation for what I want to achieve, with all the necessary registers already defined and written in C. I only need to implement the specific features I require.
 
