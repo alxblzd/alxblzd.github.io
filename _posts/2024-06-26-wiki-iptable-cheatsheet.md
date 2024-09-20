@@ -11,93 +11,114 @@ alt: "netfilter logo"
 
 # Iptables Infos
 
-In Linux, firewall management is handled by Netfilter, a kernel module that controls which network packets are permitted to enter or leave the system.
+## Introduction
 
-Iptables serves as the user-space tool that interacts with Netfilter, providing a command-line interface to define and manage the filtering rules. While they are often considered interchangeable, it's more accurate to view Netfilter as the backend that performs the actual filtering, and iptables as the frontend that allows users to configure it.
+In Linux, firewall is handled by Netfilter, a kernel module that controls which network packets are permitted to enter or leave the system.
 
-# Interfaces
--i inside               # Interface interne
--o outside              # Interface externe
+Iptables serves as the user-space tool that interacts with Netfilter, providing a command-line interface to define and manage the filtering rules. 
 
-# Adresses
--s source               # Adresse source
--d destination          # Adresse de destination
+We can view Netfilter as the backend that performs the filtering, and iptables as the frontend to configure it.
 
-# Protocole
--p tcp                  # Protocole TCP
+###  Chains
 
-# Ports
---sport                 # Port source
---dport                 # Port de destination
+Iptable use 3 majors chains on which we can control and act on packet received,
+These chain are : 
+- INPUT   : Incoming traffic destined for the firewall
+- OUTPUT  : Outgoing traffic originating from the firewall
+- FORWARD : Traffic passing through the firewall (transit traffic)
 
-# Module
--m                      # Module iptables
-established, related     # Suivi de connexion
+### Default Policy
+After installing iptables, the firewall capabilities are installed but not yet active. By default, the firewall is fully open, meaning :
+- All chains are ACCEPTING traffic
 
-# Actions
--j ACCEPT               # Accepter le paquet
--j REJECT               # Rejeter le paquet
--j DENY                 # Bloquer le paquet
--j DROP                 # Ignorer le paquet
--j MASQUERADE           # Masquer le paquet
+```bash
+# To see your defaults policy :
+sudo iptables -L | grep policy
+```
+In a hardened configuration, it's common to use iptables to limit connections. Following the principle of least privilege, you should block all connections and only allow the ones you need
 
-# Chain (Chaînes par défaut)
-- INPUT   : Trafic entrant
-- OUTPUT  : Trafic sortant
-- FORWARD : Trafic transitant
+```bash
+# Basic hardened default Policy :
+sudo iptables -P INPUT DROP
+sudo iptables -P FORWARD DROP
+sudo iptables -P OUTPUT DROP
+```
 
-# Politiques par défaut
-- ACCEPT : Accepter le paquet
-- DROP   : Bloquer le paquet
+Tip to revert to accepting traffic after 30 seconds, in case you want to test your setup without locking yourself out of the machine:
+```bash
+# Put all chains to DROP then revert to ACCEPT after 30 sec
+sudo iptables -P INPUT DROP && sudo iptables -P FORWARD DROP && sudo iptables -P OUTPUT DROP && sleep 30 && sudo iptables -P INPUT ACCEPT && sudo iptables -P FORWARD ACCEPT && sudo iptables -P OUTPUT ACCEPT
+```
 
-# Tables iptables
-- Filter  : Filtrage des paquets
-- Nat     : Traduction d’adresses (NAT)
-- Mangle  : Modification des paquets
-- Raw     : Configurations avancées
 
-# Iptables LOG
-iptables -I FORWARD -j LOG        # Logger les paquets de la chaîne FORWARD
-sudo journalctl                   # Consulter les paquets loggés dans le journal
+### Making commands
 
-# Decision de routage
-# Si un paquet est destiné au firewall, il passe par INPUT ; sinon, par FORWARD
-# Exemple de règle NAT en prerouting :
+We can follow this image from bottom to top to formulate an iptables rule
+
+![iptables](assets/img/Iptable_schem.webp)
+
+
+##### Interfaces
+-i inside (internal)
+-o outside (external)
+
+##### Addresses
+-s source address
+-d destination address
+
+##### Protocol
+-p tcp (TCP protocol)
+
+##### Ports
+--sport (source port)
+--dport (destination port)
+
+##### Modules
+For modules and connection tracking see the end of this page
+
+
+##### Actions
+-j ACCEPT: Allow the packet to continue through the firewall.
+-j REJECT: Reject the packet and send an error message back to the sender (ICMP port unreachable for UDP, TCP RST for TCP)
+-j DROP: Discard the packet without sending any response to the sender
+-j MASQUERADE: SNAT with the current firewall IP even if dynamic 
+-j SNAT: SNAT with specified source ip, can do also port translation 
+-j LOG: Log the packet's information in the system log, no impact on packet flow
+
+
+
+
+##### iptables Tables
+- Filter  : Packet filtering
+- Nat     : Network Address Translation (NAT)
+- Mangle  : Packet modification
+- Raw     : Advanced configurations
+
+#### iptables LOG
+```bash
+iptables -I FORWARD -j LOG        # Log packets in the FORWARD chain
+sudo journalctl                   # View logged packets in the system journal
+```
+
+Example of a DNAT rule in prerouting, example usecase is a reverse proxy:
+```bash
 iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.1.100:8080
+```
 
-# Suivi de connexion
-- NEW          : Requête initiale (SYN)
-- ESTABLISHED  : Connexion établie (SYN-ACK)
+```bash
+# redirects incoming UDP traffic on ports 53, 80, and 4444 for the specified IP to port 15351, useful for wireguard server to listen on multilples ports
+iptables -t nat -I PREROUTING -i eth0 -d <yourIP/32> -p udp -m multiport --dports 53,80,4444 -j REDIRECT --to-ports 15351
 
-# Conntrack vs State
--m conntrack --ctstate           # Conntrack moderne
--m state --state                 # Ancien suivi de connexion
+### Example Commands
+sudo iptables -A FORWARD -m conntrack --ctstate NEW -j ACCEPT          # Allow new connections
+sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT   # Allow responses to existing connections
 
+### Listing and Deleting Rules
+sudo iptables -L --line-numbers    # List rules
+sudo iptables -D INPUT 3           # Delete the 3rd rule from the INPUT chain
+sudo iptables -F                   # Flush all rules
 
-# Proxy
-- Accélération, Anonymisation, Filtrage via un proxy transparent avec DNAT
-
-# Reverse Proxy
-- Intercepter le flux client et rediriger avec DNAT vers un serveur ou plusieurs
-
-
-## Commands
-
-iptables -t nat -I PREROUTING -i eth0 -d <yourIP/32> -p udp -m multiport --dports 53,80,4444  -j REDIRECT --to-ports 15351
-
-
-
-
-### Exemples de commandes
-sudo iptables -A FORWARD -m conntrack --ctstate NEW -j ACCEPT          # Autoriser nouvelle connexion
-sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT   # Autoriser réponse à une connexion existante
-
-### Listes et suppression des règles
-sudo iptables -L --line-numbers    # Lister les règles
-sudo iptables -D INPUT 3           # Supprimer la 3e règle de la chaîne INPUT
-sudo iptables -F                   # Supprimer toutes les règles
-
-### Gestion des connexions ESTABLISHED
+### Managing ESTABLISHED Connections
 sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 sudo iptables -A OUTPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 sudo iptables -A FORWARD -m conntrack --ctstate ESTABLISHED -j ACCEPT
@@ -108,11 +129,29 @@ iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source 1.2.3.4
 ### Masquerade
 sudo iptables -t nat -A POSTROUTING -o ens33 -j MASQUERADE
 
-### Voir la table NAT
+### View the NAT Table
 sudo iptables -t nat -nvL
 
-### Redirection de flux SNAT
+### SNAT Traffic Redirection
 iptables -t nat -A POSTROUTING -s 192.168.1.100 -j SNAT --to-source 10.0.0.100
 
 ### DNAT (Destination Network Address Translation)
 sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to-destination 192.168.1.100:8080
+```
+
+
+### More on modules & connection tracking
+
+##### Modules
+-m (iptables module)
+established, related (connection tracking)
+###### Conntrack vs State
+-m conntrack --ctstate (modern connection tracking)
+-m state --state (legacy connection tracking, works same as conntrack)
+
+##### Connection Tracking
+- NEW: Packet is initiating a new connection or is associated with a connection that hasn't seen packets in both directions. a TCP SYN packet is marked as NEW
+
+- ESTABLISHED: Packet is part of a connection that has seen packets in both directions, following the completion of a TCP handshake (SYN-ACK)
+
+- RELATED: Packet is initiating a new connection and associated with an existing connection
