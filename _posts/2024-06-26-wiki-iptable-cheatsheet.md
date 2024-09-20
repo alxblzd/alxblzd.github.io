@@ -58,22 +58,22 @@ We can follow this image from bottom to top to formulate an iptables rule
 ![iptables](assets/img/Iptable_schem.webp)
 
 
-##### Interfaces
+#### Interfaces
 -i inside (internal)
 -o outside (external)
 
-##### Addresses
+#### Addresses
 -s source address
 -d destination address
 
-##### Protocol
+#### Protocol
 -p tcp (TCP protocol)
 
-##### Ports
+#### Ports
 --sport (source port)
 --dport (destination port)
 
-##### Modules
+#### Modules
 For modules and connection tracking see the end of this page
 
 
@@ -85,14 +85,37 @@ For modules and connection tracking see the end of this page
 -j SNAT: SNAT with specified source ip, can do also port translation 
 -j LOG: Log the packet's information in the system log, no impact on packet flow
 
+#### Short example
+To enable SSH access to a server and allow the corresponding output
+```bash
+sudo iptables -A INPUT -p tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+sudo iptables -A OUTPUT -p tcp --sport 22 -m conntrack --ctstate ESTABLISHED -j ACCEPT
+```
+
+#### Iptables Tables
+Tables are structures that define how different types of network traffic should be handled. Each table contains a set of rules organized into chains, which specify actions
+
+We can create custom table to categorize traffic and simplify the administration, but hear we cover only the common ones
 
 
-
-##### iptables Tables
-- Filter  : Packet filtering
-- Nat     : Network Address Translation (NAT)
-- Mangle  : Packet modification
+- Filter  : default table used for packet filtering
+- Nat     : used for NAT, modifies packet headers to change source/dest, IP/port
+- Mangle  : specialized packet alteration, such as changing field or setting certain flags
 - Raw     : Advanced configurations
+
+![iptables](assets/img/Iptable_schem2.webp)
+
+##### More details
+
+When a packet arrives, it goes through the PREROUTING chain of the NAT table, where it can be altered before routing decisions are made.
+
+
+After the routing decision, if the packet is for a local process, it enters the INPUT chain of the Filter table. If it’s being routed to another destination, it goes to the FORWARD chain (fw designed as a gw for a client for example).
+
+
+For outgoing packets, they first hit the OUTPUT chain of the Filter table, and then if they are being modified (like in NAT), they’ll pass through the POSTROUTING chain of the NAT table.
+
+The Mangle table can intervene at any point to modify packets as necessary, allowing for complex routing and filtering scenarios.
 
 #### iptables LOG
 ```bash
