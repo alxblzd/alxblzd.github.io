@@ -5,7 +5,7 @@ date: 2024-09-17 20:04:00 +0200
 categories: [Tutorial, ZFS]
 tags: [ZFS, filesystem, linux, tutorial]
 render_with_liquid: false
-image: /assets/img/openzfs.webp
+image: /assets/img/logo/openzfs_logo.webp
 alt: "openzfs logo"
 ---
 

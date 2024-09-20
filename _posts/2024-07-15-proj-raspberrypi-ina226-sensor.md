@@ -5,6 +5,8 @@ date: 2024-07-15 22:10:00 +0100
 categories: [Project, Electronic]
 tags: [RPI, Raspberry, Disk, Electronic, Battery]
 render_with_liquid: false
+image: /assets/img/logo/raspberry_logo.webp
+alt: "Raspberry pi logo"
 ---
 
 # 

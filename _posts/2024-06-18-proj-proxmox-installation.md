@@ -5,7 +5,7 @@ date: 2024-04-18 18:10:00 +0200
 categories: [Proxmox, Project]
 tags: [proxmox, hypervisor, homelab, project]
 render_with_liquid: false
-image: /assets/img/proxmox_logo.webp
+image: /assets/img/logo/proxmox_logo.webp
 alt: "proxmox logo"
 ---
 # Simplified Tutorial: Proxmox VE Installation

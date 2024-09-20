@@ -14,6 +14,18 @@ This tutorial will guide you how to write a post in the _Chirpy_ template, and i
 Create a new file named `YYYY-MM-DD-TITLE.EXTENSION`{: .filepath} and put it in the `_posts`{: .filepath} of the root directory. Please note that the `EXTENSION`{: .filepath} must be one of `md`{: .filepath} and `markdown`{: .filepath}. If you want to save time of creating files, please consider using the plugin [`Jekyll-Compose`](https://github.com/jekyll/jekyll-compose) to accomplish this.
 
 
+
+## Fonts
+
+For front img :
+Coolvetica RG, Size 36 on paint.net
+
+export to webp
+
+1200x630
+
+
+
 ## Media conversion
 
 How to convert png files to webp for this website

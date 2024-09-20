@@ -7,20 +7,11 @@ tags: [disks, partition, linux, tutorial]
 render_with_liquid: false
 ---
 
-# Chapter 1: Initializing the Disk
 
-Initializing a Linux Data Disk (fdisk):
+# Disks infos
 
-```bash
- sudo fdisk -l
-```
-Partitioning the disk:
-```bash
-sudo fdisk /dev/sdx
-```
+## Initializing the Disk
 
-Create a new partition:
-  - enter: n
 
 #### Partition type: 
  - Primary partition is a bootable partition and it contains the operating 
@@ -34,45 +25,65 @@ Create a new partition:
     - Applicable scenarios: We can use it to boot the operating system, establish one to four primary partitions and install multiple operating systems without interfering.
     - Naming example: Primary partitions are assigned the first letters in the alphabet as drive letters (such as C, D). Logical drives in the extended partition get the other letters (such as E, F, G).
 
-# Chapter 2: Verifying and Writing Changes
 
-Primary or extended partition:
+### Verifying and Writing Changes
+
+
+Initializing a Linux Data Disk (fdisk):
+
+```bash
+ sudo fdisk -l
+```
+Partitioning the disk:
+```bash
+sudo fdisk /dev/sdx
+```
+Create the partition
+
+```md
+#Create a new partition:
+  - n
+
+#Primary or extended partition:
   - p
   - e
 
-Partition number:
-  Usually use the default, 1 to 4 for a primary partition
+#Partition number:
+  - Usually use the default, 1 to 4 for a primary partition
 
-First sector:
-  usually default
+#First sector:
+  - usually default
 
-Last sector:
-  same
+#Last sector:
+  - same
 
-Verify:
+#Verify:
   - p
 
-Write changes to the disk:
-  enter: w
+#Write changes to the disk:
+  - w
+```
 
 Run the following command to synchronize the new partition table to the OS:
 ```bash
 partprobe
 ```
 
-# Chapter 3: Formatting the Disk
+## Formatting the Disk
 
 Format the disk to the correct file system format:
 ```bash
+mkfs.ext4 /dev/sdx
+#or
 mkfs -t ext4 /dev/sdx
 ```
-# Chapter 4: Mounting the Disk
+## Mounting the Disk
 
 Mount the disk after formatting:
 ```bash
 mount /dev/sdx /mnt/dir
 ```
-# Chapter 5: Configuring for Fstab
+## Configuring for Fstab
 
 Find the UUID for fstab provisioning:
 ```bash
@@ -82,9 +93,7 @@ Add a line to modify fstab and keeping partition change at boot:
 ```bash
 UUID=0bdsdsds-1337-4abb-841d-bddd0b92693df /mnt/sdc       ext4    defaults        0 2
 ```
-# Chapter 6: Testing Automatic Mount
-
-
+### Testing Automatic Mount
 First: unmount the disk
 ```bash
 unmount /dev/sdx
@@ -100,7 +109,7 @@ mount | grep /mnt/sdx
 ```
 
 
-# Chapter 7: Creating an LVM Disk and Formatting in ext4
+
 
 ## Creating an LVM Disk and Formatting in ext4:
 
@@ -136,7 +145,7 @@ sudo mount /dev/vg_name/lv_name /mnt/lvm
 mount | grep /mnt/lvm
 ```
 
-# Chapter 8: Disk Usage
+## Disk Usage
 
 #### Disk Usage Commands:
 

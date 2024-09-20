@@ -5,7 +5,7 @@ date: 2024-04-26 23:10:00 +0200
 categories: [Networking, Practical]
 tags: [pfsense, router, network, vlan]
 render_with_liquid: false
-image: /assets/img/pfsense_logo.webp
+image: /assets/img/logo/pfsense_logo.webp
 alt: "pfsense logo"
 ---
 # Installation Guide for pfSense

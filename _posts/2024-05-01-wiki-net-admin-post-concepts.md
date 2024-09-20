@@ -5,6 +5,8 @@ date: 2024-04-28 23:10:00 +0200
 categories: [Networking, Concepts]
 tags: [network, mac, osi, layer]
 render_with_liquid: false
+image: /assets/img/logo/osilayer_logo.webp
+alt: "OSI logo"
 ---
 
 ## OSI Model Layers
@@ -37,24 +39,32 @@ OUI -> Organizational Unit Identifier -> First 3 bytes
 
 
 ### Layer 3: Network layer
-Enable communication between devices across different networks. It divides data into smaller units known as packets and handles the routing of these packets to their destination. This layer ensures efficient data transmission by determining the best physical path for the packets to travel. Key protocols used in the network layer include:
+Enable communication between devices across different networks. It divides data into smaller units known as packets and handles the routing of these packets to their destination. 
+
+This layer ensures efficient data transmission by determining the best physical path for the packets to travel. 
+
+Protocols used at level 3:
+- IP, ARP, ICMP, IGMP, IPSEC, BGP, RIP, OSPF
 
 #### IP (Internet Protocol) 
 Addresse and routing packets across networks, ensuring delivery to the correct destination.
 - IPV4 -> 32 bits
 - IPV6 -> 128 bits 
 
+#### ARP (Address Resolution Protocol)
+- mapping IP addresses to MAC addresses in a local area network (LAN).
+- ARP helps discover other devices on the same network by associating a hardware address (MAC) with an IP address, by using ARP broadcast
 
 #### ICMP (Internet Control Message Protocol)
-Facilitates communication between network devices by reporting errors and providing diagnostic information.
+Reporting errors and providing diagnostic information for communications.
 - ICMP messages are encapsulated within IP packets
 - Used for diagnostic and error reporting
 
 #### IGMP (Internet Group Management Protocol)
-Manages multicast group memberships in IP networks, enabling efficient distribution of data to multiple recipients.
+Manages multicast group memberships in IP networks, enabling distribution of data to multiple recipients.
 
-#### IPsec suite
-Provides security features such as authentication and encryption for IP packets, ensuring data confidentiality and integrity during transmission.
+#### IPSEC suite
+Authentication and encryption for IP packets, ensuring confidentiality and integrity during transmission.
 - encryption algorithms like AES and authentication mechanisms like HMAC
 - widely used in VPN
 

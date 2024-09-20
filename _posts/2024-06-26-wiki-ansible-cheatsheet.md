@@ -5,11 +5,13 @@ date: 2024-04-26 19:10:00 +0200
 categories: [Tutorial, Ansible]
 tags: [ansible, automation, linux, tutorial]
 render_with_liquid: false
+image: /assets/img/logo/ansible_logo.webp
+alt: "ansible logo"
 ---
 
 # Ansible Infos
 
-# Directory Structure:
+## Directory Structure:
   - ansible.cfg: General configuration file
   - playbook.yml: Playbook file (YAML)
   - group_vars: Directory for group variables YAML files
@@ -17,7 +19,7 @@ render_with_liquid: false
   - inventory.yml: Host inventory file (YAML)
   - templates: Directory for Jinja2 templates
 
-# Troubleshooting:
+##  Troubleshooting:
   - Test connection to hosts in inventory group:
       command: ansible routers -m ping -i inventory.yml
   - List modules in a collection:
@@ -25,7 +27,7 @@ render_with_liquid: false
   - Display documentation for a module:
       command: ansible-doc ios_bgp
 
-# Inventory:
+##  Inventory:
 ```yaml
   - group_A:
       children:
@@ -38,16 +40,16 @@ render_with_liquid: false
             host_3:
               ansible_host: 192.168.1.4
 ```
-# Graphical view of inventory:
+###  Graphical view of inventory:
   command: ansible-inventory --graph -i inventory.yml
 
-# Complete list of hosts in inventory with their variables:
+###  Complete list of hosts in inventory with their variables:
   command: ansible-inventory --list -i inventory.yml
 
-# View details of a host:
+###  View details of a host:
   command: ansible-inventory --host R1
 
-# Playbook:
+## Playbook:
   - Run a playbook:
       command: ansible-playbook playbook.yml
   - Launch options:
@@ -61,20 +63,20 @@ render_with_liquid: false
       --list-hosts: See targeted hosts (no changes made)
       --ask-vault-password: Prompt for vault password
 
-# Variables:
-## Connection:
+### Variables:
+#### Connection:
     ansible_connection: local or network_cli
     ansible_network_os: platform (Cisco -> ios)
     ansible_user: SSH username
     ansible_ssh_pass: SSH password
     ansible_ssh_private_key_file: SSH key file
 
-## Execution:
+#### Execution:
     ansible_command_timeout: execution timeout in seconds
     ansible_become: privilege escalation (yes or no)
     ansible_become_method: enable
 
-## Filters:
+#### Filters:
   - Convert compatible data to JSON or YAML:
       example: "{{ output | to_json }}"
                "{{ output | to_yaml }}"
@@ -85,7 +87,7 @@ render_with_liquid: false
   - List all occurrences of a regex pattern:
       example: "{{ output | regex_findall('GigabitEthernet0\/0\/[0-9]{1,2}') }}"
 
-## Common regex patterns:
+#### Common regex patterns:
 ```md
 .: match any single character
 ^: match beginning of string
