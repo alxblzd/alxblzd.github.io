@@ -59,20 +59,24 @@ We can follow this image from bottom to top to formulate an iptables rule
 
 
 #### Interfaces
+```md
 -i inside (internal)
 -o outside (external)
-
+```
 #### Addresses
+```md
 -s source address
 -d destination address
-
+```
 #### Protocol
+```md
 -p tcp (TCP protocol)
-
+```
 #### Ports
+```md
 --sport (source port)
 --dport (destination port)
-
+```
 #### Modules
 For modules and connection tracking see the end of this page
 
