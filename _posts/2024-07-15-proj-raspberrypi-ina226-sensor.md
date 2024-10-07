@@ -1,5 +1,5 @@
 ---
-title: "[PROJECT] Raspberry pi and UPS setup with power consumption monitoring"
+title: "[PROJECT] RPI, INA226 sensor monitoring"
 author: Alxblzd
 date: 2024-07-15 22:10:00 +0100
 categories: [Project, Electronic]

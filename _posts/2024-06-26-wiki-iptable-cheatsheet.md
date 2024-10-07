@@ -109,7 +109,7 @@ We can create custom table to categorize traffic and simplify the administration
 
 ![iptables](assets/img/Iptable_schem2.webp)
 
-##### More details
+#### More details
 
 When a packet arrives, it goes through the PREROUTING chain of the NAT table, where it can be altered before routing decisions are made.
 

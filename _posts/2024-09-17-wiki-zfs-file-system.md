@@ -1,5 +1,5 @@
 ---
-title: "[Wiki] ZFS filesystem cheatsheet"
+title: "[Wiki] OpenZFS cheatsheet"
 author: Alxblzd
 date: 2024-09-17 20:04:00 +0200
 categories: [Tutorial, ZFS]

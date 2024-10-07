@@ -1,21 +1,18 @@
 ---
-title: "[PROJECT] Multiples Trafik instances to one external IP"
+title: "[Wiki] Traefik Multiples instances"
 author: Alxblzd
 date: 2024-09-22 14:45:00 +0100
 categories: [Project, Electronic]
-tags: [RPI, Raspberry, Disk, Electronic, Battery]
+tags: [Traefik, Docker, Proxy]
 render_with_liquid: false
 image: /assets/img/logo/traefik_logo.webp
 alt: "Treafik logo"
 ---
 
 
+## Issue
 
-# Issue
-
-Traefik requires ports 80 and 443 for routing traffic to its applications
-
-Normally, a router can forward these ports to only one internal host
+Traefik requires ports 80 and 443 for routing traffic to its applications, a router can forward these ports to only one internal host
 
 The challenge arises when you have multiple servers running Traefik and you want them to serve different domains but are limited to one external IP
 
@@ -27,8 +24,8 @@ You want to host different services under different domains (`example1.com` and 
 
 ### Concrete example
 
-You are running a primary Traefik instance on your home server, which handles the main domains (webguardx . com). 
-This server hosts services that are in current use. You want to set up a secondary Traefik instance on a other server to test new services like a development version of a website, experimental web apps, or staging versions of existing services
+You are running a primary Traefik instance on your home server, which handles the main domains (* . webguardx . com). 
+This server hosts services that are in current use. You want to set up a secondary Traefik instance on a other server to test new services like a development version of a website with a domain like : (* . test . webguardx . com)
 
 ### Solution: 
 

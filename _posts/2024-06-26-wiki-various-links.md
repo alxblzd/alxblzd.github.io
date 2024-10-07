@@ -9,13 +9,16 @@ render_with_liquid: false
 ---
 
 Pfsense in proxmox
-https://docs.netgate.com/pfsense/en/latest/recipes/virtualize-proxmox-ve.html
+<a href="https://docs.netgate.com/pfsense/en/latest/recipes/virtualize-proxmox-ve.html">https://docs.netgate.com/pfsense/en/latest/recipes/virtualize-proxmox-ve.html</a>
+
 
 SSD Guides & Resources by NewMaxx
-https://www.reddit.com/r/NewMaxx/comments/16xhbi5/ssd_guides_resources_ssd_help_post_your_questions/
+<a href="https://www.reddit.com/r/NewMaxx/comments/16xhbi5/ssd_guides_resources_ssd_help_post_your_questions/">https://www.reddit.com/r/NewMaxx/comments/16xhbi5/ssd_guides_resources_ssd_help_post_your_questions/</a>
+
 
 NSE Lab in Sweden, Cyber
-https://nse.digital/
+<a href="https://nse.digital/">https://nse.digital/</a>
+
 
 SSH honeypot framework
-https://github.com/cowrie/cowrie
+<a href="https://github.com/cowrie/cowrie">https://github.com/cowrie/cowrie</a>
