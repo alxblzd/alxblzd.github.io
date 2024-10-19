@@ -41,23 +41,21 @@ The primary Traefik acts as the "gatekeeper" for both domains.
 
 
 ```yaml
-tcp: 
-	routers: 
-		synology-traefik-rtr: 
-			entryPoints: 
-			- "https"
-			rule: "HostSNIRegexp(`example2.com`) || HostSNIRegexp(`{subdomain:[a-z]+}.example2.com`)" 
-			service: synology-traefik-svc 
-			tls: 
-				passthrough: true 
+tcp:
+  routers:
+    synology-traefik-rtr:
+      entryPoints:
+        - "https"
+      rule: "HostSNIRegexp(`example2.com`) || HostSNIRegexp(`{subdomain:[a-z]+}.example2.com`)"
+      service: synology-traefik-svc
+      tls:
+        passthrough: true
 
-
-
-services: 
-	synology-traefik-svc: 
-		loadBalancer: 
-			servers: - address: "192.168.1.254:443"
-
+services:
+  synology-traefik-svc:
+    loadBalancer:
+      servers:
+        - address: "192.168.1.254:443"
 ```
 
 - **entryPoints**: Define the HTTPS entry point.

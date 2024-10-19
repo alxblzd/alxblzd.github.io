@@ -1,5 +1,5 @@
 ---
-title: "[PROJECT] RPI, INA226 sensor monitoring"
+title: "[Project] RPI, INA226 sensor monitoring"
 author: Alxblzd
 date: 2024-07-15 22:10:00 +0100
 categories: [Project, Electronic]
@@ -128,43 +128,3 @@ The program is currently running quite fast, making it a good to be used as a Li
 https://github.com/alxblzd/rpi-web-db-ina226
 
 
-
-
-
-
-Step-by-Step Assembly
-1. Preparing the Board
-
-    Cut the Wooden Board: Cut the wooden board to your desired dimensions, ensuring it's large enough to hold all the components.
-    Cut the Plastic Glass: Cut the plastic glass sheet to match the size of the wooden board. This will serve as the top cover.
-
-2. Drilling and Mounting
-
-    Drill Holes for M2 Support: Measure and mark the positions for mounting the Raspberry Pi, UPS, NVMe drive, and the INA226 module. Drill holes accordingly.
-    Install M2 Supports: Screw in the M2 supports into the drilled holes to provide a raised platform for the components.
-
-3. Mounting the Raspberry Pi and Components
-
-    Mount the Raspberry Pi: Place the Raspberry Pi onto the M2 supports and secure it with screws.
-    Install the UPS: Mount the UPS next to the Raspberry Pi, ensuring it's firmly in place.
-    Secure the NVMe Drive: Connect the NVMe drive via USB 3.0 and secure it onto the board.
-    Attach the INA226 Module: Mount the voltage module in a convenient location for easy access to power lines.
-
-4. Wiring and Connections
-
-    Connect the UPS to the Raspberry Pi: Ensure the power supply is connected securely.
-    Wiring the INA226 Module: Connect the INA226 module to the power lines for accurate readings.
-    USB Connections: Connect the NVMe drive to one of the USB 3.0 ports on the Raspberry Pi.
-
-5. Customizations and Modifications
-
-    UPS Modifications: To avoid noise and voltage drops after overclocking the Raspberry Pi, modify the UPS. This may involve adding capacitors or additional filtering to ensure a stable power supply.
-    Overclocking Adjustments: Ensure the Raspberry Pi is adequately cooled, possibly adding heatsinks or a fan to manage the increased heat output.
-
-6. Testing and Troubleshooting
-
-    Power On: Power on the board and check for stable operation.
-    Multimeter Checks: Use a multimeter to verify voltage and current readings from the INA226 module.
-    System Stability: Monitor the Raspberry Pi under load to ensure there are no power issues.
-
-More to come ...
