@@ -13,3 +13,5 @@ I am currently engaged in a work-study contract with a logistics company, where 
 When I’m not immersed in technology, I enjoy outdoor activities like skiing and diving, which help me recharge. This website serves as a platform for sharing my IT notes and showcasing the tech projects I embark on whenever I can. Thanks for visiting!
 
 
+> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
+{: .prompt-tip }
