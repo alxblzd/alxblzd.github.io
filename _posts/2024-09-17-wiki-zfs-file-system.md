@@ -164,10 +164,9 @@ zfs list
 zpool iostat 2
 zpool iostat -v 2
 ```
-
-- Display ARC usage statistiques on ZFS Pools
+<font color="red">- Display ARC usage statistiques on ZFS Pools</font>
 ```bash
-arc_summarry
+arc_summary
 arcstat
 ```
 
