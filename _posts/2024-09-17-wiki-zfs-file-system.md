@@ -215,3 +215,7 @@ options zfs l2arc_headroom=4
 ```
 after modification -> **update-initramfs -u -k all**
 a reboot is required
+
+
+### To continue
+- Add link to a "Lab or practice" 

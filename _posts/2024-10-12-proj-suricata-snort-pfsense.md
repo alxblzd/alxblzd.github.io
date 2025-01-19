@@ -1,7 +1,7 @@
 ---
 title: "[Project] Suricata IPS on pfsense"
 author: Alxblzd
-date: 2024-11-22 14:45:00 +0100
+date: 2024-12-07 20:05:00 +0100
 categories: [Project, Electronic]
 tags: [Pfsense, Suricata, IPS]
 render_with_liquid: false
@@ -73,3 +73,12 @@ git clone https://github.com/ffuf/ffuf ; cd ffuf ; go get ; go build
 wget https://raw.githubusercontent.com/six2dez/OneListForAll/refs/heads/main/onelistforallmicro.txt
 ffuf -c -w onelistforallmicro.txt -u [target.com]/FUZZ
 ```
+
+
+### To continue
+- add screenshot
+- add which interface to monitor and best practices
+- limitation on interface with vlan, need one dedicated interface
+- Logs handling
+- More details on source of rules (ETOPEN, Abuse.ch Botnet C2, GeoLite2, how to snort rules )
+- more details interface configuration

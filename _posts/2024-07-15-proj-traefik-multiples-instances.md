@@ -1,7 +1,7 @@
 ---
 title: "[Wiki] Traefik Multiples instances"
 author: Alxblzd
-date: 2024-09-22 14:45:00 +0100
+date: 2024-11-19 22:27:00 +0100
 categories: [Project, Electronic]
 tags: [Traefik, Docker, Proxy]
 render_with_liquid: false
