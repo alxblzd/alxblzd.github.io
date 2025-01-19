@@ -82,10 +82,6 @@ sed -i 's|log_file:.*|log_file: /var/log/coraza-spoa/coraza-agent.log|' /etc/cor
 Good, now we have a default installation
 
 
-
-
-
-
 #### How it works
 
 SPOE: Stream Processing Offload Engine.
@@ -98,9 +94,41 @@ Coraza SPOA powers the Coraza WAF used by HAProxy. It works by using the Stream 
 Communication between HAProxy and the SPOA happens via the Stream Processing Offload Protocol (SPOP). The result of the scan is then sent back to HAProxy to authorize or block the traffic.
 
 
+![Coraza_engine](assets/img/coraza_spoa_flow.webp)
+
+#### Configuration files
+
+
+* /etc/haproxy/haproxy.cfg - HAProxy Main Configuration
+* /etc/haproxy/coraza.cfg - HAProxy SPOE Configuration
+* /etc/coraza-spoa/config.yml - Coraza SPOA Main Configuration
+* /etc/coraza-spoa/coraza.conf - Coraza Engine Configuration
+
+#### CRS Rules syntax
+TO simplify or schematise :
+
+SecRule is a directive like any other understood by ModSecurity. The difference is that this directive is way more powerful in what it is capable of representing. Generally, a SecRule is made up of 4 parts:
+
+Variables - Instructs ModSecurity where to look (sometimes called Targets)
+Operators - Instructs ModSecurity when to trigger a match
+Transformations - Instructs ModSecurity how it should normalize variable data
+Actions - Instructs ModSecurity what to do if a rule matches
+The structure of the rule is as follows:
+
+SecRule VARIABLES "OPERATOR" "TRANSFORMATIONS,ACTIONS"
+A very basic rule looks as follows:
+
+SecRule REQUEST_URI "@streq /index.php" "id:1,phase:1,t:lowercase,deny"
+
+##### Phases
+The distinction between phase 1 and phase 2 is important because it allows for a layered approach to security, where initial broad checks (phase 1) are followed by more detailed and specific checks (phase 2). This layered approach helps in reducing false positives and improving the overall effectiveness of the WAF rules
+
+
+
 ### To continue
 - ansible playbook
 - Logs handling
 - Disable Rules, make exception for an IP address
 - IP reputation, blocklist
 - Exclusion for nextcloud or others services
+- Phase 1 and Phase 2 to explain
