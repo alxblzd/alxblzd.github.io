@@ -1,84 +1,106 @@
 ---
-title: "[Project] Suricata IPS on pfsense"
+title: "[Project] Coraza-SPOA and Owasp Coreruleset on HAproxy"
 author: Alxblzd
-date: 2024-12-07 20:05:00 +0100
+date: 2025-01-19 15:28:00 +0100
 categories: [Project, Electronic]
-tags: [Pfsense, Suricata, IPS]
+tags: [Pfsense, Coraza, IPS]
 render_with_liquid: false
-image: /assets/img/logo/suricata_logo.webp
-alt: "Suricata pfsense logo"
+image: /assets/img/logo/haproxy_logo.webp
+alt: "Haproxy and coraza + crs logo"
 ---
 
 
-# Installing IDS/IPS on pfSense with Suricata
+# Installing Coraza and use case with OWASP CRS + haproxy
 
 Installing an Intrusion Detection and Intrusion Prevention Systems (IDS/IPS) on pfSense,
 
 Focus on Suricata, an open-source solution that monitors network traffic, detects threats, and can block them in real time. 
 
-## 1. Pre-Installation Considerations
-
-2 way of implementing it on pfsense, **Inline mode vs. Legacy mode**:
-
-- **Inline mode**: Actively blocks threats in real time.
-- **Legacy mode**: Captures a copy (pcap) of transiting packets and allows the traffic to pass through before analyzing it. While it can block an IP address, it still permits traffic to flow even if it hasn't determined whether the content is malicious.
-
-Im going to use the Inline mode for a more precise way to block malicious actors
-
-## 2. Installation of Suricata
-
-A step-by-step walkthrough of installing Suricata on pfSense, including:
-
-- Enabling the necessary repositories and dependencies.
-- Installing the Suricata package.
-- Configuring your network interfaces.
-- Testing rules with quick fuzzing of url.
-
-## 3. Sources of Rules
-
-Theres different rules sources available in Suricata, each with unique gathering of threat intelligence:
-
-- **Snort**: Proprietary rules providing high-quality threat detection.
-- **Emerging Threats (ET)**: Free and open-source rules covering a wide range of threats.
-- **Community**: Basic, community-contributed rules.
-- **GeoIP**: gather informations on where treat probably came from
-  
-
-## 4. Managing Rules
-
-You have multiples categories to handle rules differently:
-
-- **SID management**: Enabling or disabling specific Signature ID rules.
-- **DROP all categories**: Dropping all packets matching rules in specific categories for better threat prevention.
-- **Excluding rules**: Excluding certain rules from categories to minimize false positives and reduce noise in your alerts.
-
-### 4.1 Disabling Rules
-
-There are cases where you might need to disable specific rules that generate unnecessary alerts. We’ll walk through the process of disabling individual rules to fine-tune your Suricata configuration.
-
-## 6. Testing Suricata
-
-Testing is crucial to ensure that Suricata effectively detects and blocks threats. 
-For the moment I only tried fuzzing my website with fuff to see how it work:
-
+## 1. Installing HAproxy
+You can use : https://haproxy.debian.net/
 
 ```bash
-sudo apt install git
-wget https://go.dev/dl/go1.23.2.linux-amd64.tar.gz
+# In my case I wanted the last version of haproxy in LTS realse so the 3.0.0 at this time
+sudo apt update
+sudo apt install curl gpg
 sudo su
-rm -rf /usr/local/go && tar -C /usr/local -xzf go1.23.2.linux-amd64.tar.gz
-export PATH=$PATH:/usr/local/go/bin
+curl https://haproxy.debian.net/bernat.debian.org.gpg | gpg --dearmor > /usr/share/keyrings/haproxy.debian.net.gpg && echo "deb [signed-by=/usr/share/keyrings/haproxy.debian.net.gpg] http://haproxy.debian.net bookworm-backports-3.0 main" > /etc/apt/sources.list.d/haproxy.list
 exit
-git clone https://github.com/ffuf/ffuf ; cd ffuf ; go get ; go build
-wget https://raw.githubusercontent.com/six2dez/OneListForAll/refs/heads/main/onelistforallmicro.txt
-ffuf -c -w onelistforallmicro.txt -u [target.com]/FUZZ
+sudo apt update
+sudo apt install haproxy=3.0.\*
+```
+
+## 2. Installation of Coraza-SPOA
+
+GO installation, check lastest stable here : wget https://go.dev/dl/
+
+```bash
+wget https://go.dev/dl/go1.23.5.linux-amd64.tar.gz
+sudo tar -C /usr/local -xzf go1.23.5.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin
+echo 'export GOPATH=$HOME/go' >> ~/.bashrc
+source ~/.bashrc
+#This command should return the version if everything is good
+go version
 ```
 
 
+Here we start the installation of Coraza SPOA
+
+```bash
+
+sudo apt install git make gcc pkg-config wget unzip
+git clone https://github.com/corazawaf/coraza-spoa.git
+cd ./coraza-spoa
+#compilation
+go run mage.go build
+
+
+
+
+# create user and group
+addgroup --quiet --system coraza-spoa
+adduser --quiet --system --ingroup coraza-spoa --no-create-home --home /nonexistent --disabled-password coraza-spoa
+
+```
+We are not over yet, even if we have compiled coraza spoa, we still need to create te directory and copy configuration files and even activate the service, let's go :
+```bash
+mkdir -p /etc/coraza-spoa
+cd /etc/coraza-spoa
+#Check latest version : https://github.com/coreruleset/coreruleset/releases
+sudo wget https://github.com/coreruleset/coreruleset/archive/refs/tags/v4.10.0.zip
+
+mkdir -p /var/log/coraza-spoa /var/log/coraza-spoa/audit
+touch /var/log/coraza-spoa/server.log /var/log/coraza-spoa/error.log /var/log/coraza-spoa/audit.log /var/log/coraza-spoa/debug.log
+cp -a ./build/coraza-spoa /usr/bin/coraza-spoa
+chmod 750 /usr/bin/coraza-spoa
+
+cp -a ./example/coraza-spoa.yaml /etc/coraza-spoa/config.yaml
+sed -i 's/bind: 0.0.0.0:9000/bind: 127.0.0.1:9000/' /etc/coraza-spoa/config.yaml
+sed -i 's|log_file:.*|log_file: /var/log/coraza-spoa/coraza-agent.log|' /etc/coraza-spoa/config.yaml
+```
+Good, now we have a default installation
+
+
+
+
+
+
+#### How it works
+
+SPOE: Stream Processing Offload Engine.
+SPOA: Stream Processing Offload Agent.
+SPOP: Stream Processing Offload Protocol.
+WAF: Web Application Firewall.
+
+Coraza SPOA powers the Coraza WAF used by HAProxy. It works by using the Stream Processing Offload Engine (SPOE) to send requests to the Stream Processing Offload Agent (SPOA) for processing.
+
+Communication between HAProxy and the SPOA happens via the Stream Processing Offload Protocol (SPOP). The result of the scan is then sent back to HAProxy to authorize or block the traffic.
+
+
 ### To continue
-- add screenshot
-- add which interface to monitor and best practices
-- limitation on interface with vlan, need one dedicated interface
+- ansible playbook
 - Logs handling
-- More details on source of rules (ETOPEN, Abuse.ch Botnet C2, GeoLite2, how to snort rules )
-- more details interface configuration
+- Disable Rules, make exception for an IP address
+- IP reputation, blocklist
+- Exclusion for nextcloud or others services
