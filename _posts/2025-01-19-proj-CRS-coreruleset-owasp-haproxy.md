@@ -12,9 +12,7 @@ alt: "Haproxy and coraza + crs logo"
 
 # Installing Coraza and use case with OWASP CRS + haproxy
 
-Installing an Intrusion Detection and Intrusion Prevention Systems (IDS/IPS) on pfSense,
-
-Focus on Suricata, an open-source solution that monitors network traffic, detects threats, and can block them in real time. 
+I had to choose a frontend for my website, sometimes not using services, and I selected HAProxy for various reasons that I won't elaborate on here. Additionally, I wanted it to provide broad WAF filtering. So, here's a blog post about HAProxy and the implementation of Coraza with OWASP rules.
 
 ## 1. Installing HAproxy
 You can use : https://haproxy.debian.net/
@@ -84,14 +82,14 @@ Good, now we have a default installation
 
 #### How it works
 
-SPOE: Stream Processing Offload Engine.
-SPOA: Stream Processing Offload Agent.
-SPOP: Stream Processing Offload Protocol.
-WAF: Web Application Firewall.
+SPOE: Stream Processing Offload Engine. \
+SPOA: Stream Processing Offload Agent. \
+SPOP: Stream Processing Offload Protocol. \
+WAF: Web Application Firewall. \
 
-Coraza SPOA powers the Coraza WAF used by HAProxy. It works by using the Stream Processing Offload Engine (SPOE) to send requests to the Stream Processing Offload Agent (SPOA) for processing.
+HAproxy integrate the SPOE to send requests and receive reponse to/from the SPOA, used for processing.
 
-Communication between HAProxy and the SPOA happens via the Stream Processing Offload Protocol (SPOP). The result of the scan is then sent back to HAProxy to authorize or block the traffic.
+Communication between SPOE and the SPOA happens via the SPOP (2 & 5). The result of the scan is sent back to HAProxy to authorize or block the traffic.
 
 
 ![Coraza_engine](assets/img/coraza_spoa_flow.webp)
@@ -107,21 +105,28 @@ Communication between HAProxy and the SPOA happens via the Stream Processing Off
 #### CRS Rules syntax
 TO simplify or schematise :
 
-SecRule is a directive like any other understood by ModSecurity. The difference is that this directive is way more powerful in what it is capable of representing. Generally, a SecRule is made up of 4 parts:
+SecRule is a directive like any other understood by ModSecurity and Coraza integrates theses. \
+A SecRule is made up of 4 parts :
 
-Variables - Instructs ModSecurity where to look (sometimes called Targets)
-Operators - Instructs ModSecurity when to trigger a match
-Transformations - Instructs ModSecurity how it should normalize variable data
-Actions - Instructs ModSecurity what to do if a rule matches
+- Variables - Instructs ModSecurity where to look (sometimes called Targets)
+- Operators - Instructs ModSecurity when to trigger a match
+- Transformations - Instructs ModSecurity how it should normalize variable data
+- Actions - Instructs ModSecurity what to do if a rule matches \
 The structure of the rule is as follows:
 
-SecRule VARIABLES "OPERATOR" "TRANSFORMATIONS,ACTIONS"
+SecRule VARIABLES "OPERATOR" "TRANSFORMATIONS,ACTIONS" \
 A very basic rule looks as follows:
 
 SecRule REQUEST_URI "@streq /index.php" "id:1,phase:1,t:lowercase,deny"
 
 ##### Phases
-The distinction between phase 1 and phase 2 is important because it allows for a layered approach to security, where initial broad checks (phase 1) are followed by more detailed and specific checks (phase 2). This layered approach helps in reducing false positives and improving the overall effectiveness of the WAF rules
+The distinction between phase 1 and phase 2 is important because it allows for a layered approach to security. \
+
+Initial broad checks (phase 1) \
+the followed by  : \
+more detailed and specific checks (phase 2). \
+ 
+This approach helps in reducing false positives and improving the overall effectiveness/comprehension of WAF rules by categorizing them.
 
 
 
