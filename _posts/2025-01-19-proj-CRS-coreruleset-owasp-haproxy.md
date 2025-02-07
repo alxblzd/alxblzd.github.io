@@ -85,7 +85,7 @@ Good, now we have a default installation
 SPOE: Stream Processing Offload Engine. \
 SPOA: Stream Processing Offload Agent. \
 SPOP: Stream Processing Offload Protocol. \
-WAF: Web Application Firewall. \
+WAF: Web Application Firewall. 
 
 HAproxy integrate the SPOE to send requests and receive reponse to/from the SPOA, used for processing.
 
@@ -111,24 +111,34 @@ A SecRule is made up of 4 parts :
 - Variables - Instructs ModSecurity where to look (sometimes called Targets)
 - Operators - Instructs ModSecurity when to trigger a match
 - Transformations - Instructs ModSecurity how it should normalize variable data
-- Actions - Instructs ModSecurity what to do if a rule matches \
+- Actions - Instructs ModSecurity what to do if a rule matches 
+
 The structure of the rule is as follows:
 
-SecRule VARIABLES "OPERATOR" "TRANSFORMATIONS,ACTIONS" \
+SecRule VARIABLES "OPERATOR" "TRANSFORMATIONS,ACTIONS" 
 A very basic rule looks as follows:
 
 SecRule REQUEST_URI "@streq /index.php" "id:1,phase:1,t:lowercase,deny"
 
 ##### Phases
-The distinction between phase 1 and phase 2 is important because it allows for a layered approach to security. \
+ModSecurity processes security rules in 5 main phases during the Apache request cycle.
 
-Initial broad checks (phase 1) \
-the followed by  : \
-more detailed and specific checks (phase 2). \
+These phases allow different types of checks to be made at specific points, and secure the web application by detecting and blocking malicious requests or responses. 
  
-This approach helps in reducing false positives and improving the overall effectiveness/comprehension of WAF rules by categorizing them.
+Let’s break it down:
+
+- Request Headers: First stage where the server reads the incoming request headers from the client.
+
+- Request Body: Once the headers are read, ModSecurity then processes the body of the request. This is where most application-specific security rules are applied.
+
+- Response Headers: In this phase, ModSecurity checks the headers before sending the response back to the client.
+
+- Response Body: After headers are set, ModSecurity checks the body of the response, looking for sensitive information or errors before it reaches the client.
+
+- Logging: Finally, after all other checks, ModSecurity logs the transaction and can modify how the logging is handled.
 
 
+[More details here : https://github.com/owasp-modsecurity/ModSecurity/wiki/Reference-Manual-(v2.x)-Processing-Phases](https://github.com/owasp-modsecurity/ModSecurity/wiki/Reference-Manual-(v2.x)-Processing-Phases)
 
 ### To continue
 - ansible playbook
