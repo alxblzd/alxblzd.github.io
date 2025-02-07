@@ -17,8 +17,8 @@ I had to choose a frontend for my website, sometimes not using services, and I s
 ## 1. Installing HAproxy
 You can use : https://haproxy.debian.net/
 
+In my case I wanted the last version of haproxy in LTS release so the 3.0.0 at this time.
 ```bash
-# In my case I wanted the last version of haproxy in LTS realse so the 3.0.0 at this time
 sudo apt update
 sudo apt install curl gpg
 sudo su
@@ -43,18 +43,16 @@ go version
 ```
 
 
-Here we start the installation of Coraza SPOA
+Here we start the installation of Coraza SPOA :
 
 ```bash
 
 sudo apt install git make gcc pkg-config wget unzip
 git clone https://github.com/corazawaf/coraza-spoa.git
 cd ./coraza-spoa
+
 #compilation
 go run mage.go build
-
-
-
 
 # create user and group
 addgroup --quiet --system coraza-spoa
@@ -80,7 +78,7 @@ sed -i 's|log_file:.*|log_file: /var/log/coraza-spoa/coraza-agent.log|' /etc/cor
 Good, now we have a default installation
 
 
-#### How it works
+## 3. Coraza integration with HAproxy
 
 SPOE: Stream Processing Offload Engine. \
 SPOA: Stream Processing Offload Agent. \
@@ -94,7 +92,7 @@ Communication between SPOE and the SPOA happens via the SPOP (2 & 5). The result
 
 ![Coraza_engine](assets/img/coraza_spoa_flow.webp)
 
-#### Configuration files
+### Configuration files
 
 
 * /etc/haproxy/haproxy.cfg - HAProxy Main Configuration
@@ -102,7 +100,7 @@ Communication between SPOE and the SPOA happens via the SPOP (2 & 5). The result
 * /etc/coraza-spoa/config.yml - Coraza SPOA Main Configuration
 * /etc/coraza-spoa/coraza.conf - Coraza Engine Configuration
 
-#### CRS Rules syntax
+### CRS Rules syntax
 TO simplify or schematise :
 
 SecRule is a directive like any other understood by ModSecurity and Coraza integrates theses. \
@@ -117,10 +115,11 @@ The structure of the rule is as follows:
 
 SecRule VARIABLES "OPERATOR" "TRANSFORMATIONS,ACTIONS" 
 A very basic rule looks as follows:
-
+``` bash
 SecRule REQUEST_URI "@streq /index.php" "id:1,phase:1,t:lowercase,deny"
+```
 
-##### Phases
+#### Phases
 ModSecurity processes security rules in 5 main phases during the Apache request cycle.
 
 These phases allow different types of checks to be made at specific points, and secure the web application by detecting and blocking malicious requests or responses. 
@@ -147,3 +146,4 @@ Let’s break it down:
 - IP reputation, blocklist
 - Exclusion for nextcloud or others services
 - Phase 1 and Phase 2 to explain
+- more details on conf files
