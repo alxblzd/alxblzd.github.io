@@ -4,7 +4,6 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-<<<<<<< HEAD
 Hey! 👋
 
 My name is Alexandre, I love experimenting with Software Defined Radio (SDR) and also run a minimalistic homelab that hosts services like a website, VPN, virtual router, and stuff for home use. My ongoing hands-on projects include building FPV quadcopters, a perfect mix of electronics, IT, and telecommunications where I’ve worked on various aspects related to sensors, batteries, and basic electronic improvements. I often start various projects that keep me busy, even if they don’t always get finished!
@@ -14,7 +13,5 @@ I am currently engaged in a work-study contract with a logistics company, where 
 When I’m not immersed in technology, I enjoy outdoor activities like skiing and diving, which help me recharge. This website serves as a platform for sharing my IT notes and showcasing the tech projects I embark on whenever I can. Thanks for visiting!
 
 
-=======
->>>>>>> v7.3.0
 > Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
 {: .prompt-tip }
