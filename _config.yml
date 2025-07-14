@@ -6,22 +6,36 @@ theme: jekyll-theme-chirpy
 # The language of the webpage › http://www.lingoes.net/en/translator/langcode.htm
 # If it has the same name as one of the files in folder `_data/locales`, the layout language will also be changed,
 # otherwise, the layout language will use the default value of 'en'.
+<<<<<<< HEAD
 lang: fr
 
 # Change to your timezone › https://kevinnovak.github.io/Time-Zone-Picker
 timezone: Europe/Paris
+=======
+lang: en
+
+# Change to your timezone › https://kevinnovak.github.io/Time-Zone-Picker
+timezone:
+>>>>>>> v7.3.0
 
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
+<<<<<<< HEAD
 title: Alex Wiki # the main title
 
 tagline: Work in progress # it will display as the sub-title
+=======
+title: Chirpy # the main title
+
+tagline: A text-focused Jekyll theme # it will display as the subtitle
+>>>>>>> v7.3.0
 
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.
 
 # Fill in the protocol & hostname for your site.
+<<<<<<< HEAD
 # e.g. 'https://username.github.io', note that it does not end with a '/'.
 url: "https://wiki.webguardx.com"
 
@@ -30,10 +44,21 @@ github:
 
 twitter:
   username: alxblzd # change to your twitter username
+=======
+# E.g. 'https://username.github.io', note that it does not end with a '/'.
+url: ""
+
+github:
+  username: github_username # change to your GitHub username
+
+twitter:
+  username: twitter_username # change to your Twitter username
+>>>>>>> v7.3.0
 
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
+<<<<<<< HEAD
   name: Alexandre Balzard
   email: alexbalzfr@gmail.com # change to your email address
   links:
@@ -46,10 +71,31 @@ social:
    
 
 google_site_verification: # fill in to your verification string
+=======
+  name: your_full_name
+  email: example@domain.com # change to your email address
+  links:
+    # The first element serves as the copyright owner's link
+    - https://twitter.com/username # change to your Twitter homepage
+    - https://github.com/username # change to your GitHub homepage
+    # Uncomment below to add more social links
+    # - https://www.facebook.com/username
+    # - https://www.linkedin.com/in/username
+
+# Site Verification Settings
+webmaster_verifications:
+  google: # fill in your Google verification code
+  bing: # fill in your Bing verification code
+  alexa: # fill in your Alexa verification code
+  yandex: # fill in your Yandex verification code
+  baidu: # fill in your Baidu verification code
+  facebook: # fill in your Facebook verification code
+>>>>>>> v7.3.0
 
 # ↑ --------------------------
 # The end of `jekyll-seo-tag` settings
 
+<<<<<<< HEAD
 google_analytics:
   id: # fill in your Google Analytics ID
 
@@ -68,6 +114,51 @@ img_cdn:
 
 # the avatar on sidebar, support local or CORS resources
 avatar: assets/img/avatar.png
+=======
+# Web Analytics Settings
+analytics:
+  google:
+    id: # fill in your Google Analytics ID
+  goatcounter:
+    id: # fill in your GoatCounter ID
+  umami:
+    id: # fill in your Umami ID
+    domain: # fill in your Umami domain
+  matomo:
+    id: # fill in your Matomo ID
+    domain: # fill in your Matomo domain
+  cloudflare:
+    id: # fill in your Cloudflare Web Analytics token
+  fathom:
+    id: # fill in your Fathom Site ID
+
+# Page views settings
+pageviews:
+  provider: # now only supports 'goatcounter'
+
+# Prefer color scheme setting.
+#
+# Note: Keep empty will follow the system prefer color by default,
+# and there will be a toggle to switch the theme between dark and light
+# on the bottom left of the sidebar.
+#
+# Available options:
+#
+#     light — Use the light color scheme
+#     dark — Use the dark color scheme
+#
+theme_mode: # [light | dark]
+
+# The CDN endpoint for media resources.
+# Notice that once it is assigned, the CDN url
+# will be added to all media resources (site avatar, posts' images, audio and video files) paths starting with '/'
+#
+# e.g. 'https://cdn.com'
+cdn:
+
+# the avatar on sidebar, support local or CORS resources
+avatar:
+>>>>>>> v7.3.0
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
@@ -161,10 +252,13 @@ defaults:
     values:
       layout: page
       permalink: /:title/
+<<<<<<< HEAD
   - scope:
       path: assets/js/dist
     values:
       swcache: true
+=======
+>>>>>>> v7.3.0
 
 sass:
   style: compressed
@@ -185,8 +279,14 @@ exclude:
   - tools
   - README.md
   - LICENSE
+<<<<<<< HEAD
   - "*.config.js"
   - package*.json
+=======
+  - purgecss.js
+  - "*.config.js"
+  - "package*.json"
+>>>>>>> v7.3.0
 
 jekyll-archives:
   enabled: [categories, tags]
