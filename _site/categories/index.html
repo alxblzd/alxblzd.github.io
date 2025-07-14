@@ -19,7 +19,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta
     name="viewport"
@@ -29,7 +29,7 @@
   
 
   <!-- Begin Jekyll SEO tag v2.8.0 -->
-<meta name="generator" content="Jekyll v4.3.3" />
+<meta name="generator" content="Jekyll v4.4.1" />
 <meta property="og:title" content="Categories" />
 <meta property="og:locale" content="fr" />
 <meta name="description" content="A minimal, responsive and feature-rich Jekyll theme for technical writing." />
@@ -38,12 +38,12 @@
 <meta property="og:url" content="http://localhost:4000/categories/" />
 <meta property="og:site_name" content="Alex Wiki" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2024-04-30T23:55:36+02:00" />
+<meta property="article:published_time" content="2025-07-14T15:36:40+02:00" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Categories" />
 <meta name="twitter:site" content="@alxblzd" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-30T23:55:36+02:00","datePublished":"2024-04-30T23:55:36+02:00","description":"A minimal, responsive and feature-rich Jekyll theme for technical writing.","headline":"Categories","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/categories/"},"url":"http://localhost:4000/categories/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-07-14T15:36:40+02:00","datePublished":"2025-07-14T15:36:40+02:00","description":"A minimal, responsive and feature-rich Jekyll theme for technical writing.","headline":"Categories","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/categories/"},"url":"http://localhost:4000/categories/"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -71,190 +71,102 @@
 <meta name="theme-color" content="#ffffff">
 
 
+  <!-- Resource Hints -->
   
     
-      <link rel="preconnect" href="https://fonts.googleapis.com" >
-      <link rel="dns-prefetch" href="https://fonts.googleapis.com" >
+      
+        <link rel="preconnect" href="https://fonts.googleapis.com" >
+      
+        <link rel="dns-prefetch" href="https://fonts.googleapis.com" >
+      
     
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-      <link rel="dns-prefetch" href="https://fonts.gstatic.com" crossorigin>
+      
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" >
+      
     
-      <link rel="preconnect" href="https://fonts.googleapis.com" >
-      <link rel="dns-prefetch" href="https://fonts.googleapis.com" >
+      
+        <link rel="preconnect" href="https://cdn.jsdelivr.net" >
+      
+        <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" >
+      
     
-      <link rel="preconnect" href="https://cdn.jsdelivr.net" >
-      <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" >
-    
-      <link rel="preconnect" href="https://cdnjs.cloudflare.com" >
-      <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" >
-    
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
-  
-
-  <!-- GA -->
   
 
   <!-- Bootstrap -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css">
+  
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css">
-
+  <!-- Theme style -->
   <link rel="stylesheet" href="/assets/css/jekyll-theme-chirpy.css">
 
-  
+  <!-- Web Font -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400&family=Source+Sans+Pro:wght@400;600;700;900&display=swap">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.1/css/all.min.css">
+
+  <!-- 3rd-party Dependencies -->
 
   
 
   
 
-  <!-- JavaScript -->
+  
+
+  <!-- Scripts -->
+
+  <script src="/assets/js/dist/theme.min.js"></script>
+
+  <!-- JS selector for site. -->
+
+<!-- commons -->
+
+
+
+<!-- layout specified -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
-    <!-- Switch the mode between dark and light. -->
+    
 
-<script type="text/javascript">
-  class ModeToggle {
-    static get MODE_KEY() {
-      return 'mode';
-    }
-    static get MODE_ATTR() {
-      return 'data-mode';
-    }
-    static get DARK_MODE() {
-      return 'dark';
-    }
-    static get LIGHT_MODE() {
-      return 'light';
-    }
-    static get ID() {
-      return 'mode-toggle';
-    }
+    
 
-    constructor() {
-      if (this.hasMode) {
-        if (this.isDarkMode) {
-          if (!this.isSysDarkPrefer) {
-            this.setDark();
-          }
-        } else {
-          if (this.isSysDarkPrefer) {
-            this.setLight();
-          }
-        }
-      }
+  
 
-      let self = this;
 
-      /* always follow the system prefers */
-      this.sysDarkPrefers.addEventListener('change', () => {
-        if (self.hasMode) {
-          if (self.isDarkMode) {
-            if (!self.isSysDarkPrefer) {
-              self.setDark();
-            }
-          } else {
-            if (self.isSysDarkPrefer) {
-              self.setLight();
-            }
-          }
 
-          self.clearMode();
-        }
+  <script defer src="https://cdn.jsdelivr.net/combine/npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script>
 
-        self.notify();
-      });
-    } /* constructor() */
 
-    get sysDarkPrefers() {
-      return window.matchMedia('(prefers-color-scheme: dark)');
-    }
 
-    get isSysDarkPrefer() {
-      return this.sysDarkPrefers.matches;
-    }
 
-    get isDarkMode() {
-      return this.mode === ModeToggle.DARK_MODE;
-    }
 
-    get isLightMode() {
-      return this.mode === ModeToggle.LIGHT_MODE;
-    }
 
-    get hasMode() {
-      return this.mode != null;
-    }
 
-    get mode() {
-      return sessionStorage.getItem(ModeToggle.MODE_KEY);
-    }
+<script defer src="/assets/js/dist/categories.min.js"></script>
 
-    /* get the current mode on screen */
-    get modeStatus() {
-      if (this.isDarkMode || (!this.hasMode && this.isSysDarkPrefer)) {
-        return ModeToggle.DARK_MODE;
-      } else {
-        return ModeToggle.LIGHT_MODE;
-      }
-    }
 
-    setDark() {
-      document.documentElement.setAttribute(ModeToggle.MODE_ATTR, ModeToggle.DARK_MODE);
-      sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.DARK_MODE);
-    }
 
-    setLight() {
-      document.documentElement.setAttribute(ModeToggle.MODE_ATTR, ModeToggle.LIGHT_MODE);
-      sessionStorage.setItem(ModeToggle.MODE_KEY, ModeToggle.LIGHT_MODE);
-    }
+<!-- Pageviews -->
 
-    clearMode() {
-      document.documentElement.removeAttribute(ModeToggle.MODE_ATTR);
-      sessionStorage.removeItem(ModeToggle.MODE_KEY);
-    }
 
-    /* Notify another plugins that the theme mode has changed */
-    notify() {
-      window.postMessage(
-        {
-          direction: ModeToggle.ID,
-          message: this.modeStatus
-        },
-        '*'
-      );
-    }
-
-    flipMode() {
-      if (this.hasMode) {
-        if (this.isSysDarkPrefer) {
-          if (this.isLightMode) {
-            this.clearMode();
-          } else {
-            this.setLight();
-          }
-        } else {
-          if (this.isDarkMode) {
-            this.clearMode();
-          } else {
-            this.setDark();
-          }
-        }
-      } else {
-        if (this.isSysDarkPrefer) {
-          this.setLight();
-        } else {
-          this.setDark();
-        }
-      }
-
-      this.notify();
-    } /* flipMode() */
-  } /* ModeToggle */
-
-  const modeToggle = new ModeToggle();
-</script>
 
   
 
@@ -268,12 +180,10 @@
 
 <aside aria-label="Sidebar" id="sidebar" class="d-flex flex-column align-items-end">
   <header class="profile-wrapper">
-    <a href="/" id="avatar" class="rounded-circle"></a>
+    <a href="/" id="avatar" class="rounded-circle"><img src="/assets/img/avatar.png" width="112" height="112" alt="avatar" onerror="this.style.display='none'"></a>
 
-    <h1 class="site-title">
-      <a href="/">Alex Wiki</a>
-    </h1>
-    <p class="site-subtitle fst-italic mb-0">Happy wiki</p>
+    <a class="site-title d-block" href="/">Alex Wiki</a>
+    <p class="site-subtitle fst-italic mb-0">Work in progress</p>
   </header>
   <!-- .profile-wrapper -->
 
@@ -333,7 +243,7 @@
 
   <div class="sidebar-bottom d-flex flex-wrap  align-items-center w-100">
     
-      <button type="button" class="mode-toggle btn" aria-label="Switch Mode">
+      <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="mode-toggle">
         <i class="fas fa-adjust"></i>
       </button>
 
@@ -407,24 +317,6 @@
         </a>
       
     
-      
-
-      
-        <a
-          href="/feed.xml"
-          aria-label="rss"
-          
-
-          
-
-          
-
-          
-        >
-          <i class="fas fa-rss"></i>
-        </a>
-      
-    
   </div>
   <!-- .sidebar-bottom -->
 </aside>
@@ -435,7 +327,7 @@
       <div class="container d-flex flex-column px-xxl-5">
         <!-- The Top Bar -->
 
-<header id="topbar-wrapper" aria-label="Top Bar">
+<header id="topbar-wrapper" class="flex-shrink-0" aria-label="Top Bar">
   <div
     id="topbar"
     class="d-flex align-items-center justify-content-between px-lg-3 h-100"
@@ -463,7 +355,7 @@
     </nav>
     <!-- endof #breadcrumb -->
 
-    <button type="button" id="sidebar-trigger" class="btn btn-link">
+    <button type="button" id="sidebar-trigger" class="btn btn-link" aria-label="Sidebar">
       <i class="fas fa-bars fa-fw"></i>
     </button>
 
@@ -471,11 +363,11 @@
       Categories
     </div>
 
-    <button type="button" id="search-trigger" class="btn btn-link">
+    <button type="button" id="search-trigger" class="btn btn-link" aria-label="Search">
       <i class="fas fa-search fa-fw"></i>
     </button>
 
-    <search class="align-items-center ms-3 ms-lg-0">
+    <search id="search" class="align-items-center ms-3 ms-lg-0">
       <i class="fas fa-search fa-fw"></i>
       <input
         class="form-control"
@@ -517,6 +409,12 @@
 
 
 
+
+  
+  
+  
+
+  
 
   
   
@@ -588,10 +486,462 @@
 
                 
                 <span class="text-muted small font-weight-light">
+                  8
+
+                  
+                    posts
+                  
+                </span>
+              </li>
+            
+          </ul>
+        </div>
+      
+    </div>
+    <!-- .card -->
+
+    
+  
+
+  
+  
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  
+  
+
+  
+
+  
+  
+  
+
+  
+    
+
+    
+
+    
+    
+
+    <div class="card categories">
+      <!-- top-category -->
+      <div
+        id="h_1"
+        class="card-header d-flex justify-content-between hide-border-bottom"
+      >
+        <span class="ms-2">
+          <i class="far fa-folder-open fa-fw"></i>
+
+          
+          <a href="/categories/networking/" class="mx-2">Networking</a>
+
+          <!-- content count -->
+          
+          <span class="text-muted small font-weight-light">
+            
+              2
+              
+                categories
+              ,
+            
+
+            2
+
+            
+              posts
+            
+          </span>
+        </span>
+
+        <!-- arrow -->
+        
+          <a
+            href="#l_1"
+            data-bs-toggle="collapse"
+            aria-expanded="true"
+            aria-label="h_1-trigger"
+            class="category-trigger hide-border-bottom"
+          >
+            <i class="fas fa-fw fa-angle-down"></i>
+          </a>
+        
+      </div>
+      <!-- .card-header -->
+
+      <!-- Sub-categories -->
+      
+        <div id="l_1" class="collapse show" aria-expanded="true">
+          <ul class="list-group">
+            
+              <li class="list-group-item">
+                <i class="far fa-folder fa-fw"></i>
+
+                
+                <a href="/categories/concepts/" class="mx-2">Concepts</a>
+
+                
+                <span class="text-muted small font-weight-light">
+                  1
+
+                  
+                    post
+                  
+                </span>
+              </li>
+            
+              <li class="list-group-item">
+                <i class="far fa-folder fa-fw"></i>
+
+                
+                <a href="/categories/practical/" class="mx-2">Practical</a>
+
+                
+                <span class="text-muted small font-weight-light">
+                  1
+
+                  
+                    post
+                  
+                </span>
+              </li>
+            
+          </ul>
+        </div>
+      
+    </div>
+    <!-- .card -->
+
+    
+  
+
+  
+  
+  
+
+  
+
+  
+  
+  
+
+  
+    
+
+    
+
+    
+    
+
+    <div class="card categories">
+      <!-- top-category -->
+      <div
+        id="h_2"
+        class="card-header d-flex justify-content-between hide-border-bottom"
+      >
+        <span class="ms-2">
+          <i class="far fa-folder-open fa-fw"></i>
+
+          
+          <a href="/categories/project/" class="mx-2">Project</a>
+
+          <!-- content count -->
+          
+          <span class="text-muted small font-weight-light">
+            
+              2
+              
+                categories
+              ,
+            
+
+            5
+
+            
+              posts
+            
+          </span>
+        </span>
+
+        <!-- arrow -->
+        
+          <a
+            href="#l_2"
+            data-bs-toggle="collapse"
+            aria-expanded="true"
+            aria-label="h_2-trigger"
+            class="category-trigger hide-border-bottom"
+          >
+            <i class="fas fa-fw fa-angle-down"></i>
+          </a>
+        
+      </div>
+      <!-- .card-header -->
+
+      <!-- Sub-categories -->
+      
+        <div id="l_2" class="collapse show" aria-expanded="true">
+          <ul class="list-group">
+            
+              <li class="list-group-item">
+                <i class="far fa-folder fa-fw"></i>
+
+                
+                <a href="/categories/electronic/" class="mx-2">Electronic</a>
+
+                
+                <span class="text-muted small font-weight-light">
+                  4
+
+                  
+                    posts
+                  
+                </span>
+              </li>
+            
+              <li class="list-group-item">
+                <i class="far fa-folder fa-fw"></i>
+
+                
+                <a href="/categories/project/" class="mx-2">Project</a>
+
+                
+                <span class="text-muted small font-weight-light">
+                  5
+
+                  
+                    posts
+                  
+                </span>
+              </li>
+            
+          </ul>
+        </div>
+      
+    </div>
+    <!-- .card -->
+
+    
+  
+
+  
+  
+  
+
+  
+    
+
+    
+
+    
+    
+
+    <div class="card categories">
+      <!-- top-category -->
+      <div
+        id="h_3"
+        class="card-header d-flex justify-content-between hide-border-bottom"
+      >
+        <span class="ms-2">
+          <i class="far fa-folder-open fa-fw"></i>
+
+          
+          <a href="/categories/proxmox/" class="mx-2">Proxmox</a>
+
+          <!-- content count -->
+          
+          <span class="text-muted small font-weight-light">
+            
+              1
+              
+                category
+              ,
+            
+
+            1
+
+            
+              post
+            
+          </span>
+        </span>
+
+        <!-- arrow -->
+        
+          <a
+            href="#l_3"
+            data-bs-toggle="collapse"
+            aria-expanded="true"
+            aria-label="h_3-trigger"
+            class="category-trigger hide-border-bottom"
+          >
+            <i class="fas fa-fw fa-angle-down"></i>
+          </a>
+        
+      </div>
+      <!-- .card-header -->
+
+      <!-- Sub-categories -->
+      
+        <div id="l_3" class="collapse show" aria-expanded="true">
+          <ul class="list-group">
+            
+              <li class="list-group-item">
+                <i class="far fa-folder fa-fw"></i>
+
+                
+                <a href="/categories/project/" class="mx-2">Project</a>
+
+                
+                <span class="text-muted small font-weight-light">
+                  5
+
+                  
+                    posts
+                  
+                </span>
+              </li>
+            
+          </ul>
+        </div>
+      
+    </div>
+    <!-- .card -->
+
+    
+  
+
+  
+  
+  
+
+  
+    
+
+    
+
+    
+    
+
+    <div class="card categories">
+      <!-- top-category -->
+      <div
+        id="h_4"
+        class="card-header d-flex justify-content-between hide-border-bottom"
+      >
+        <span class="ms-2">
+          <i class="far fa-folder-open fa-fw"></i>
+
+          
+          <a href="/categories/tutorial/" class="mx-2">Tutorial</a>
+
+          <!-- content count -->
+          
+          <span class="text-muted small font-weight-light">
+            
+              4
+              
+                categories
+              ,
+            
+
+            8
+
+            
+              posts
+            
+          </span>
+        </span>
+
+        <!-- arrow -->
+        
+          <a
+            href="#l_4"
+            data-bs-toggle="collapse"
+            aria-expanded="true"
+            aria-label="h_4-trigger"
+            class="category-trigger hide-border-bottom"
+          >
+            <i class="fas fa-fw fa-angle-down"></i>
+          </a>
+        
+      </div>
+      <!-- .card-header -->
+
+      <!-- Sub-categories -->
+      
+        <div id="l_4" class="collapse show" aria-expanded="true">
+          <ul class="list-group">
+            
+              <li class="list-group-item">
+                <i class="far fa-folder fa-fw"></i>
+
+                
+                <a href="/categories/ansible/" class="mx-2">Ansible</a>
+
+                
+                <span class="text-muted small font-weight-light">
                   2
 
                   
                     posts
+                  
+                </span>
+              </li>
+            
+              <li class="list-group-item">
+                <i class="far fa-folder fa-fw"></i>
+
+                
+                <a href="/categories/disks/" class="mx-2">Disks</a>
+
+                
+                <span class="text-muted small font-weight-light">
+                  3
+
+                  
+                    posts
+                  
+                </span>
+              </li>
+            
+              <li class="list-group-item">
+                <i class="far fa-folder fa-fw"></i>
+
+                
+                <a href="/categories/tutorial/" class="mx-2">Tutorial</a>
+
+                
+                <span class="text-muted small font-weight-light">
+                  8
+
+                  
+                    posts
+                  
+                </span>
+              </li>
+            
+              <li class="list-group-item">
+                <i class="far fa-folder fa-fw"></i>
+
+                
+                <a href="/categories/zfs/" class="mx-2">ZFS</a>
+
+                
+                <span class="text-muted small font-weight-light">
+                  1
+
+                  
+                    post
                   
                 </span>
               </li>
@@ -620,7 +970,7 @@
           </main>
 
           <!-- panel -->
-          <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 mb-5 text-muted">
+          <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 text-muted">
             <div class="access">
               <!-- Get 5 last posted/updated posts -->
 
@@ -645,14 +995,35 @@
         
         
         <li class="text-truncate lh-lg">
-          <a href="/posts/hello-to-my-wiki/">Bienvenue sur ce wiki</a>
+          <a href="/posts/proj-CRS-coreruleset-owasp-haproxy/">[Project] Coraza-SPOA and Owasp Coreruleset on HAproxy</a>
         </li>
       
         
         
         
         <li class="text-truncate lh-lg">
-          <a href="/posts/write-a-new-post/">Writing a New Post</a>
+          <a href="/posts/wiki-zfs-file-system/">[Wiki] OpenZFS cheatsheet</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/proj-traefik-multiples-instances/">[Wiki] Traefik Multiples instances</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/proj-suricata-snort-pfsense/">[Project] Suricata IPS on pfsense</a>
+        </li>
+      
+        
+        
+        
+        <li class="text-truncate lh-lg">
+          <a href="/posts/proj-raspberrypi-ina226-sensor/">[Project] RPI, INA226 sensor monitoring</a>
         </li>
       
     </ul>
@@ -681,6 +1052,729 @@
     
     
     
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
       
         
         
@@ -692,7 +1786,34 @@
     <div class="d-flex flex-wrap mt-3 mb-1 me-3">
       
         
-        <a class="post-tag btn btn-outline-primary" href="/tags/writing/">writing</a>
+        <a class="post-tag btn btn-outline-primary" href="/tags/tutorial/">tutorial</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/linux/">linux</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/network/">network</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/ips/">IPS</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/pfsense/">Pfsense</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/about/">about</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/ansible/">ansible</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/automation/">automation</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/battery/">Battery</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/bookmark/">bookmark</a>
       
     </div>
   </section>
@@ -719,7 +1840,7 @@
   "
 >
   <p>©
-    <time>2024</time>
+    <time>2025</time>
 
     
       <a href="https://twitter.com/alxblzd">Alexandre Balzard</a>.
@@ -734,7 +1855,14 @@
     
   </p>
 
-  <p>Using the <a href="https://github.com/cotes2020/jekyll-theme-chirpy" target="_blank" rel="noopener">Chirpy</a> theme for <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a>.
+  <p>Using the <a
+        data-bs-toggle="tooltip"
+        data-bs-placement="top"
+        title="v7.3.0"
+        href="https://github.com/cotes2020/jekyll-theme-chirpy"
+        target="_blank"
+        rel="noopener"
+      >Chirpy</a> theme for <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a>.
   </p>
 </footer>
 
@@ -743,7 +1871,7 @@
 
         <!-- The Search results -->
 
-<div id="search-result-wrapper" class="d-flex justify-content-center unloaded">
+<div id="search-result-wrapper" class="d-flex justify-content-center d-none">
   <div class="col-11 content">
     <div id="search-hints">
       <!-- The trending tags list -->
@@ -767,6 +1895,729 @@
     
     
     
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+        
+        
+
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
+      
+    
+  
+    
+    
+    
+    
       
         
         
@@ -778,7 +2629,34 @@
     <div class="d-flex flex-wrap mt-3 mb-1 me-3">
       
         
-        <a class="post-tag btn btn-outline-primary" href="/tags/writing/">writing</a>
+        <a class="post-tag btn btn-outline-primary" href="/tags/tutorial/">tutorial</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/linux/">linux</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/network/">network</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/ips/">IPS</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/pfsense/">Pfsense</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/about/">about</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/ansible/">ansible</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/automation/">automation</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/battery/">Battery</a>
+      
+        
+        <a class="post-tag btn btn-outline-primary" href="/tags/bookmark/">bookmark</a>
       
     </div>
   </section>
@@ -798,7 +2676,7 @@
       </aside>
     </div>
 
-    <div id="mask"></div>
+    <div id="mask" class="d-none position-fixed w-100 h-100 z-1"></div>
 
     
       <aside
@@ -828,69 +2706,7 @@
 
     
 
-    <!-- JavaScripts -->
-
-    <!-- JS selector for site. -->
-
-<!-- commons -->
-
-
-
-<!-- layout specified -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-    
-
-    
-
-  
-
-  
-    
-
-    
-
-  
-
-  
-    
-
-    
-
-  
-
-
-
-  <script src="https://cdn.jsdelivr.net/combine/npm/jquery@3.7.1/dist/jquery.min.js,npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js,npm/simple-jekyll-search@1.10.0/dest/simple-jekyll-search.min.js"></script>
-
-
-
-
-
-
-<script defer src="/assets/js/dist/categories.min.js"></script>
-
-
-
-
-
+    <!-- Embedded scripts -->
 
     
 
@@ -904,30 +2720,32 @@
 
 
 <script>
-  /* Note: dependent library will be loaded in `js-selector.html` */
-  SimpleJekyllSearch({
-    searchInput: document.getElementById('search-input'),
-    resultsContainer: document.getElementById('search-results'),
-    json: '/assets/js/data/search.json',
-    searchResultTemplate: '  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">    <header>      <h2><a href="{url}">{title}</a></h2>      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">        {categories}        {tags}      </div>    </header>    <p>{snippet}</p>  </article>',
-    noResultsText: '<p class="mt-5"></p>',
-    templateMiddleware: function(prop, value, template) {
-      if (prop === 'categories') {
-        if (value === '') {
-          return `${value}`;
-        } else {
-          return `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    SimpleJekyllSearch({
+      searchInput: document.getElementById('search-input'),
+      resultsContainer: document.getElementById('search-results'),
+      json: '/assets/js/data/search.json',
+      searchResultTemplate: '  <article class="px-1 px-sm-2 px-lg-4 px-xl-0">    <header>      <h2><a href="{url}">{title}</a></h2>      <div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1">        {categories}        {tags}      </div>    </header>    <p>{content}</p>  </article>',
+      noResultsText: '<p class="mt-5">Oops! No results found.</p>',
+      templateMiddleware: function(prop, value, template) {
+        if (prop === 'categories') {
+          if (value === '') {
+            return `${value}`;
+          } else {
+            return `<div class="me-sm-4"><i class="far fa-folder fa-fw"></i>${value}</div>`;
+          }
         }
-      }
 
-      if (prop === 'tags') {
-        if (value === '') {
-          return `${value}`;
-        } else {
-          return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+        if (prop === 'tags') {
+          if (value === '') {
+            return `${value}`;
+          } else {
+            return `<div><i class="fa fa-tag fa-fw"></i>${value}</div>`;
+          }
         }
       }
-    }
+    });
   });
 </script>
 

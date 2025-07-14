@@ -1,6 +1,6 @@
 const swconf = {
   
-    cacheName: 'chirpy-1714514136',resources: [
+    cacheName: 'chirpy-1752500201',resources: [
       '/assets/css/jekyll-theme-chirpy.css',
       '/',
       
@@ -20,18 +20,17 @@ const swconf = {
         '/assets/js/dist/home.min.js',
         '/assets/js/dist/misc.min.js',
         '/assets/js/dist/page.min.js',
-        '/assets/js/dist/post.min.js'
-    ],allowHosts: [
-      
-          'fonts.googleapis.com',
-          'fonts.gstatic.com',
-          'fonts.googleapis.com',
-          'cdn.jsdelivr.net',
-          'cdnjs.cloudflare.com'
-      
-    ],denyPaths: [
-      
+        '/assets/js/dist/post.min.js',
+        '/assets/js/dist/theme.min.js'
     ],
+
+    interceptor: {paths: [
+        
+      ],urlPrefixes: [
+        
+      ]
+    },
+
     purge: false
   
 };
