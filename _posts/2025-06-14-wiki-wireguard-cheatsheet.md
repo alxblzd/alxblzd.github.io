@@ -1,5 +1,5 @@
 ---
-title: "[Network] WireGuard VPN Cheatsheet"
+title: "[Wiki] WireGuard VPN Cheatsheet"
 author: Alxblzd
 date: 2025-06-14 15:57:00 +0200
 categories: [Tutorial, Wireguard]
@@ -14,17 +14,20 @@ alt: "wireguard logo"
 
 WireGuard is a VPN protocol. It’s lightweight, fast, and uses modern cryptography primitives.
 
-Built directly into the Linux kernel, it’s designed to be simple yet extremely efficient — making it perfect for homelabs, remote work, and low-power devices (hello Raspberry Pi).
+Built directly into the Linux kernel, it’s designed to be simple yet extremely efficient, making it perfect for homelabs, remote work, and low-power devices (hello Raspberry Pi).
 
-### Why use WireGuard?
+### Why WireGuard?
 
-- Lightning fast connection (low overhead)
-- Simple configuration (no XML jungle)
-- Cross-platform (Linux, macOS, Windows, Android, iOS)
 - Minimal attack surface
-- Peer-to-peer — no client/server nonsense (but we’ll use it like that anyway)
+- Peer-to-peer, no true client/server (but we’ll use it like that anyway)
 - Built into the Linux kernel (kernel >= 5.6)
 - Just ~4,000 lines of code
+
+and also : 
+- Fast (low overhead)
+- Simple configuration
+- Cross-platform 
+
 
 WireGuard doesn’t allow you to choose ciphers; it uses fixed ones.
 
@@ -39,7 +42,7 @@ WireGuard is deployed on my VPS to route virtual machine traffic into my homelab
 I also run WireGuard within the homelab itself, enabling remote access to my internal network. I route all traffic from my phone through the VPN when connected to untrusted or public Wi-Fi networks such as hotels
 
 - Host: Debian VPS (also works perfectly with Raspberry Pi / Proxmox LXC)
-- Clients: Android phone, laptop, desktop
+- My clients: Android phone, laptop, desktop and vms in my homelab
 
 ## Prerequisites
 
