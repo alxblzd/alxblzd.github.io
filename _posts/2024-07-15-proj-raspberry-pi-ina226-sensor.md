@@ -1,7 +1,7 @@
 ---
 title: "[Project] RPI, INA226 sensor monitoring"
 author: Alxblzd
-date: 2024-07-15 22:10:00 +0100
+date: 2024-07-15 22:10:00 +0200
 categories: [Project, Electronic]
 tags: [RPI, Raspberry, Disk, Electronic, Battery]
 render_with_liquid: false

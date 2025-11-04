@@ -2,11 +2,10 @@
 title: "[Project] Deploying OPNsense on Proxmox, double NAT setup"
 author: Alxblzd
 date: 2025-08-24 14:09:00 +0200
-categories: ["project"]
-tags: ["opnsense", "proxmox", "homelab", "network"]
-image:
-  path: /assets/img/projects/opnsense_proxmox_ha.webp
-  alt: "OPNsense + Proxmox double nat architecture"
+categories: [Project, Networking]
+tags: [opnsense, proxmox, homelab, network]
+image: /assets/img/logo/proxmox_logo.webp
+alt: "Proxmox logo"
 render_with_liquid: false
 ---
 ## Proxmox - OPNsense VM Setup

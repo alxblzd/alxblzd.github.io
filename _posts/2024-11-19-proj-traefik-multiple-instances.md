@@ -1,12 +1,12 @@
 ---
-title: "[Wiki] Traefik Multiples instances"
+title: "[Project] Traefik Multiple instances"
 author: Alxblzd
 date: 2024-11-19 22:27:00 +0100
-categories: [Project, Electronic]
-tags: [Traefik, Docker, Proxy]
+categories: [Project, Networking]
+tags: [traefik, docker, proxy, reverse-proxy]
 render_with_liquid: false
 image: /assets/img/logo/traefik_logo.webp
-alt: "Treafik logo"
+alt: "Traefik logo"
 ---
 
 

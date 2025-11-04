@@ -5,8 +5,6 @@ date: 2025-10-24 09:12:00 +0200
 categories: [Networking, VPN]
 tags: [wireguard, vpn, network, security, encryption]
 render_with_liquid: false
-image: /assets/img/projects/opnsense_proxmox_ha.webp
-alt: "OPNsense + Proxmox double nat architecture"
 ---
 
 # WireGuard VPN
