@@ -1,6 +1,6 @@
 ---
 title: "[Wiki] Ansible cheatsheet"
-author: Alxblzd
+author: "Alxblzd"
 date: 2024-04-26 19:10:00 +0200
 categories: [Tutorial, Ansible]
 tags: [ansible, automation, linux, tutorial]

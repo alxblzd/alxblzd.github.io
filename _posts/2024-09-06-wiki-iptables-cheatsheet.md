@@ -1,6 +1,6 @@
 ---
 title: "[Wiki] Iptables cheatsheet"
-author: Alxblzd
+author: "Alxblzd"
 date: 2024-09-06 18:10:00 +0200
 categories: [Networking, Security]
 tags: [iptables, network, linux, firewall, tutorial]

@@ -1,6 +1,6 @@
 ---
 title: "[Project] Coraza-SPOA and Owasp Coreruleset on HAproxy"
-author: Alxblzd
+author: "Alxblzd"
 date: 2025-01-19 15:28:00 +0100
 categories: [Project, Security]
 tags: [haproxy, coraza, waf, owasp, security]

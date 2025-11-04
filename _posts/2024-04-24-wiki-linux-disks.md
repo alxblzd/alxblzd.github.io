@@ -1,6 +1,6 @@
 ---
 title: "[Wiki] Linux disks"
-author: Alxblzd
+author: "Alxblzd"
 date: 2024-04-24 19:10:00 +0200
 categories: [Tutorial, Disks]
 tags: [disks, partition, linux, tutorial]

@@ -1,6 +1,6 @@
 ---
 title: "[Wiki] Bookmark link list"
-author: Alxblzd
+author: "Alxblzd"
 date: 2024-04-24 19:10:00 +0200
 categories: [Wiki, Links]
 tags: [links, bookmark, tutorial]

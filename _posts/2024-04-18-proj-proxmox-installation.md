@@ -1,6 +1,6 @@
 ---
 title: "[Project] Proxmox Hypervisor for Homelab"
-author: Alxblzd
+author: "Alxblzd"
 date: 2024-04-18 18:10:00 +0200
 categories: [Proxmox, Project]
 tags: [proxmox, hypervisor, homelab, project]

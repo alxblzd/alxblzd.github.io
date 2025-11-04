@@ -1,6 +1,6 @@
 ---
 title: "[Wiki] WireGuard VPN"
-author: Alxblzd
+author: "Alxblzd"
 date: 2025-10-24 09:12:00 +0200
 categories: [Networking, VPN]
 tags: [wireguard, vpn, network, security, encryption]
