@@ -1,3 +1,12 @@
+---
+title: "[Wiki] WireGuard VPN"
+author: Alxblzd
+date: 2025-10-24 09:12:00 +0200
+categories: [Networking, VPN]
+tags: [wireguard, vpn, network, security, encryption]
+render_with_liquid: false
+---
+
 ## What is WireGuard?
 
 WireGuard is a modern, fast, and secure VPN protocol they say, designed to be simpler and more efficient than traditional VPN solutions like IPsec and OpenVPN. 
