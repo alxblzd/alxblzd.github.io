@@ -6,23 +6,15 @@ tags: [terraform, proxmox, cloud-init, virtualization, automation]
 render_with_liquid: false
 ---
 
-## What is Terraform + Proxmox Automation?
+## Terraform + Proxmox Automation
 
 Terraform lets you spin up VMs in Proxmox without clicking through the web UI every time. You define your VMs in code, and Terraform handles the rest.
 
-- Uses the BPG Proxmox Provider
+- Uses the BPG [Proxmox Provider](https://github.com/bpg/terraform-provider-proxmox)
 - Cloud-Init handles the initial setup
 
-Full working example on [GitHub](https://github.com/alxblzd/proxmox-terraform-pbks/tree/main)
+Full working example on [https://github.com/alxblzd/proxmox-terraform-pbks/tree/main](https://github.com/alxblzd/proxmox-terraform-pbks/tree/main)
 
-
-## The Stack
-
-Pretty straightforward:
-
-- **Proxmox VE** - the hypervisor running everything
-- **Terraform** - describes what VMs you want
-- **Cloud-Init** - configures VMs on first boot
 
 ## How It Works
 
@@ -30,26 +22,20 @@ Pretty straightforward:
 
 Instead of installing from ISO every time, you make one template and clone it. Way faster. The template is just a base Debian image with Cloud-Init installed.
 
-**Important gotcha**: Proxmox's built-in Cloud-Init drive (ide2) doesn't play nice with Terraform's initialization block. You need to create templates WITHOUT the Cloud-Init drive for Terraform to work properly.
-
 ### What Cloud-Init Does
 
-On first boot, Cloud-Init handles:
+On first boot, Cloud-Init can handles:
 1. **Network** - sets up static IPs, DNS, whatever you need
 2. **Users** - adds your SSH keys, creates accounts
 3. **Packages** - installs any initial software
-4. **Scripts** - runs custom setup commands
-5. **Files** - drops config files in place
+4. and much more
 
 ### How a VM Gets Created
 
-1. Start with your template (base Debian image)
+1. Start with your template (base Debian image with cloudinit)
 2. Terraform clones it to a new VM
-3. Cloud-Init config gets attached as an ISO
-4. VM boots and Cloud-Init does its thing using snippet
-5. QEMU agent confirms everything's ready
-
-## Installation
+3. Cloud-Init config (proxmox snippet) gets attached as an ISO
+4. VM boots and Cloud-Init does its thing
 
 ### Prerequisites
 
@@ -57,18 +43,19 @@ On first boot, Cloud-Init handles:
 ```bash
 # Create API token for Terraform
 pveum user add terraform@pve
-pveum aclmod / -user terraform@pve -role Administrator
-pveum user token add terraform@pve terraform -privsep 0
+sudo pveum role add Terraform -privs "Realm.AllocateUser, VM.PowerMgmt, VM.GuestAgent.Unrestricted, Sys.Console, Sys.Audit, Sys.AccessNetwork, VM.Config.Cloudinit, VM.Replicate, Pool.Allocate, SDN.Audit, Realm.Allocate, SDN.Use, Mapping.Modify, VM.Config.Memory, VM.GuestAgent.FileSystemMgmt, VM.Allocate, SDN.Allocate, VM.Console, VM.Clone, VM.Backup, Datastore.AllocateTemplate, VM.Snapshot, VM.Config.Network, Sys.Incoming, Sys.Modify, VM.Snapshot.Rollback, VM.Config.Disk, Datastore.Allocate, VM.Config.CPU, VM.Config.CDROM, Group.Allocate, Datastore.Audit, VM.Migrate, VM.GuestAgent.FileWrite, Mapping.Use, Datastore.AllocateSpace, Sys.Syslog, VM.Config.Options, Pool.Audit, User.Modify, VM.Config.HWType, VM.Audit, Sys.PowerMgmt, VM.GuestAgent.Audit, Mapping.Audit, VM.GuestAgent.FileRead, Permissions.Modify"
+sudo pveum aclmod / -user terraform@pve -role Terraform
+sudo pveum user token add terraform@pve provider --privsep=0
 
-# Note the token - you'll need it for Terraform
+# Note the token - you'll need it for later
 ```
 
 
 #### Snippets creation 
 
-Proxmox snippets allow you to inject cloud-init configurations directly into virtual machines at deployment time. They are especially useful for installing packages, updating systems, or setting initial parameters without manually accessing each VM.
+Proxmox snippets allow you to inject cloud-init configurations directly into virtual machines at deployment time. They are used for setting initial parameters without manually accessing each VM.
 
-For instance, I use the following simple snippet stored at /var/lib/vz/snippets/base_vm.yaml
+For instance, I use the following snippet stored at /var/lib/vz/snippets/base_vm.yaml
 
 ```yaml
 #cloud-config
