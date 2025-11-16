@@ -371,6 +371,90 @@ runcmd:
 - Disable root SSH login (use sudo instead)
 - Run updates before creating the template so new VMs start fresh
 
+## Cloud-Init and VyOS
+
+VyOS routers can also be deployed with cloud-init, but they use a different format than standard Linux distributions. Instead of the usual cloud-init directives, VyOS only supports two top-level keys:
+
+- **vyos_config_commands**: VyOS CLI commands executed on first boot
+- **write_files**: Custom files written to the system
+
+### VyOS Cloud-Init Format
+
+Here's what a VyOS cloud-init snippet looks like:
+
+```yaml
+#cloud-config
+vyos_config_commands:
+  - set system host-name 'vyos-router'
+  - set system time-zone 'UTC'
+  - set system login user ansible authentication public-keys key-01 key 'AAAAB3NzaC...'
+  - set system login user ansible authentication public-keys key-01 type 'ssh-rsa'
+  - set interfaces ethernet eth0 address '192.168.1.1/24'
+  - set interfaces ethernet eth0 description 'WAN'
+  - set protocols static route 0.0.0.0/0 next-hop '192.168.1.254'
+  - set service ssh port '22'
+  - commit
+  - save
+```
+
+**Important:** Standard cloud-init directives like `users:`, `packages:`, or `runcmd:` don't work with VyOS. You must use VyOS configuration commands.
+
+### Uploading Cloud-Init Snippets with Terraform
+
+Instead of manually creating snippets on the Proxmox server, you can upload them directly using Terraform. The BPG Proxmox provider includes a `proxmox_virtual_environment_file` resource for this:
+
+```hcl
+resource "proxmox_virtual_environment_file" "vyos_userdata" {
+  for_each     = { for vm in var.vyos_vms : vm.name => vm }
+  datastore_id = "local"  # Or your snippets datastore
+  node_name    = "pve01"
+  content_type = "snippets"
+
+  source_raw {
+    file_name = "cloud-init-${each.key}.yml"
+    data = templatefile("${path.module}/cloud-init-vyos.tpl.yml", {
+      hostname    = each.value.hostname
+      wan_ip      = each.value.wan_ip
+      wan_gateway = each.value.wan_gateway
+      timezone    = var.timezone
+      ssh_keys    = var.ssh_keys
+    })
+  }
+}
+```
+
+Then reference the snippet in your VM resource:
+
+```hcl
+resource "proxmox_virtual_environment_vm" "vyos" {
+  for_each = { for vm in var.vyos_vms : vm.name => vm }
+
+  name      = each.value.name
+  node_name = var.proxmox.node_name
+
+  clone {
+    vm_id = var.vyos_template_id
+    full  = true
+  }
+
+  # Reference the uploaded cloud-init snippet
+  initialization {
+    type              = "nocloud"
+    datastore_id      = "local"
+    user_data_file_id = proxmox_virtual_environment_file.vyos_userdata[each.key].id
+  }
+}
+```
+
+### Benefits of Terraform-Managed Snippets
+
+- Snippets are version-controlled alongside your Terraform code
+- No manual SSH access to Proxmox needed
+- Easy to template snippets with different variables per VM
+- Terraform tracks snippet changes and updates them automatically
+
+For a complete working example with VyOS deployment and zone-based firewall configuration, check out the [deploy-vyos-stack](https://github.com/alxblzd/deploy-vyos-stack) repository.
+
 ## Troubleshooting
 
 ```bash

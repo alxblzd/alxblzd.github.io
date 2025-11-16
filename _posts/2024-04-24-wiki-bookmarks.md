@@ -22,3 +22,7 @@ NSE Lab in Sweden, Cyber
 
 SSH honeypot framework
 <a href="https://github.com/cowrie/cowrie">https://github.com/cowrie/cowrie</a>
+
+
+Kroy's Blog - Great routing and firewall blog
+<a href="https://blog.kroy.io/">https://blog.kroy.io/</a>
