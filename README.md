@@ -1,58 +1,66 @@
-# Chirpy Starter
+# Portfolio (Chirpy)
 
-
-When installing the [**Chirpy**][chirpy] theme through [RubyGems.org][gem], Jekyll can only read files in the folders
-`_data`, `_layouts`, `_includes`, `_sass` and `assets`, as well as a small part of options of the `_config.yml` file
-from the theme's gem. If you have ever installed this theme gem, you can use the command
-`bundle info --path jekyll-theme-chirpy` to locate these files.
-
-The Jekyll team claims that this is to leave the ball in the user’s court, but this also results in users not being
-able to enjoy the out-of-the-box experience when using feature-rich themes.
-
-To fully use all the features of **Chirpy**, you need to copy the other critical files from the theme's gem to your
-Jekyll site. The following is a list of targets:
-
-```shell
-.
-├── _config.yml
-├── _plugins
-├── _tabs
-└── index.html
-```
-
-To save you time, and also in case you lose some files while copying, we extract those files/configurations of the
-latest version of the **Chirpy** theme and the [CD][CD] workflow to here, so that you can start writing in minutes.
+A Jekyll site built on the [Chirpy](https://github.com/cotes2020/jekyll-theme-chirpy) theme. Use the steps below to get a reliable local build and the same output CI will check.
 
 ## Prerequisites
 
-Follow the instructions in the [Jekyll Docs](https://jekyllrb.com/docs/installation/) to complete the installation of
-the basic environment. [Git](https://git-scm.com/) also needs to be installed.
+- Ruby 3.2 (project pins 3.2.3 in [`.ruby-version`](.ruby-version))
+- Bundler 2.4+
+- Git
 
-## Installation
+> On macOS you can install Ruby via [Homebrew](https://brew.sh/) (`brew install ruby`) or [rbenv](https://github.com/rbenv/rbenv). On Ubuntu, install `ruby-full` from apt or use [asdf](https://asdf-vm.com/).
 
-Sign in to GitHub and [**use this template**][use-template] to generate a brand new repository and name it
-`USERNAME.github.io`, where `USERNAME` represents your GitHub username.
+## Quick start (local test)
 
-Then clone it to your local machine and run:
+1. Clone the repo and switch to the `portfolio-crisp-refresh` branch.
+2. Install Bundler if it is not already available:
+   ```bash
+   gem install bundler
+   ```
+3. Install dependencies (uses `.ruby-version` automatically when a version manager is present):
+   ```bash
+   bundle install
+   ```
+4. Run the site locally with livereload:
+   ```bash
+   bundle exec jekyll serve --livereload
+   ```
+   Visit http://127.0.0.1:4000 to verify light/dark mode, homepage, and project data render correctly.
 
-```console
-$ bundle
+## Setup
+
+If you prefer a manual sequence, run the following from the project root:
+
+1. Install bundler if it is not already available:
+   ```bash
+   gem install bundler
+   ```
+2. Install dependencies:
+   ```bash
+   bundle install
+   ```
+
+## Local development
+
+Serve the site with livereload:
+```bash
+bundle exec jekyll serve --livereload
 ```
 
-## Usage
-
-Please see the [theme's docs](https://github.com/cotes2020/jekyll-theme-chirpy#documentation).
-
-## Testing / Serving locally : 
-
-1. Open Terminal.
-
-2. Navigate to the publishing source for your site 
-
-3. Run `bundle install`.
-
-4. Run your Jekyll site locally.
-
+Build the site for validation:
 ```bash
-$ bundle exec jekyll serve
+bundle exec jekyll build
+```
 
+Both commands honor `JEKYLL_ENV=production` if you want to mirror CI locally.
+
+## Continuous integration
+
+The repository includes a lightweight GitHub Actions workflow (`.github/workflows/jekyll-build.yml`) that caches gems and runs `bundle exec jekyll build` to keep the site shippable.
+
+## Troubleshooting
+
+- If you see `command not found: jekyll`, ensure you ran `bundle install` and then re-run the commands with `bundle exec`.
+- If your Ruby differs from `.ruby-version`, use a version manager (rbenv/asdf) to match it for consistent builds.
+- When behind a corporate proxy, configure Bundler with the appropriate mirror (e.g., `bundle config set mirror.https://rubygems.org https://your-mirror.example.com`).
+- If `bundle install` returns `403 Forbidden` from rubygems.org, your network is blocking access; point Bundler at an allowed mirror or retry from a network with direct HTTPS access to rubygems.
