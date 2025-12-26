@@ -4,7 +4,7 @@ A Jekyll site built on the [Chirpy](https://github.com/cotes2020/jekyll-theme-ch
 
 ## Prerequisites
 
-- Ruby 3.2 (project pins 3.2.3 in [`.ruby-version`](.ruby-version))
+- Ruby 3.4 (project pins 3.4.7 in [`.ruby-version`](.ruby-version))
 - Bundler 2.4+
 - Git
 
