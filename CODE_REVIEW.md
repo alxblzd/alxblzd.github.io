@@ -28,3 +28,6 @@
    - Documented the rubygems.org 403 scenario with guidance to switch to an allowed mirror when corporate networks block direct gem downloads.
    - Updated the CI workflow to pin Ruby 3.4.7 so Bundler aligns with `.ruby-version` and avoids runner/runtime mismatch errors.
    - Adjusted the workflow to read the Ruby version directly from `.ruby-version` and added a manual trigger so reviewers can start a fresh check without new commits.
+
+## Reviewer questions
+- **Why add `_sass/custom.scss`?** To keep the visual refresh changes isolated from the theme’s upstream Sass, all new tokens (spacing, color accents) and component tweaks were placed in a single custom partial. That keeps the base theme untouched, makes reversions straightforward, and allows future clean-up to remove or adjust the refresh styles without hunting through vendor files.
