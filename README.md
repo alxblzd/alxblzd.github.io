@@ -38,6 +38,22 @@ bundle install
 bundle exec jekyll serve --livereload
 ```
 
+### Docker (no local Ruby required)
+
+Build the image from the repo root:
+
+```bash
+docker build -t portfolio-site .
+```
+
+Serve the site in a container (with livereload exposed):
+
+```bash
+docker run --rm -it -p 4000:4000 -p 35729:35729 portfolio-site
+```
+
+Then visit http://127.0.0.1:4000 to verify light/dark mode, the homepage, and project data.
+
 ## Setup
 
 If you prefer a manual sequence, run the following from the project root:
