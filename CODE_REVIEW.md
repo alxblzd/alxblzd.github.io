@@ -26,3 +26,4 @@
    - Added a "Quick start" section to the README with the exact clone/install/serve commands so testers can verify the site locally (light/dark mode, homepage, projects) without digging through docs.
    - Documented the rubygems.org 403 scenario with guidance to switch to an allowed mirror when corporate networks block direct gem downloads.
    - Updated the CI workflow to pin Ruby 3.2.3 so Bundler aligns with `.ruby-version` and avoids the 3.2.9 vs 3.2.3 lockfile error.
+   - Adjusted the workflow to read the Ruby version directly from `.ruby-version` and added a manual trigger so reviewers can start a fresh check without new commits.
