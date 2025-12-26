@@ -1,11 +1,10 @@
 ---
-title: "[Project] Traefik Multiple instances"
+title: "Traefik Multiple instances"
 author: "Alxblzd"
 date: 2024-11-19 22:27:00 +0100
 categories: [Project, Networking]
 tags: [traefik, docker, proxy, reverse-proxy]
 render_with_liquid: false
-image: /assets/img/logo/traefik_logo.webp
 alt: "Traefik logo"
 ---
 

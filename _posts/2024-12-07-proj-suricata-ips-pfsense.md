@@ -1,11 +1,10 @@
 ---
-title: "[Project] Suricata IPS on pfsense"
+title: "Suricata IPS on pfsense"
 author: "Alxblzd"
 date: 2024-12-07 20:05:00 +0100
 categories: [Project, Security]
 tags: [pfsense, suricata, ips, security, networking]
 render_with_liquid: false
-image: /assets/img/logo/suricata_logo.webp
 alt: "Suricata pfsense logo"
 ---
 

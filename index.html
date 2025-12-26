@@ -2,3 +2,57 @@
 layout: home
 # Index page
 ---
+
+<section class="hero-shell">
+  <div class="hero-card">
+    <p class="eyebrow">Systems &amp; Network Engineering</p>
+    <h1 class="hero-title">Alexandre Balzard</h1>
+    <p class="hero-lede">
+      Rresilient infrastructure, clean networking, and hands-on hardware projects.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="/about/">About me</a>
+      <a class="btn btn-ghost" href="mailto:alexbalzfr@gmail.com">Get in touch</a>
+    </div>
+  </div>
+</section>
+
+<section class="section-shell">
+  <div class="section-heading">
+    <!-- <p class="eyebrow">Featured work</p> -->
+    <h2 class="section-title">Latest builds</h2>
+    <!-- <p class="section-lede">A quick snapshot of hands-on projects blending infrastructure, security, and electronics.</p> -->
+  </div>
+  <div class="project-grid" role="list">
+    {% for project in site.data.projects %}
+    <article class="project-card" role="listitem">
+      <a class="project-link" href="{{ project.url | relative_url }}">
+        <div class="project-media">
+          <img src="{{ project.image }}" alt="{{ project.title }}" loading="lazy">
+        </div>
+        <div class="project-body">
+          <!-- <p class="eyebrow">Project</p> -->
+          <h3 class="project-title">{{ project.title }}</h3>
+          <p class="project-summary">{{ project.description }}</p>
+          <!-- <div class="project-tags" aria-label="Tags">
+            {% for tag in project.tags %}
+            <span class="pill pill-ghost">{{ tag }}</span>
+            {% endfor %}
+          </div> -->
+          <div class="project-actions">
+            <span class="text-link">Read more</span>
+          </div>
+        </div>
+      </a>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="section-shell section-inline">
+  <div class="section-heading">
+    <!-- <p class="eyebrow">Latest writing</p> -->
+    <h2 class="section-title">All posts and Cheatsheets !</h2>
+    <p class="section-lede">Deep dives, build logs, and quick references.</p>
+  </div>
+</section>

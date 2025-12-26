@@ -6,12 +6,29 @@ order: 4
 
 Hey! 👋
 
-My name is Alexandre, I love experimenting with Software Defined Radio (SDR) and also run a minimalistic homelab that hosts services like a website, VPN, virtual router, and stuff for home use. My ongoing hands-on projects include building FPV quadcopters, a perfect mix of electronics, IT, and telecommunications where I’ve worked on various aspects related to sensors, batteries, and basic electronic improvements. I often start various projects that keep me busy, even if they don’t always get finished!
+## What I'm building
+- Tinkering with Software Defined Radio (SDR) projects and a minimal homelab that runs my personal services (website, VPN, virtual router).
+- Building FPV quadcopters—a mix of electronics, IT, and telecommunications—where I tune sensors, batteries, and other small hardware upgrades.
+- Starting hands-on projects whenever I can, even if they evolve over time.
 
-I am currently engaged in a work-study contract with a logistics company, where I mainly focus on systems and network tasks. I work with various operating systems, but I have a particular preference for Linux. Prior to my engineering studies, I spent two years at university studying Networks and Telecommunications, which fueled my already burning passion for electronics and telecommunications.
+## Background
+I’m currently on a work-study contract with a logistics company, focused on systems and network work across multiple operating systems (with a soft spot for Linux). Before engineering school, I spent two years studying Networks and Telecommunications at university, which deepened my passion for electronics and telecoms.
 
-When I’m not immersed in technology, I enjoy outdoor activities like skiing and diving, which help me recharge. This website serves as a platform for sharing my IT notes and showcasing the tech projects I embark on whenever I can. Thanks for visiting!
+## Outside of tech
+I recharge outdoors—skiing and diving whenever I get the chance. This site is my place to share IT notes and document the tech projects I take on. Thanks for stopping by!
 
+## CV
+<a href="{{ cv_url }}" download>Download the PDF</a>
 
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
+{% assign cv_url = "/assets/files/alxblzd-cv.pdf" %}
+<div class="cv-embed" style="margin: 1.5rem 0;">
+  <iframe
+    src="{{ cv_url }}"
+    title="Alxblzd CV"
+    width="100%"
+    height="800"
+    style="border: 1px solid var(--text-muted-color); border-radius: 10px;">
+  </iframe>
+  <p style="margin-top: 0.5rem;">
+  </p>
+</div>

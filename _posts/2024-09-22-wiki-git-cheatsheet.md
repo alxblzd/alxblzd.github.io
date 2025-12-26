@@ -1,11 +1,10 @@
 ---
-title: "[Wiki] Git cheatsheet"
+title: "Git cheatsheet"
 author: "Alxblzd"
 date: 2024-09-22 13:10:00 +0200
 categories: [Tutorial, Git]
 tags: [git, cheatsheet, tutorial, version-control]
 render_with_liquid: false
-image: /assets/img/logo/git_logo.webp
 alt: "git logo"
 ---
 

@@ -1,11 +1,10 @@
 ---
-title: "[Wiki] Iptables cheatsheet"
+title: "Iptables cheatsheet"
 author: "Alxblzd"
 date: 2024-09-06 18:10:00 +0200
 categories: [Networking, Security]
 tags: [iptables, network, linux, firewall, tutorial]
 render_with_liquid: false
-image: /assets/img/logo/netfilter_logo.webp
 alt: "netfilter logo"
 ---
 

@@ -1,11 +1,10 @@
 ---
-title: "[Project] RPI, INA226 sensor monitoring"
+title: "RPI, INA226 sensor monitoring"
 author: "Alxblzd"
 date: 2024-07-15 22:10:00 +0200
 categories: [Project, Electronic]
 tags: [RPI, Raspberry, Disk, Electronic, Battery]
 render_with_liquid: false
-image: /assets/img/logo/raspberry_logo.webp
 alt: "Raspberry pi logo"
 ---
 
@@ -108,7 +107,7 @@ link :
 https://cdn.hackaday.io/files/1829407826904960/Xysemi_XR2981.pdf
 backup:
 
-<object data="assets/pdf/Xysemi_XR2981.pdf" width="250" height="250" type='application/pdf'></object>
+<object data="/assets/pdf/Xysemi_XR2981.pdf" width="250" height="250" type='application/pdf'></object>
 
 ![chip_rpi_ups](assets/img/Chip_rpi_ups.webp)
 
@@ -126,5 +125,4 @@ The program is currently running quite fast, making it a good to be used as a Li
 
 
 https://github.com/alxblzd/rpi-web-db-ina226
-
 

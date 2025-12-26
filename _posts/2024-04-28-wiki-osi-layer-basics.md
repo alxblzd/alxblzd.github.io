@@ -1,11 +1,10 @@
 ---
-title: "[Wiki] OSI layer basics"
+title: "OSI layer basics"
 author: "Alxblzd"
 date: 2024-04-28 23:10:00 +0200
 categories: [Networking, Concepts]
 tags: [network, mac, osi, layer]
 render_with_liquid: false
-image: /assets/img/logo/osilayer_logo.webp
 alt: "OSI logo"
 ---
 

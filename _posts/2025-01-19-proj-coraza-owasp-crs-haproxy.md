@@ -1,23 +1,22 @@
 ---
-title: "[Project] Coraza-SPOA and Owasp Coreruleset on HAproxy"
+title: "Coraza-SPOA and Owasp Coreruleset on HAproxy"
 author: "Alxblzd"
 date: 2025-01-19 15:28:00 +0100
 categories: [Project, Security]
 tags: [haproxy, coraza, waf, owasp, security]
 render_with_liquid: false
-image: /assets/img/logo/haproxy_logo.webp
 alt: "Haproxy and coraza + crs logo"
 ---
 
 
 # Installing Coraza and use case with OWASP CRS + haproxy
 
-I had to choose a frontend for my website, sometimes not using services, and I selected HAProxy for various reasons that I won't elaborate on here. Additionally, I wanted it to provide broad WAF filtering. So, here's a blog post about HAProxy and the implementation of Coraza with OWASP rules.
+I needed a frontend for my site and landed on HAProxy. I also wanted solid WAF coverage, so I paired it with Coraza and the OWASP Core Rule Set. Here's how I set it up.
 
 ## 1. Installing HAproxy
-You can use : https://haproxy.debian.net/
+Grab packages from https://haproxy.debian.net/
 
-In my case I wanted the last version of haproxy in LTS release so the 3.0.0 at this time.
+I wanted the latest HAProxy on Debian LTS, so 3.0.0 at this time:
 ```bash
 sudo apt update
 sudo apt install curl gpg
@@ -30,7 +29,7 @@ sudo apt install haproxy=3.0.\*
 
 ## 2. Installation of Coraza-SPOA
 
-GO installation, check lastest stable here : wget https://go.dev/dl/
+Install Go first (grab the latest stable from https://go.dev/dl/):
 
 ```bash
 wget https://go.dev/dl/go1.23.5.linux-amd64.tar.gz
@@ -39,11 +38,11 @@ export PATH=$PATH:/usr/local/go/bin
 echo 'export GOPATH=$HOME/go' >> ~/.bashrc
 source ~/.bashrc
 #This command should return the version if everything is good
-go version
+go version  # should print the version
 ```
 
 
-Here we start the installation of Coraza SPOA :
+Install Coraza SPOA:
 
 ```bash
 
@@ -59,7 +58,7 @@ addgroup --quiet --system coraza-spoa
 adduser --quiet --system --ingroup coraza-spoa --no-create-home --home /nonexistent --disabled-password coraza-spoa
 
 ```
-We are not over yet, even if we have compiled coraza spoa, we still need to create te directory and copy configuration files and even activate the service, let's go :
+Now create directories, copy configs, and set up logging:
 ```bash
 mkdir -p /etc/coraza-spoa
 cd /etc/coraza-spoa
@@ -75,7 +74,7 @@ cp -a ./example/coraza-spoa.yaml /etc/coraza-spoa/config.yaml
 sed -i 's/bind: 0.0.0.0:9000/bind: 127.0.0.1:9000/' /etc/coraza-spoa/config.yaml
 sed -i 's|log_file:.*|log_file: /var/log/coraza-spoa/coraza-agent.log|' /etc/coraza-spoa/config.yaml
 ```
-Good, now we have a default installation
+You now have a basic Coraza SPOA install.
 
 
 ## 3. Coraza integration with HAproxy
@@ -85,7 +84,7 @@ SPOA: Stream Processing Offload Agent. \
 SPOP: Stream Processing Offload Protocol. \
 WAF: Web Application Firewall. 
 
-HAproxy integrate the SPOE to send requests and receive reponse to/from the SPOA, used for processing.
+HAProxy uses SPOE to send requests to the SPOA and get responses back for processing.
 
 Communication between SPOE and the SPOA happens via the SPOP (2 & 5). The result of the scan is sent back to HAProxy to authorize or block the traffic.
 
@@ -95,16 +94,15 @@ Communication between SPOE and the SPOA happens via the SPOP (2 & 5). The result
 ### Configuration files
 
 
-* /etc/haproxy/haproxy.cfg - HAProxy Main Configuration
-* /etc/haproxy/coraza.cfg - HAProxy SPOE Configuration
-* /etc/coraza-spoa/config.yml - Coraza SPOA Main Configuration
-* /etc/coraza-spoa/coraza.conf - Coraza Engine Configuration
+* /etc/haproxy/haproxy.cfg - HAProxy main configuration
+* /etc/haproxy/coraza.cfg - HAProxy SPOE configuration
+* /etc/coraza-spoa/config.yml - Coraza SPOA main configuration
+* /etc/coraza-spoa/coraza.conf - Coraza engine configuration
 
 ### CRS Rules syntax
-TO simplify or schematise :
+To simplify:
 
-SecRule is a directive like any other understood by ModSecurity and Coraza integrates theses. \
-A SecRule is made up of 4 parts :
+`SecRule` is a ModSecurity directive that Coraza understands. A rule has four parts:
 
 - Variables - Instructs ModSecurity where to look (sometimes called Targets)
 - Operators - Instructs ModSecurity when to trigger a match
@@ -120,11 +118,7 @@ SecRule REQUEST_URI "@streq /index.php" "id:1,phase:1,t:lowercase,deny"
 ```
 
 #### Phases
-ModSecurity processes security rules in 5 main phases during the Apache request cycle.
-
-These phases allow different types of checks to be made at specific points, and secure the web application by detecting and blocking malicious requests or responses. 
- 
-Let’s break it down:
+ModSecurity processes rules in five phases during the request cycle:
 
 - Request Headers: First stage where the server reads the incoming request headers from the client.
 
