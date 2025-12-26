@@ -27,6 +27,17 @@ A Jekyll site built on the [Chirpy](https://github.com/cotes2020/jekyll-theme-ch
    ```
    Visit http://127.0.0.1:4000 to verify light/dark mode, homepage, and project data render correctly.
 
+If you want a single copy/paste to smoke-test the site, run:
+
+```bash
+git clone https://github.com/alxblzd/alxblzd.github.io.git
+cd alxblzd.github.io
+git checkout portfolio-crisp-refresh
+gem install bundler
+bundle install
+bundle exec jekyll serve --livereload
+```
+
 ## Setup
 
 If you prefer a manual sequence, run the following from the project root:
