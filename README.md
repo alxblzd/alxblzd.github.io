@@ -57,6 +57,7 @@ Both commands honor `JEKYLL_ENV=production` if you want to mirror CI locally.
 ## Continuous integration
 
 The repository includes a lightweight GitHub Actions workflow (`.github/workflows/jekyll-build.yml`) that caches gems and runs `bundle exec jekyll build` to keep the site shippable.
+It pins Ruby 3.2.3 to match [`.ruby-version`](.ruby-version), preventing the Bundler version mismatch seen with the default `3.2.x` runner image.
 
 ## Troubleshooting
 
