@@ -1,5 +1,5 @@
 ---
-title: "[Wiki] Automating Proxmox with Terraform and Cloud-Init"
+title: "Automating Proxmox with Terraform and Cloud-Init"
 date: 2025-11-06 20:34:00 +0100
 categories: [Infrastructure, Automation]
 tags: [terraform, proxmox, cloud-init, virtualization, automation]
@@ -8,10 +8,12 @@ render_with_liquid: false
 
 ## Terraform + Proxmox Automation
 
-Terraform lets you spin up VMs in Proxmox without clicking through the web UI every time. You define your VMs in code, and Terraform handles the rest.
+Terraform spins up VMs in Proxmox without clicking through the web UI every time. Define the VMs in code and let Terraform do the work.
 
 - Uses the BPG [Proxmox Provider](https://github.com/bpg/terraform-provider-proxmox)
-- Cloud-Init handles the initial setup
+- Cloud-Init handles initial setup
+
+This is the homelab pattern I use to go from zero to SSH-ready VMs with almost no manual clicks.
 
 Full working example on [https://github.com/alxblzd/proxmox-terraform-pbks/tree/main](https://github.com/alxblzd/proxmox-terraform-pbks/tree/main)
 
@@ -20,26 +22,28 @@ Full working example on [https://github.com/alxblzd/proxmox-terraform-pbks/tree/
 
 ### Template-Based Setup
 
-Instead of installing from ISO every time, you make one template and clone it. Way faster. The template is just a base Debian image with Cloud-Init installed.
+Instead of installing from ISO every time, create one template and clone it. Much faster. The template is a base Debian image with Cloud-Init installed.
 
 ### What Cloud-Init Does
 
-On first boot, Cloud-Init can handles:
-1. **Network** - sets up static IPs, DNS, whatever you need
-2. **Users** - adds your SSH keys, creates accounts
-3. **Packages** - installs any initial software
-4. and much more
+On first boot, Cloud-Init handles:
+1. **Network** - sets static IPs, DNS, whatever you need
+2. **Users** - adds SSH keys, creates accounts
+3. **Packages** - installs initial software
+4. and more
 
 ### How a VM Gets Created
 
-1. Start with your template (base Debian image with cloudinit)
+1. Start with your template (base Debian image with cloud-init)
 2. Terraform clones it to a new VM
-3. Cloud-Init config (proxmox snippet) gets attached as an ISO
+3. Cloud-Init config (Proxmox snippet) gets attached as an ISO
 4. VM boots and Cloud-Init does its thing
+5. You SSH in with your key and start working
 
 ### Prerequisites
 
 #### Proxmox Setup
+Run this once on Proxmox to give Terraform the right scope without using your own account:
 ```bash
 # Create API token for Terraform
 pveum user add terraform@pve
@@ -53,9 +57,9 @@ sudo pveum user token add terraform@pve provider --privsep=0
 
 #### Snippets creation 
 
-Proxmox snippets allow you to inject cloud-init configurations directly into virtual machines at deployment time. They are used for setting initial parameters without manually accessing each VM.
+Proxmox snippets inject cloud-init configurations into VMs at deployment time. They set initial parameters without logging into each VM.
 
-For instance, I use the following snippet stored at /var/lib/vz/snippets/base_vm.yaml
+I keep this tiny snippet at `/var/lib/vz/snippets/base_vm.yaml`:
 
 ```yaml
 #cloud-config
@@ -114,7 +118,7 @@ rm debian-13-generic-amd64.qcow2
 echo "Done"
 ```
 
-This script works fine for a few templates. If you need to manage a bunch of different OS templates, check out Packer instead.
+This script works fine for a few templates. If you need to manage a bunch of different OS templates, check out Packer instead. Run it directly on the Proxmox shell and tweak the bridge/storage IDs for your setup.
 
 ## Configuration
 
@@ -143,6 +147,8 @@ provider "proxmox" {
   insecure  = var.proxmox.insecure
 }
 ```
+
+Pinning provider versions like this keeps upgrades from surprising you later.
 
 
 ### VM Resource Definition
@@ -227,14 +233,14 @@ resource "proxmox_virtual_environment_vm" "vm" {
 #### Proxmox Connection
 - **endpoint**: Your Proxmox URL (https://proxmox.example.com:8006/)
 - **api_token**: The token you created earlier (user@realm!token=secret)
-- **insecure**: Set to true if you're using self-signed certs (totally fine for homelab)
+- **insecure**: Set to true for self-signed certs (fine for homelab)
 - **node_name**: Which Proxmox node to put the VMs on
 
 #### Cloud-Init Settings
-- **username**: The default user that gets created
-- **ssh_keys**: Your public SSH key for passwordless login
-- **ip_address**: Static IP in CIDR format (like 10.0.100.10/24)
-- **dns_servers**: Your DNS servers (probably your router or Pi-hole)
+- **username**: Default user to create
+- **ssh_keys**: Public SSH key for passwordless login
+- **ip_address**: Static IP in CIDR format (10.0.100.10/24, etc.)
+- **dns_servers**: DNS servers (router or Pi-hole, usually)
 - **vendor_data**: Any custom Cloud-Init scripts you want to run
 
 ## Managing Your VMs
@@ -286,9 +292,10 @@ cat >> terraform.tfvars <<EOF
   }
 EOF
 
-# Apply just the new VM
+# Apply only the new VM
 terraform apply -target='proxmox_virtual_environment_vm.vm["debian13-03"]'
 ```
+> `cat >>` appends to `terraform.tfvars`; double-check before committing it.
 
 ## Common Use Cases
 
@@ -362,7 +369,7 @@ runcmd:
 ## Security Notes
 
 ### API Token
-- Create a dedicated user for Terraform (keeps things organized)
+- Create a dedicated user for Terraform
 - Use token authentication instead of passwords
 - Don't commit tokens to Git (use environment variables or .gitignore)
 
@@ -373,7 +380,7 @@ runcmd:
 
 ## Cloud-Init and VyOS
 
-VyOS routers can also be deployed with cloud-init, but they use a different format than standard Linux distributions. Instead of the usual cloud-init directives, VyOS only supports two top-level keys:
+If you're also running VyOS, you can deploy it with cloud-init, but the format differs from standard Linux. VyOS only supports two top-level keys:
 
 - **vyos_config_commands**: VyOS CLI commands executed on first boot
 - **write_files**: Custom files written to the system
@@ -456,6 +463,7 @@ resource "proxmox_virtual_environment_vm" "vyos" {
 For a complete working example with VyOS deployment and zone-based firewall configuration, check out the [deploy-vyos-stack](https://github.com/alxblzd/deploy-vyos-stack) repository.
 
 ## Troubleshooting
+These are the first checks I run when something feels off:
 
 ```bash
 # Test if Proxmox API is reachable
@@ -467,3 +475,5 @@ sudo cat /var/log/cloud-init.log
 sudo cloud-init status --long
 
 ```
+
+Once those pass, the usual culprit is a typo in variables or a missing snippet reference. Checking `terraform plan` again usually shows it.

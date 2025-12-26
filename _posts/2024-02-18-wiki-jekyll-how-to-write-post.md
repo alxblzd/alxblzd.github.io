@@ -1,5 +1,5 @@
 ---
-title: "[Wiki] How to write a Jekyll post"
+title: "How to write a Jekyll post"
 author: "Alxblzd"
 date: 2024-02-18 23:10:00 +0200
 categories: [Blogging, Tutorial]
@@ -7,41 +7,36 @@ tags: [writing]
 render_with_liquid: false
 ---
 
-This tutorial will guide you how to write a post in the _Chirpy_ template, and it's worth reading even if you've used Jekyll before, as many features require specific variables to be set.
+This guide walks through writing a post with the _Chirpy_ template. Even if you've used Jekyll before, it's worth a skim since some features need specific variables.
 
 ## Naming and Path
 
-Create a new file named `YYYY-MM-DD-TITLE.EXTENSION`{: .filepath} and put it in the `_posts`{: .filepath} of the root directory. Please note that the `EXTENSION`{: .filepath} must be one of `md`{: .filepath} and `markdown`{: .filepath}. If you want to save time of creating files, please consider using the plugin [`Jekyll-Compose`](https://github.com/jekyll/jekyll-compose) to accomplish this.
+Create `YYYY-MM-DD-TITLE.EXTENSION`{: .filepath} in `_posts`{: .filepath} at the root. `EXTENSION`{: .filepath} must be `md`{: .filepath} or `markdown`{: .filepath}. To save time, use [`Jekyll-Compose`](https://github.com/jekyll/jekyll-compose).
 
 
 
 ## Fonts
 
-For front img :
-Coolvetica RG, Size 36 on paint.net
-
-export to webp
-
-1200x630
+Front image: Coolvetica RG, size 36 in paint.net. Export to WebP at 1200x630.
 
 
 
 ## Media conversion
 
-How to convert png files to webp for this website
+Convert PNG files to WebP for this site:
 
 ```bash
 sudo apt install webp 
 sudo pacman -Syu webp
 ```
 
-To convert an image to webp, the -q switch defines the output quality and -o specifies the output file.
+To convert an image to WebP, `-q` sets output quality and `-o` sets the output file.
 
 ```bash
 cwebp -q 85 myimg.png -o myimg.webp
 ```
 
-Custom script to change all .png file to .webp in a folder :
+Custom script to convert all `.png` files to `.webp` in a folder:
 
 ```bash
 #!/bin/bash
@@ -107,11 +102,11 @@ tags: [TAG]     # TAG names should always be lowercase
 
 ### Timezone of Date
 
-In order to accurately record the release date of a post, you should not only set up the `timezone` of `_config.yml`{: .filepath} but also provide the post's timezone in variable `date` of its Front Matter block. Format: `+/-TTTT`, e.g. `+0800`.
+To record the release date accurately, set `timezone` in `_config.yml`{: .filepath} and include the post's timezone in `date` in the Front Matter. Format: `+/-TTTT`, e.g., `+0800`.
 
 ### Categories and Tags
 
-The `categories` of each post are designed to contain up to two elements, and the number of elements in `tags` can be zero to infinity. For instance:
+`categories` should have up to two items; `tags` can have as many as you like. For example:
 
 ```yaml
 ---
@@ -122,9 +117,7 @@ tags: [bee]
 
 ### Author Information
 
-The author information of the post usually does not need to be filled in the _Front Matter_ , they will be obtained from variables `social.name` and the first entry of `social.links` of the configuration file by default. But you can also override it as follows:
-
-Adding author information in `_data/authors.yml` (If your website doesn't have this file, don't hesitate to create one).
+Author info usually comes from `social.name` and the first entry in `social.links`. If you want to override it, add author data in `_data/authors.yml` (create it if it doesn't exist):
 
 ```yaml
 <author_id>:
@@ -134,7 +127,7 @@ Adding author information in `_data/authors.yml` (If your website doesn't have t
 ```
 {: file="_data/authors.yml" }
 
-And then use `author` to specify a single entry or `authors` to specify multiple entries:
+Then use `author` for a single entry or `authors` for multiple:
 
 ```yaml
 ---
@@ -144,14 +137,14 @@ authors: [<author1_id>, <author2_id>]   # for multiple entries
 ---
 ```
 
-Having said that, the key `author` can also identify multiple entries.
+The `author` key can also point to multiple entries.
 
-> The benefit of reading the author information from the file `_data/authors.yml`{: .filepath } is that the page will have the meta tag `twitter:creator`, which enriches the [Twitter Cards](https://developer.twitter.com/en/docs/twitter-for-websites/cards/guides/getting-started#card-and-content-attribution) and is good for SEO.
+> Reading author info from `_data/authors.yml`{: .filepath } adds the `twitter:creator` meta tag, which enriches [Twitter Cards](https://developer.twitter.com/en/docs/twitter-for-websites/cards/guides/getting-started#card-and-content-attribution) and helps SEO.
 {: .prompt-info }
 
 ### Post Description
 
-By default, the first words of the post are used to display on the home page for a list of posts, in the _Further Reading_ section, and in the XML of the RSS feed. If you don't want to display the auto-generated description for the post, you can customize it using the `description` field in the _Front Matter_ as follows:
+By default, the first words of the post show up on the home page, in _Further Reading_, and in the RSS feed. To override the auto-generated description, set `description` in the Front Matter:
 
 ```yaml
 ---
@@ -159,11 +152,11 @@ description: Short summary of the post.
 ---
 ```
 
-Additionally, the `description` text will also be displayed under the post title on the post's page.
+That `description` also appears under the post title on the post page.
 
 ## Table of Contents
 
-By default, the **T**able **o**f **C**ontents (TOC) is displayed on the right panel of the post. If you want to turn it off globally, go to `_config.yml`{: .filepath} and set the value of variable `toc` to `false`. If you want to turn off TOC for a specific post, add the following to the post's [Front Matter](https://jekyllrb.com/docs/front-matter/):
+By default, the **T**able **o**f **C**ontents (TOC) appears on the right. To turn it off globally, set `toc` to `false` in `_config.yml`{: .filepath}. To disable it for one post, add this to its Front Matter:
 
 ```yaml
 ---
@@ -173,9 +166,9 @@ toc: false
 
 ## Comments
 
-The global switch of comments is defined by variable `comments.active` in the file `_config.yml`{: .filepath}. After selecting a comment system for this variable, comments will be turned on for all posts.
+Set the global comments switch with `comments.active` in `_config.yml`{: .filepath}. Once you pick a system, comments are on for all posts.
 
-If you want to close the comment for a specific post, add the following to the **Front Matter** of the post:
+To turn off comments for a single post, add this to its Front Matter:
 
 ```yaml
 ---
@@ -185,7 +178,7 @@ comments: false
 
 ## Mathematics
 
-We use [**MathJax**][mathjax] to generate mathematics. For website performance reasons, the mathematical feature won't be loaded by default. But it can be enabled by:
+We use [**MathJax**][mathjax] for math. It's off by default for performance, but you can enable it with:
 
 [mathjax]: https://www.mathjax.org/
 
@@ -195,13 +188,13 @@ math: true
 ---
 ```
 
-After enabling the mathematical feature, you can add math equations with the following syntax:
+After enabling math, use these patterns:
 
-- **Block math** should be added with `$$ math $$` with **mandatory** blank lines before and after `$$`
-  - **Inserting equation numbering** should be added with `$$\begin{equation} math \end{equation}$$`
-  - **Referencing equation numbering** should be done with `\label{eq:label_name}` in the equation block and `\eqref{eq:label_name}` inline with text (see example below)
-- **Inline math** (in lines) should be added with `$$ math $$` without any blank line before or after `$$`
-- **Inline math** (in lists) should be added with `\$$ math $$`
+- **Block math**: `$$ math $$` with **mandatory** blank lines before and after `$$`
+  - **Equation numbering**: `$$\begin{equation} math \end{equation}$$`
+  - **Reference numbering**: `\label{eq:label_name}` in the block and `\eqref{eq:label_name}` inline
+- **Inline math** (in lines): `$$ math $$` with no blank lines before or after
+- **Inline math** (in lists): `\$$ math $$`
 
 ```markdown
 <!-- Block math, keep all blank lines -->
@@ -232,15 +225,15 @@ Can be referenced as \eqref{eq:label_name}.
 3. \$$ LaTeX_math_expression $$
 ```
 
-> Starting with `v7.0.0`, configuration options for **MathJax** have been moved to file `assets/js/data/mathjax.js`{: .filepath }, and you can change the options as needed, such as adding [extensions][mathjax-exts].  
-> If you are building the site via `chirpy-starter`, copy that file from the gem installation directory (check with command `bundle info --path jekyll-theme-chirpy`) to the same directory in your repository.
+> Starting with `v7.0.0`, **MathJax** options live in `assets/js/data/mathjax.js`{: .filepath }. Adjust them as needed, e.g., add [extensions][mathjax-exts].  
+> If you're building with `chirpy-starter`, copy that file from the gem install directory (see `bundle info --path jekyll-theme-chirpy`) into your repo.
 {: .prompt-tip }
 
 [mathjax-exts]: https://docs.mathjax.org/en/latest/input/tex/extensions/index.html
 
 ## Mermaid
 
-[**Mermaid**](https://github.com/mermaid-js/mermaid) is a great diagram generation tool. To enable it on your post, add the following to the YAML block:
+[**Mermaid**](https://github.com/mermaid-js/mermaid) is great for diagrams. To enable it for a post, add this to the YAML block:
 
 ```yaml
 ---
@@ -248,13 +241,13 @@ mermaid: true
 ---
 ```
 
-Then you can use it like other markdown languages: surround the graph code with ```` ```mermaid ```` and ```` ``` ````.
+Then use it like any other fenced block: wrap the graph code with ```` ```mermaid ```` and ```` ``` ````.
 
 ## Images
 
 ### Caption
 
-Add italics to the next line of an image, then it will become the caption and appear at the bottom of the image:
+Add italics on the line after an image to show a caption below it:
 
 ```markdown
 ![img-description](/path/to/image)
@@ -264,7 +257,7 @@ _Image Caption_
 
 ### Size
 
-In order to prevent the page content layout from shifting when the image is loaded, we should set the width and height for each image.
+Set width and height on each image to avoid layout shifts while it loads:
 
 ```markdown
 ![Desktop View](/assets/img/sample/mockup.png){: width="700" height="400" }
@@ -274,7 +267,7 @@ In order to prevent the page content layout from shifting when the image is load
 > For an SVG, you have to at least specify its _width_, otherwise it won't be rendered.
 {: .prompt-info }
 
-Starting from _Chirpy v5.0.0_, `height` and `width` support abbreviations (`height` → `h`, `width` → `w`). The following example has the same effect as the above:
+Starting from _Chirpy v5.0.0_, `height` and `width` support abbreviations (`height` → `h`, `width` → `w`). This has the same effect:
 
 ```markdown
 ![Desktop View](/assets/img/sample/mockup.png){: w="700" h="400" }
@@ -283,14 +276,14 @@ Starting from _Chirpy v5.0.0_, `height` and `width` support abbreviations (`heig
 
 ### Position
 
-By default, the image is centered, but you can specify the position by using one of the classes `normal`, `left`, and `right`.
+Images center by default. To position them, use `normal`, `left`, or `right`.
 
 > Once the position is specified, the image caption should not be added.
 {: .prompt-warning }
 
 - **Normal position**
 
-  Image will be left aligned in below sample:
+  The image is left aligned in this example:
 
   ```markdown
   ![Desktop View](/assets/img/sample/mockup.png){: .normal }
@@ -313,7 +306,7 @@ By default, the image is centered, but you can specify the position by using one
 
 ### Dark/Light mode
 
-You can make images follow theme preferences in dark/light mode. This requires you to prepare two images, one for dark mode and one for light mode, and then assign them a specific class (`dark` or `light`):
+You can swap images for dark/light mode. Provide two images and assign the `dark` or `light` class:
 
 ```markdown
 ![Light mode only](/path/to/light-mode.png){: .light }
@@ -322,7 +315,7 @@ You can make images follow theme preferences in dark/light mode. This requires y
 
 ### Shadow
 
-The screenshots of the program window can be considered to show the shadow effect:
+Program window screenshots work well with the shadow effect:
 
 ```markdown
 ![Desktop View](/assets/img/sample/mockup.png){: .shadow }
@@ -331,14 +324,14 @@ The screenshots of the program window can be considered to show the shadow effec
 
 ### CDN URL
 
-If you host the media resources on the CDN, you can save the time of repeatedly writing the CDN URL by assigning the variable `cdn` of `_config.yml`{: .filepath} file:
+If media lives on a CDN, set `cdn` in `_config.yml`{: .filepath} to avoid repeating the URL:
 
 ```yaml
 cdn: https://cdn.com
 ```
 {: file='_config.yml' .nolineno}
 
-Once `cdn` is assigned, the CDN URL will be added to the path of all media resources (site avatar, posts' images, audio and video files) starting with `/`.
+Once set, the CDN URL prefixes all media paths starting with `/` (avatars, images, audio, video).
 
 For instance, when using images:
 
@@ -356,7 +349,7 @@ The parsing result will automatically add the CDN prefix `https://cdn.com` befor
 
 ### Media Subpath
 
-When a post contains many images, it will be a time-consuming task to repeatedly define the path of the media resources. To solve this, we can define this path in the YAML block of the post:
+For posts with many images, avoid repeating paths by setting `media_subpath` in the YAML block:
 
 ```yml
 ---
@@ -364,7 +357,7 @@ media_subpath: /img/path/
 ---
 ```
 
-And then, the image source of Markdown can write the file name directly:
+Then reference images by filename only:
 
 ```md
 ![The flower](flower.png)
@@ -380,9 +373,9 @@ The output will be:
 
 ### Preview Image
 
-If you want to add an image at the top of the post, please provide an image with a resolution of `1200 x 630`. Please note that if the image aspect ratio does not meet `1.91 : 1`, the image will be scaled and cropped.
+For a top-of-post image, use a `1200 x 630` image. If it isn't `1.91 : 1`, it will be scaled and cropped.
 
-Knowing these prerequisites, you can start setting the image's attribute:
+With that in mind, set the image attributes:
 
 ```yaml
 ---
@@ -392,7 +385,7 @@ image:
 ---
 ```
 
-Note that the [`media_subpath`](#media-subpath) can also be passed to the preview image, that is, when it has been set, the attribute `path` only needs the image file name.
+[`media_subpath`](#media-subpath) also applies to the preview image. If it's set, `path` only needs the filename.
 
 For simple use, you can also just use `image` to define the path.
 
@@ -413,7 +406,7 @@ image:
 ---
 ```
 
-> You can observe LQIP in the preview image of post .
+> You can see LQIP on the preview image of this post.
 
 For normal images:
 
@@ -424,7 +417,7 @@ For normal images:
 
 ## Pinned Posts
 
-You can pin one or more posts to the top of the home page, and the fixed posts are sorted in reverse order according to their release date. Enable by:
+You can pin one or more posts to the top of the home page; pinned posts sort in reverse release order. Enable with:
 
 ```yaml
 ---
@@ -434,7 +427,7 @@ pin: true
 
 ## Prompts
 
-There are several types of prompts: `tip`, `info`, `warning`, and `danger`. They can be generated by adding the class `prompt-{type}` to the blockquote. For example, define a prompt of type `info` as follows:
+Prompt types include `tip`, `info`, `warning`, and `danger`. Add class `prompt-{type}` to a blockquote. For example:
 
 ```md
 > Example line for prompt.
@@ -451,7 +444,7 @@ There are several types of prompts: `tip`, `info`, `warning`, and `danger`. They
 ```
 {: .nolineno }
 
-### Filepath Hightlight
+### Filepath Highlight
 
 ```md
 `/path/to/a/file.extend`{: .filepath}
@@ -460,7 +453,7 @@ There are several types of prompts: `tip`, `info`, `warning`, and `danger`. They
 
 ### Code Block
 
-Markdown symbols ```` ``` ```` can easily create a code block as follows:
+Markdown fences ```` ``` ```` create a code block:
 
 ````md
 ```
@@ -529,9 +522,9 @@ You can embed a video with the following syntax:
 {% include embed/{Platform}.html id='{ID}' %}
 ```
 
-Where `Platform` is the lowercase of the platform name, and `ID` is the video ID.
+`Platform` is the lowercase platform name and `ID` is the video ID.
 
-The following table shows how to get the two parameters we need in a given video URL, and you can also know the currently supported video platforms.
+The table below shows how to grab those values from supported platforms:
 
 | Video URL                                                                                          | Platform   | ID             |
 | -------------------------------------------------------------------------------------------------- | ---------- | :------------- |
@@ -541,15 +534,15 @@ The following table shows how to get the two parameters we need in a given video
 
 ### Video File
 
-If you want to embed a video file directly, use the following syntax:
+To embed a video file directly, use:
 
 ```liquid
 {% include embed/video.html src='{URL}' %}
 ```
 
-Where `URL` is an URL to a video file e.g. `/assets/img/sample/video.mp4`.
+Where `URL` points to a video file, e.g., `/assets/img/sample/video.mp4`.
 
-You can also specify additional attributes for the embedded video file. Here is a full list of attributes allowed.
+You can also pass attributes:
 
 - `poster='/path/to/poster.png'` - poster image for a video that is shown while video is downloading
 - `title='Text'` - title for a video that appears below the video and looks same as for images
@@ -558,7 +551,7 @@ You can also specify additional attributes for the embedded video file. Here is 
 - `muted=true` - audio will be initially silenced
 - `types` - specify the extensions of additional video formats separated by `|`. Ensure these files exist in the same directory as your primary video file.
 
-Consider an example utilizing all of the above:
+Example with everything set:
 
 ```liquid
 {%
@@ -573,28 +566,28 @@ Consider an example utilizing all of the above:
 %}
 ```
 
-> It's not recommended to host video files in `assets` folder as they cannot be cached by PWA and may cause issues.
-> Instead, use CDN to host video files. Alternatively, use a separate folder that is excluded from PWA (see `pwa.deny_paths` setting in `_config.yml`).
+> Avoid hosting video files in `assets` since PWA won't cache them and it may cause issues.
+> Use a CDN instead, or a folder excluded from PWA (see `pwa.deny_paths` in `_config.yml`).
 {: .prompt-warning }
 
 ## Audios
 
 ### Audio File
 
-If you want to embed an audio file directly, use the following syntax:
+To embed an audio file directly, use:
 
 ```liquid
 {% include embed/audio.html src='{URL}' %}
 ```
 
-Where `URL` is an URL to an audio file e.g. `/assets/img/sample/audio.mp3`.
+Where `URL` points to an audio file, e.g., `/assets/img/sample/audio.mp3`.
 
-You can also specify additional attributes for the embedded audio file. Here is a full list of attributes allowed.
+You can also pass attributes:
 
 - `title='Text'` - title for an audio that appears below the audio and looks same as for images
 - `types` - specify the extensions of additional audio formats separated by `|`. Ensure these files exist in the same directory as your primary audio file.
 
-Consider an example utilizing all of the above:
+Example with all options:
 
 ```liquid
 {%
@@ -605,8 +598,8 @@ Consider an example utilizing all of the above:
 %}
 ```
 
-> It's not recommended to host audio files in `assets` folder as they cannot be cached by PWA and may cause issues.
-> Instead, use CDN to host audio files. Alternatively, use a separate folder that is excluded from PWA (see `pwa.deny_paths` setting in `_config.yml`).
+> Avoid hosting audio in `assets` since PWA won't cache them and it may cause issues.
+> Use a CDN instead, or a folder excluded from PWA (see `pwa.deny_paths` in `_config.yml`).
 {: .prompt-warning }
 
 ## Learn More

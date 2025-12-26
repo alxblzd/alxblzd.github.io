@@ -1,20 +1,21 @@
 - title: Coraza-SPOA + OWASP CRS on HAProxy
   description: Inline WAF and SPOA routing with HAProxy to harden public-facing services and trim noisy traffic early.
-  url: /posts/proj-CRS-coreruleset-owasp-haproxy/
+  url: /posts/proj-coraza-owasp-crs-haproxy/
   image: /assets/img/coraza_spoa_flow.webp
   tags:
     - Reverse proxy
     - Security engineering
     - High availability
 
-- title: Suricata IPS on pfSense
-  description: Deploying Suricata with tuned rulesets to visualize and block threats without slowing home-lab gateways.
-  url: /posts/proj-suricata-snort-pfsense/
-  image: /assets/img/setup.webp
+- title: Automating Proxmox with Terraform + Cloud-Init
+  description: Declaratively cloning VMs from templates, wiring Cloud-Init snippets, and pushing configs straight through the Proxmox API.
+  url: /posts/proj-terraform-proxmox-cloudinit/
+  image: /assets/img/proxmox/proxmox1.webp
   tags:
-    - Network defense
-    - IDS/IPS
-    - pfSense
+    - Terraform
+    - Proxmox
+    - Cloud-Init
+    - Automation
 
 - title: Raspberry Pi INA226 Sensor Board
   description: Building a compact power-monitoring HAT for Raspberry Pi with clean telemetry for lab automation.

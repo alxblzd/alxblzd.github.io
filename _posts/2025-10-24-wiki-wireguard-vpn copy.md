@@ -1,5 +1,5 @@
 ---
-title: "[Wiki] WireGuard VPN"
+title: "WireGuard VPN"
 author: Alxblzd
 date: 2025-10-24 09:12:00 +0200
 categories: [Networking, VPN]
