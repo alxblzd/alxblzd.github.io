@@ -18,9 +18,8 @@ I’m currently on a work-study contract with a logistics company, focused on sy
 I recharge outdoors—skiing and diving whenever I get the chance. This site is my place to share IT notes and document the tech projects I take on. Thanks for stopping by!
 
 ## CV
-<a href="{{ cv_url }}" download>Download the PDF</a>
-
 {% assign cv_url = "/assets/files/alxblzd-cv.pdf" %}
+<a href="{{ cv_url }}" download>Download the PDF</a>
 <div class="cv-embed" style="margin: 1.5rem 0;">
   <iframe
     src="{{ cv_url }}"
