@@ -1,5 +1,6 @@
 ---
 title: "Coraza-SPOA and Owasp Coreruleset on HAproxy"
+article_type: post
 author: "Alxblzd"
 date: 2025-01-19 15:28:00 +0100
 categories: [Project, Security]

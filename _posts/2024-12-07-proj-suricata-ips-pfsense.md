@@ -1,5 +1,6 @@
 ---
 title: "Suricata IPS on pfsense"
+article_type: post
 author: "Alxblzd"
 date: 2024-12-07 20:05:00 +0100
 categories: [Project, Security]
@@ -81,4 +82,3 @@ ffuf -c -w onelistforallmicro.txt -u [target.com]/FUZZ
 - Logs handling
 - More details on source of rules (ETOPEN, Abuse.ch Botnet C2, GeoLite2, how to snort rules )
 - more details interface configuration
-

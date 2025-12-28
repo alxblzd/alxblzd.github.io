@@ -4,18 +4,39 @@ icon: fas fa-info-circle
 order: 4
 ---
 
+<section class="hero-shell">
+  <div class="hero-card">
+    <p class="eyebrow">Networks &amp; Cloud security engineer (in progress)</p>
+    <h2 class="hero-title">Alexandre Balzard</h2>
+    <p class="hero-lede">
+      Learning by building hybrid infra and hardening access: Azure stacks, firewalls, PAM rollouts, and automation to keep services resilient.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://linkedin.com/in/alexandre-balzard">Get in touch</a>
+      <a class="btn btn-ghost" href="mailto:alexbalzfr@gmail.com">Email me</a>
+    </div>
+  </div>
+</section>
+
 Hey! 👋
 
 ## What I'm building
-- Tinkering with Software Defined Radio (SDR) projects and a minimal homelab that runs my personal services (website, VPN, virtual router).
-- Building FPV quadcopters—a mix of electronics, IT, and telecommunications—where I tune sensors, batteries, and other small hardware upgrades.
-- Starting hands-on projects whenever I can, even if they evolve over time.
+
+I enjoy experimenting and learning by doing. My current projects include:
+
+- Running a minimal homelab to host my personal services such as my website, VPN, and a virtual router.
+- Designing and flying FPV quadcopters, combining electronics, IT, and telecommunications. This involves tuning sensors, power systems, and testing small hardware optimizations.
+- Launching hands-on projects whenever possible, even if they grow and evolve over time.
 
 ## Background
-I’m currently on a work-study contract with a logistics company, focused on systems and network work across multiple operating systems (with a soft spot for Linux). Before engineering school, I spent two years studying Networks and Telecommunications at university, which deepened my passion for electronics and telecoms.
+
+I currently work as a Networks and Systems Engineer in the logistics sector, focusing on infrastructure, cloud, and cybersecurity across heterogeneous environments, with a strong preference for Linux-based systems.
+
+I hold an engineering degree with a specialization in Cybersecurity, and previously completed a university degree in Networks and Telecommunications, which laid the foundation for my interest in networking, electronics, and telecom systems. My experience spans hybrid cloud infrastructures, network security, and automation, both professionally and through personal projects.
 
 ## Outside of tech
-I recharge outdoors—skiing and diving whenever I get the chance. This site is my place to share IT notes and document the tech projects I take on. Thanks for stopping by!
+
+When I'm not working on technical projects, I recharge outdoors through skiing and diving. This website is my personal space to share IT notes, experiments, and project documentation. Thanks for stopping by!
 
 ## CV
 {% assign cv_url = "/assets/files/alxblzd-cv.pdf" %}
