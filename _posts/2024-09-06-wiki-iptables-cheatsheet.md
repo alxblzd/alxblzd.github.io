@@ -1,5 +1,6 @@
 ---
 title: "Iptables cheatsheet"
+article_type: cheatsheet
 author: "Alxblzd"
 date: 2024-09-06 18:10:00 +0200
 categories: [Networking, Security]

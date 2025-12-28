@@ -1,5 +1,6 @@
 ---
 title: "Traefik Multiple instances"
+article_type: post
 author: "Alxblzd"
 date: 2024-11-19 22:27:00 +0100
 categories: [Project, Networking]

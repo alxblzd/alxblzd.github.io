@@ -3,16 +3,34 @@ layout: home
 # Index page
 ---
 
-<section class="hero-shell">
-  <div class="hero-card">
-    <p class="eyebrow">Systems &amp; Network Engineering</p>
-    <h1 class="hero-title">Alexandre Balzard</h1>
-    <p class="hero-lede">
-      Rresilient infrastructure, clean networking, and hands-on hardware projects.
+{% comment %}
+Dashboard overview counts
+{% endcomment %}
+{% assign posts_count = 0 %}
+{% assign cheatsheet_count = 0 %}
+{% for doc in site.posts %}
+  {% if doc.article_type == "cheatsheet" %}
+    {% assign cheatsheet_count = cheatsheet_count | plus: 1 %}
+  {% else %}
+    {% assign posts_count = posts_count | plus: 1 %}
+  {% endif %}
+{% endfor %}
+
+<section class="overview-shell">
+  <div class="overview-header">
+    <h2 class="overview-title">What you'll find here</h2>
+    <p class="overview-lede">
+      A personal log of the systems, networking, and hardware experiments I’m working on — notes, fixes, and small wins worth sharing.
     </p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="/about/">About me</a>
-      <a class="btn btn-ghost" href="mailto:alexbalzfr@gmail.com">Get in touch</a>
+  </div>
+  <div class="overview-grid">
+    <div class="overview-card">
+      <div class="overview-metric">{{ posts_count }}</div>
+      <div class="overview-label">Posts</div>
+    </div>
+    <div class="overview-card">
+      <div class="overview-metric">{{ cheatsheet_count }}</div>
+      <div class="overview-label">Cheatsheets</div>
     </div>
   </div>
 </section>

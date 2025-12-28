@@ -1,5 +1,6 @@
 ---
 title: "How to write a Jekyll post"
+article_type: post
 author: "Alxblzd"
 date: 2024-02-18 23:10:00 +0200
 categories: [Blogging, Tutorial]

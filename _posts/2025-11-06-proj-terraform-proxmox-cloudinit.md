@@ -1,5 +1,6 @@
 ---
 title: "Automating Proxmox with Terraform and Cloud-Init"
+article_type: post
 date: 2025-11-06 20:34:00 +0100
 categories: [Infrastructure, Automation]
 tags: [terraform, proxmox, cloud-init, virtualization, automation]

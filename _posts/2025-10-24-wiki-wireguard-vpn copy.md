@@ -1,5 +1,6 @@
 ---
 title: "WireGuard VPN"
+article_type: post
 author: Alxblzd
 date: 2025-10-24 09:12:00 +0200
 categories: [Networking, VPN]
@@ -487,4 +488,3 @@ nmcli connection up wg0
 - Protocol specification: [WireGuard whitepaper](https://www.wireguard.com/papers/wireguard.pdf)
 - Configuration examples: [WireGuard examples](https://github.com/pirate/wireguard-docs)
 - Quick start guide: [WireGuard Quick Start](https://www.wireguard.com/quickstart/)
-

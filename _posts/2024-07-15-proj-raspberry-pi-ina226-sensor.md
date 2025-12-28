@@ -1,5 +1,6 @@
 ---
 title: "RPI, INA226 sensor monitoring"
+article_type: post
 author: "Alxblzd"
 date: 2024-07-15 22:10:00 +0200
 categories: [Project, Electronic]
@@ -125,4 +126,3 @@ The program is currently running quite fast, making it a good to be used as a Li
 
 
 https://github.com/alxblzd/rpi-web-db-ina226
-

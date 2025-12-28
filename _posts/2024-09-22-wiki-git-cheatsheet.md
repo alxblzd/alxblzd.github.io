@@ -1,5 +1,6 @@
 ---
 title: "Git cheatsheet"
+article_type: cheatsheet
 author: "Alxblzd"
 date: 2024-09-22 13:10:00 +0200
 categories: [Tutorial, Git]
