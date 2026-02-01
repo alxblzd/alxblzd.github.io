@@ -8,158 +8,185 @@ render_with_liquid: false
 alt: "git logo"
 ---
 
-#### Creating Repositories
+
+
+## Use cases
+
+1) I changed stuff but what ? log view diff
 
 ```bash
-# create new repository in current directory
-git init
-
-# clone a remote repository
-git clone [url]
-# for example cloning the entire jquery repo locally
-git clone https://github.com/jquery/jquery
-```
-
-#### Branches and Tags
-
-```bash
-# List all existing branches with the latest commit comment 
-git branch –av
-
-# Switch your HEAD to branch
-git checkout [branch]
-
-# Create a new branch based on your current HEAD
-git branch [new-branch]
-
-# Create a new tracking branch based on a remote branch
-git checkout --track [remote/branch]
-# for example track the remote branch named feature-branch-foo
-git checkout --track origin/feature-branch-foo
-
-# Delete a local branch
-git branch -d [branch]
-
-# Tag the current commit
-git tag [tag-name]
-```
-
-#### Local Changes
-
-```bash
-# List all new or modified files - showing which are to staged to be commited and which are not 
 git status
-
-# View changes between staged files and unstaged changes in files
 git diff
-
-# View changes between staged files and the latest committed version
-git diff --cached
-# only one file add the file name
-git diff --cached [file]
-
-# Add all current changes to the next commit
-git add [file]
-
-# Remove a file from the next commit
-git rm [file]
-
-# Add some changes in < file> to the next commit
-# Watch these video's for a demo of the power of git add -p - http://johnkary.net/blog/git-add-p-the-most-powerful-git-feature-youre-not-using-yet/
-git add -p [file]
-
-# Commit all local changes in tracked  files
-git commit –a
-git commit -am "An inline  commit message"
-
-# Commit previously staged changes
-git commit
-git commit -m "An inline commit message"
-
-# Unstages the file, but preserve its contents
-
-git reset [file]
+git diff --staged
 ```
 
-#### Commit History
+2) I want to commit only part of my changes
+
+Use: you fixed 2 things but want 2 separate commits
 
 ```bash
-# Show all commits, starting from the latest 
-git log 
-
-# Show changes over time for a specific file 
-git log -p [file]
-
-# Show who changed each line in a file, when it was changed and the commit id
-git blame -c [file]
+git add -p
 ```
 
-#### Update and Publish
+3) I staged the wrong file
 
-``` bash
-# List all remotes 
-git remote -v
-
-# Add a new remote at [url] with the given local name
-git remote add [localname] [url]
-
-# Download all changes from a remote, but don‘t integrate into them locally
-git fetch [remote]
-
-# Download all remote changes and merge them locally
-git pull [remote] [branch]
-
-# Publish local changes to a remote 
-git push [remote] [branch]
-
-# Delete a branch on the remote 
-git branch -dr [remote/branch]
-
-# Publish your tags to a remote
-git push --tags
-```
-
-#### Merge & Rebase
+Use: you did git add . too fast
 
 ```bash
-# Merge [branch] into your current HEAD 
-git merge [branch]
-
-# Rebase your current HEAD onto [branch]
-git rebase [branch]
-
-# Abort a rebase 
-git rebase –abort
-
-# Continue a rebase after resolving conflicts 
-git rebase –continue
-
-# Use your configured merge tool to solve conflicts 
-git mergetool
-
-# Use your editor to manually solve conflicts and (after resolving) mark as resolved 
-git add <resolved- file>
-git rm <resolved- file>
+git restore --staged file
 ```
 
-#### Undo
+4) I want to throw away local edits
+
+Use: you broke something and want to go back
 
 ```bash
-# Discard all local changes and start working on the current branch from the last commit
-git reset --hard HEAD
-
-# Discard local changes to a specific file 
-git checkout HEAD [file]
-
-# Revert a commit by making a new commit which reverses the given [commit]
-git revert [commit]
-
-# Reset your current branch to a previous commit and discard all changes since then 
-git reset --hard [commit]
-
-# Reset your current branch to a previous commit and preserve all changes as unstaged changes 
-git reset [commit]
-
-#  Reset your current branch to a previous commit and preserve staged local changes 
-git reset --keep [commit]
+git restore file
 ```
+
+5) My last commit is wrong (message or content)
+
+Use: forgot a file, bad commit message (before pushing)
+
+```bash
+git add <file>
+git commit --amend
+```
+
+6) Remote has new commits, I want clean history
+
+Use: you and others push to the same branch, you have also commits
+
+```bash
+git fetch
+git log --oneline --graph --decorate --all
+```
+then
+```bash
+git rebase #Puts your local commits on top of the updated remote (rewrites commit IDs).
+```
+or
+```bash
+git merge  #Combines the two histories with a merge commit if diverged.
+```
+
+7) Rebase got conflicts, how do I finish or cancel?
+
+Use: during pull --rebase
+
+```bash
+git add <fixed-files>
+git rebase --continue
+# or cancel:
+git rebase --abort
+```
+
+8) I need to pull, but I'm mid-work and not ready to commit
+
+Use: you have modified stuff but didnt commit or didnt want to commit
+
+```bash
+git stash
+git pull --rebase
+git stash pop
+```
+
+9) I already pushed a bad commit, undo safely
+
+Use: shared branch, teammate already pulled
+
+```bash
+git revert <commit>
+```
+
+10) I want to undo local commits (if not pushed)
+
+Use: clean up your local history
+
+```bash
+git reset HEAD~1        # keep changes (unstaged)
+git reset --hard HEAD~1 # delete changes (danger)
+```
+
+
+## My others alias in .bashrc confs
+
+```bash
+alias gs='git status'
+alias g='git '
+
+lg() {
+    [ -d .git ] || { echo "Not a git repo"; return; }
+    git add . && git commit -m "$*" && git push
+}
+```
+## Recommended VScodium extension
+
+Use git graph from mhutchie used to view a Git Graph of repos, yo ucan even perform Git actions from the graph. 
+
+then :
+```bash
+Ctrl + shift + g
+```
+
+Here is an exmaple with commits and merge of branch
+
+![gitgraph_vscodium](assets/img/gitgraph_vscodium.webp)
+
+
+## My ~/.gitconfig (starter)
+
+Use: personalize identity, aliases, editor, and quality-of-life defaults
+
+```ini
+[user]
+    name = Alxblzd
+    email = 69093161+alxblzd@users.noreply.github.com
+
+[core]
+    editor = vi
+    excludesfile = ~/.gitignoregbl  # Global ignore file
+
+[color]
+    ui = auto
+
+[alias]
+    st = status
+    ci = commit
+    co = checkout
+    br = branch
+    lg = log --oneline --graph --decorate --all
+    df = diff
+    hist = log --oneline --decorate --graph --all --date=short
+    unstage = restore --staged
+    amend = commit --amend --no-edit
+
+[merge]
+    tool = vimdiff  # Or meld if you prefer
+
+[push]
+    default = simple
+
+[credential]
+    helper = cache --timeout=3600  # Optional, secure credential caching
+
+[rebase]
+    autoStash = true
+```
+## Keywords
+
+- repo: the project + history
+- commit: saved snapshot
+- working tree: your edited files
+- staging (index): what will go into the next commit
+- HEAD: where you are now
+- branch: movable label to a commit (main, dev)
+- remote: server copy (origin)
+- fetch: download remote info, don't change files
+- pull: fetch + integrate (merge or rebase)
+- merge: combine histories (may create merge commit)
+- rebase: replay your commits on top of another base (rewrites commit IDs)
+- conflict: Git can't auto-merge a file
+- stash: temporarily hide uncommitted work
+- revert: undo via a new commit (safe after push)
+- reset: move branch pointer back (rewrites history; be careful)
