@@ -110,6 +110,7 @@ html[data-mode='dark'] {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+  margin-top: 1.5rem;
   margin-bottom: 1rem;
 }
 
@@ -118,13 +119,33 @@ html[data-mode='dark'] {
   border-color: var(--accent-600);
   font-weight: 700;
   padding: 0.65rem 1.1rem;
-  box-shadow: 0 8px 18px rgba(79, 109, 217, 0.28);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.18);
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
-.btn-primary:hover,
-.btn-primary:focus-visible {
+.btn-primary:is(:hover, :focus, :focus-visible) {
   background: var(--accent-700);
   border-color: var(--accent-700);
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.22);
+  transform: translateY(-1px);
+  color: #fff !important;
+  border-bottom: 0 !important;
+  text-decoration: none !important;
+}
+
+.hero-actions a.btn.btn-primary:hover {
+  color: #fff !important;
+  border-bottom: 0 !important;
+  text-decoration: none !important;
+}
+
+.btn-primary:is(:focus, :focus-visible) {
+  outline: 2px solid var(--accent-400);
+  outline-offset: 3px;
+}
+
+.hero-actions .btn-primary:is(:hover, :focus, :focus-visible) {
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.24);
 }
 
 .btn-ghost {
