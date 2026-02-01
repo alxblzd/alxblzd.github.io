@@ -205,3 +205,7 @@ bindsym $mod+Shift+a exec grim -g "$(slurp)" - | swappy -f -
 look at this beautiful screenshot of my screenshot tool,swappy ! 
 
 ![swappy_screenshot](assets/img/swappy_screenshot.webp)
+
+
+And the complete desk : 
+![complete_desk](assets/img/complete_desk.webp)
