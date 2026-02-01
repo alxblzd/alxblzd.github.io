@@ -74,10 +74,37 @@ bundle exec jekyll build
 
 Both commands honor `JEKYLL_ENV=production` if you want to mirror CI locally.
 
+## Chirpy static assets (dev-only self-hosting)
+
+If you want the Chirpy static assets locally while developing:
+
+```bash
+git submodule init
+git submodule update
+```
+
+Then ensure `_config.yml` has:
+
+```yml
+assets:
+  self_host:
+    enabled: true
+    env: development
+```
+
+If you ever switch to self-hosting in production, set `assets.self_host.enabled: true` without the `env` key and enable submodules in `.github/workflows/pages-deploy.yml`:
+
+```yml
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+```
+
 ## Continuous integration
 
 The repository includes a lightweight GitHub Actions workflow (`.github/workflows/jekyll-build.yml`) that caches gems and runs `bundle exec jekyll build` to keep the site shippable.
-It reads the pinned Ruby from [`.ruby-version`](.ruby-version) so CI matches local builds, and it can also be triggered manually via **Run workflow** in the Actions tab when you need a fresh check.
+It uses the latest Ruby available on GitHub Actions, and it can also be triggered manually via **Run workflow** in the Actions tab when you need a fresh check.
 
 ## Troubleshooting
 

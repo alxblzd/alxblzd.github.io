@@ -31,7 +31,8 @@ order: 2
           <div class="card-body d-flex flex-column">
             <h1 class="card-title my-2 mt-md-0">{{ post.title }}</h1>
             <div class="card-text content mt-0 mb-3">
-              <p>{% include post-summary.html %}</p>
+              {%- assign summary = post.summary | default: post.description | default: post.excerpt -%}
+              <p>{{ summary | strip_html | strip_newlines | truncate: 160 }}</p>
             </div>
             <div class="post-meta flex-grow-1 d-flex align-items-end">
               <div class="me-auto">

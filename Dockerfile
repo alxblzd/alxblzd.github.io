@@ -15,6 +15,12 @@ RUN apt-get update -y \
 
 COPY . .
 
+RUN if [ -d assets/lib/dayjs ]; then \
+    cp -n assets/lib/dayjs/locale/en.js assets/lib/dayjs/locale/en.min.js 2>/dev/null || true; \
+    cp -n assets/lib/dayjs/plugin/relativeTime.js assets/lib/dayjs/plugin/relativeTime.min.js 2>/dev/null || true; \
+    cp -n assets/lib/dayjs/plugin/localizedFormat.js assets/lib/dayjs/plugin/localizedFormat.min.js 2>/dev/null || true; \
+  fi
+
 RUN bundle config set path vendor/bundle \
   && bundle install --jobs 4 --retry 3
 
