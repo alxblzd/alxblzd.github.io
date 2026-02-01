@@ -2,15 +2,13 @@
 
 source "https://rubygems.org"
 
-ruby "3.4.8"
+gem "jekyll"
+gem "jekyll-theme-chirpy"
 
-gem "jekyll", "~> 4.3"
-gem "jekyll-theme-chirpy", "~> 7.3"
-
-gem "html-proofer", "~> 5.0", group: :test
+gem "html-proofer", group: :test
 
 group :development do
-  gem "webrick", "~> 1.8"
+  gem "webrick"
 end
 
 platforms :mingw, :x64_mingw, :mswin, :jruby do

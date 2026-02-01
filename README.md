@@ -2,23 +2,47 @@
 
 A Jekyll site built on the [Chirpy](https://github.com/cotes2020/jekyll-theme-chirpy) theme. Use the steps below to get a reliable local build and the same output CI will check.
 
-## Prerequisites
+## Prerequisites (Fedora Atomic + Toolbox)
 
-- Ruby 3.4 (project pins 3.4.7 in [`.ruby-version`](.ruby-version))
-- Bundler 2.4+
-- Git
+- Toolbox installed and working.
+- Git.
 
-> On macOS you can install Ruby via [Homebrew](https://brew.sh/) (`brew install ruby`) or [rbenv](https://github.com/rbenv/rbenv). On Ubuntu, install `ruby-full` from apt or use [asdf](https://asdf-vm.com/).
+This repo does not pin Ruby. On Fedora Atomic, the easiest path is to install the latest Ruby inside a toolbox container.
 
-## Quick start (local test)
+## Quick start (local test via Podman)
 
-1. Clone the repo and switch to the `portfolio-crisp-refresh` branch.
-2. Install Bundler if it is not already available:
+Best if you want a self-contained build with no host Ruby.
+
+Build the image from the repo root:
+
+```bash
+podman build -t portfolio-site .
+```
+
+Serve the site in a container (with livereload exposed):
+
+```bash
+podman run --rm -it -p 4000:4000 -p 35729:35729 portfolio-site
+```
+
+Then visit http://127.0.0.1:4000 to verify light/dark mode, the homepage, and project data.
+
+## Quick start (local test via Toolbox)
+
+Best if you want faster edit/run cycles without rebuilding images.
+
+1. Enter your existing toolbox:
    ```bash
-   gem install bundler
+   toolbox enter <your-container-name>
    ```
-3. Install dependencies (uses `.ruby-version` automatically when a version manager is present):
+2. Install the latest build deps + Ruby (inside the toolbox):
    ```bash
+   sudo dnf upgrade -y
+   sudo dnf install -y ruby ruby-devel gcc make
+   ```
+3. Install the latest Bundler and dependencies:
+   ```bash
+   gem install bundler --no-document
    bundle install
    ```
 4. Run the site locally with livereload:
@@ -27,45 +51,14 @@ A Jekyll site built on the [Chirpy](https://github.com/cotes2020/jekyll-theme-ch
    ```
    Visit http://127.0.0.1:4000 to verify light/dark mode, homepage, and project data render correctly.
 
-If you want a single copy/paste to smoke-test the site, run:
+## Setup (inside Toolbox)
+
+From the project root inside a toolbox:
 
 ```bash
-git clone https://github.com/alxblzd/alxblzd.github.io.git
-cd alxblzd.github.io
-git checkout portfolio-crisp-refresh
-gem install bundler
+gem install bundler --no-document
 bundle install
-bundle exec jekyll serve --livereload
 ```
-
-### Docker (no local Ruby required)
-
-Build the image from the repo root:
-
-```bash
-docker build -t portfolio-site .
-```
-
-Serve the site in a container (with livereload exposed):
-
-```bash
-docker run --rm -it -p 4000:4000 -p 35729:35729 portfolio-site
-```
-
-Then visit http://127.0.0.1:4000 to verify light/dark mode, the homepage, and project data.
-
-## Setup
-
-If you prefer a manual sequence, run the following from the project root:
-
-1. Install bundler if it is not already available:
-   ```bash
-   gem install bundler
-   ```
-2. Install dependencies:
-   ```bash
-   bundle install
-   ```
 
 ## Local development
 
@@ -89,6 +82,10 @@ It reads the pinned Ruby from [`.ruby-version`](.ruby-version) so CI matches loc
 ## Troubleshooting
 
 - If you see `command not found: jekyll`, ensure you ran `bundle install` and then re-run the commands with `bundle exec`.
-- If your Ruby differs from `.ruby-version`, use a version manager (rbenv/asdf) to match it for consistent builds.
-- When behind a corporate proxy, configure Bundler with the appropriate mirror (e.g., `bundle config set mirror.https://rubygems.org https://your-mirror.example.com`).
+- If `toolbox` is missing in VS Code’s integrated terminal, you are likely using the Flatpak build. Use:
+  ```bash
+  flatpak-spawn --host toolbox enter <your-container-name>
+  ```
+  Or set VS Code’s terminal profile to a host shell so `toolbox` is always available.
+- When behind a corporate proxy, configure Bundler with a mirror (e.g., `bundle config set mirror.https://rubygems.org https://your-mirror.example.com`).
 - If `bundle install` returns `403 Forbidden` from rubygems.org, your network is blocking access; point Bundler at an allowed mirror or retry from a network with direct HTTPS access to rubygems.

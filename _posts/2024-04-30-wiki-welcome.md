@@ -1,7 +1,6 @@
 ---
 title: "Welcome on my posting website !"
 article_type: post
-author: "Alxblzd"
 date: 2024-04-30 23:10:00 +0200
 categories: [Blogging, Tutorial]
 tags: [about]

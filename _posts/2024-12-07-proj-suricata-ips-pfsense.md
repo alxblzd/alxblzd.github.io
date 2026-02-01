@@ -1,7 +1,6 @@
 ---
 title: "Suricata IPS on pfsense"
 article_type: post
-author: "Alxblzd"
 date: 2024-12-07 20:05:00 +0100
 categories: [Project, Security]
 tags: [pfsense, suricata, ips, security, networking]

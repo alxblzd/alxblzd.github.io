@@ -1,7 +1,6 @@
 ---
 title: "OpenZFS cheatsheet"
 article_type: cheatsheet
-author: "Alxblzd"
 date: 2024-09-17 20:04:00 +0200
 categories: [Tutorial, ZFS]
 tags: [ZFS, filesystem, linux, tutorial]

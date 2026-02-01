@@ -17,9 +17,9 @@ order: 2
 
         {% if post.image %}
           {% assign src = post.image.path | default: post.image %}
-          {% if post.media_subpath and src contains '://' | negate %}
+          {% unless src contains '://' or post.media_subpath == nil %}
             {% assign src = post.media_subpath | append: '/' | append: src | replace: '///', '/' | replace: '//', '/' %}
-          {% endif %}
+          {% endunless %}
           {% assign alt = post.image.alt | xml_escape | default: 'Preview Image' %}
           <div class="col-md-5">
             <img src="{{ src }}" alt="{{ alt }}">

@@ -1,7 +1,6 @@
 ---
 title: "Deploying OPNsense on Proxmox, double NAT setup"
 article_type: post
-author: "Alxblzd"
 date: 2025-08-24 14:09:00 +0200
 categories: [Project, Networking]
 tags: [opnsense, proxmox, homelab, network]

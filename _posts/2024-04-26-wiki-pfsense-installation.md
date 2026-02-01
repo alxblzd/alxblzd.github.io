@@ -1,7 +1,6 @@
 ---
 title: "Pfsense installation on proxmox in double nat setup"
 article_type: post
-author: "Alxblzd"
 date: 2024-04-26 23:10:00 +0200
 categories: [Networking, Practical]
 tags: [pfsense, router, network, vlan]
