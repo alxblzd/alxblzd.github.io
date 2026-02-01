@@ -6,6 +6,8 @@ categories: [Project, Electronic]
 tags: [RPI, Raspberry, Disk, Electronic, Battery]
 render_with_liquid: false
 alt: "Raspberry pi logo"
+math: true
+image: /assets/img/rpi_ups.webp
 ---
 
 # 
@@ -94,24 +96,42 @@ In this second video, he show how to fix it : https://youtu.be/6bicunweBAQ?featu
 He then proceed to change one of the bus capacitor with a smaller but more reliable one,
 I found one of good quality on a Old DVD reader that used good quality component used at high frequency, perfect for this case !
 
-Despite these efforts, the low voltage warning persists. Next step is to increase the bus voltage from around 4.9V to over 5.05-5.1V. To achieve this, I need to adjust the voltage divider for the XR2981 chip
+Despite these efforts, the low voltage warning persists. The next step is to raise the bus from ~4.9V to around 5.1–5.2V by adjusting the XR2981 voltage divider.
 
-To do this I need to change the value of the voltage divider for the XR2981 chip,
+The datasheet (page 7, “OUTPUT VOLTAGE PROGRAMMING”) gives:
 
-Since I didn’t have the right SMD resistors, I improvised with a basic resistor, as you can see in the second picture. It doesn’t look great, but it works
+$$
+V_{out} = 1.24 \times \left(1 + \frac{R_1}{R_2}\right)
+$$
 
-You can find the exact calculation in the datasheet, page "7", "OUTPUT VOLTAGE PROGRAMMING"
+
+Here you can see the resistors used for te voltage divisor
+
+![chip_rpi_ups](assets/img/Chip_rpi_ups.webp)
+
+
+
+Since I didn’t have the right SMD values, I tacked on a through‑hole resistor in parallel with the 10k.It isn’t pretty, but it works.
+
+
+With the stock 30k/10k divider, I kept R1 at 30k and lowered R2 by adding a 220k resistor in parallel:
+
+$$
+R_2 = 10\,k\Omega \parallel 220\,k\Omega \approx 9.565\,k\Omega
+$$
+
+That gives:
+
+$$
+V_{out} \approx 1.24 \times \left(1 + \frac{30\,k\Omega}{9.565\,k\Omega}\right) \approx 5.13\,V
+$$
 
 
 link :
 https://cdn.hackaday.io/files/1829407826904960/Xysemi_XR2981.pdf
 backup:
 
-<object data="/assets/pdf/Xysemi_XR2981.pdf" width="250" height="250" type='application/pdf'></object>
-
-![chip_rpi_ups](assets/img/Chip_rpi_ups.webp)
-
-![rpi_ups](assets/img/rpi_ups.webp)
+<object data="/assets/pdf/Xysemi_XR2981.pdf" width="800" height="800" type='application/pdf'></object>
 
 
 # C Program

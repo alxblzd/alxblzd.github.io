@@ -1,3 +1,13 @@
+- title: Fedora Atomic Sway as a Daily Driver
+  description: Moving my workstation to Fedora Atomic with Sway for a boring, predictable, and fast daily workflow.
+  url: /posts/proj-fedora-daily-driver/
+  image: /assets/img/fedora_atomic.webp
+  tags:
+    - Fedora
+    - Atomic
+    - Sway
+    - Workflow
+
 - title: Coraza-SPOA + OWASP CRS on HAProxy
   description: Inline WAF and SPOA routing with HAProxy to harden public-facing services and trim noisy traffic early.
   url: /posts/proj-coraza-owasp-crs-haproxy/

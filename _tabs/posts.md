@@ -13,21 +13,7 @@ order: 1
   {% for post in posts %}
     <article class="card-wrapper card">
       <a href="{{ post.url | relative_url }}" class="post-preview row g-0 flex-md-row-reverse">
-        {% assign card_body_col = '12' %}
-
-        {% if post.image %}
-          {% assign src = post.image.path | default: post.image %}
-          {% unless src contains '://' or post.media_subpath == nil %}
-            {% assign src = post.media_subpath | append: '/' | append: src | replace: '///', '/' | replace: '//', '/' %}
-          {% endunless %}
-          {% assign alt = post.image.alt | xml_escape | default: 'Preview Image' %}
-          <div class="col-md-5">
-            <img src="{{ src }}" alt="{{ alt }}">
-          </div>
-          {% assign card_body_col = '7' %}
-        {% endif %}
-
-        <div class="col-md-{{ card_body_col }}">
+        <div class="col-md-12">
           <div class="card-body d-flex flex-column">
             <h1 class="card-title my-2 mt-md-0">{{ post.title }}</h1>
             <div class="card-text content mt-0 mb-3">

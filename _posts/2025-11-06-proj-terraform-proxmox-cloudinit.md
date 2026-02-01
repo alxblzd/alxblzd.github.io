@@ -5,6 +5,8 @@ date: 2025-11-06 20:34:00 +0100
 categories: [Infrastructure, Automation]
 tags: [terraform, proxmox, cloud-init, virtualization, automation]
 render_with_liquid: false
+image: /assets/img/proxmox/proxmox1.webp
+
 ---
 
 ## Terraform + Proxmox Automation
