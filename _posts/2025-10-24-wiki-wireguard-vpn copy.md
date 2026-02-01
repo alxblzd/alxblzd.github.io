@@ -10,66 +10,48 @@ render_with_liquid: false
 
 ## What is WireGuard?
 
-WireGuard is a modern, fast, and secure VPN protocol they say, designed to be simpler and more efficient than traditional VPN solutions like IPsec and OpenVPN. 
+WireGuard is the VPN I reach for when I want something boring and reliable. It’s a small, modern protocol that keeps the config simple and stays out of the way.
 
 - Designed by Jason A. Donenfeld
-- Merged into the Linux kernel 5.6 (March 2020)
-- Available for Linux, Windows, macOS, BSD, iOS, and Android
-- Significantly smaller codebase compared to OpenVPN and IPsec (~4,000 lines of code)
+- In the Linux kernel since 5.6 (March 2020)
+- Available on Linux, Windows, macOS, BSD, iOS, and Android
 
-## Key Features
-
-### Performance
-- Extremely fast due to minimal overhead and efficient cryptography
-- Runs in kernel space on Linux for optimal performance
-- 3-5x throughput improvements over OpenVPN in identical hardware configurations
-- Low latency and high throughput
-
-### Security
-- No cipher suite negotiation - prevents downgrade attacks
-- Smaller attack surface due to minimal codebase
-- Silent protocol - doesn't respond to unauthenticated packets (prevents enumeration attacks)
-
-### Simplicity
-- Easy to audit due to small codebase 
-- Stateless by design - roams seamlessly between networks
-- Negligible maintenance overhead
+### Why it’s nice
+#### Performance
+Low overhead, Kernel‑space on Linux, Usually faster than OpenVPN on the same box
+#### Security
+Fixed crypto set, Small attack surface, Silent to unauthenticated packets
+#### Simplicity
+Small config files yay!, Roams between networks, Easy to operate
 
 ## Cryptography
 
-WireGuard uses a fixed set of modern cryptographic protocols:
+WireGuard ships with a fixed crypto suite:
 
 - **ChaCha20** for symmetric encryption
 - **Poly1305** for authentication
 - **Curve25519** for key exchange (ECDH)
-- **BLAKE2s** for hashing
-- **SipHash24** for hashtable keys
-- **HKDF** for key derivation
 
-> No algorithm negotiation means no complexity and no vulnerabilities from weak configurations. However, this also means you're stuck with ChaCha20-Poly1305 whether you like it or not.
-
-## How WireGuard Works
+## How it works 
 
 ### Key Concepts
 
 #### Cryptokey Routing
-WireGuard associates public keys with allowed IP addresses. Each peer has a public key, and traffic is routed based on cryptographic identity rather than traditional routing tables. The cryptokey routing table is implemented as a hash table - with thousands of peers, you may hit collision overhead.
-
-**Critical insight**: AllowedIPs isn't just an ACL, it's your routing table. Each peer gets exactly one IP. No overlap. No ambiguity. This constraint forces clean network design.
+Keys map to AllowedIPs. That list is both your ACL and your routing table. Keep it clean and non‑overlapping.
 
 #### Interface-Based
-WireGuard creates a virtual network interface (like `wg0`) that behaves like a regular network interface. Traffic sent through this interface is encrypted and routed to peers. Unlike OpenVPN's dependency on tun/tap devices, WireGuard's interface model plays nicely with container networking.
+You get a normal interface (`wg0`). Send traffic to it, WireGuard handles the rest. Works well with containers.
 
 #### Peer-to-Peer
-Each WireGuard installation can be both client and server. The distinction is mainly in configuration - one peer typically has a static endpoint while others connect to it.
+Everything is a peer. “Server” just means the peer with a stable endpoint.
 
 ### Connection Process
 
-1. **Key Exchange**: Uses Noise protocol framework for handshake
-2. **Authentication**: Mutual authentication using public/private key pairs
-3. **Encryption**: All traffic encrypted with session keys
-4. **Roaming**: Automatically adapts to IP address changes (typically in under 3 seconds)
-5. **Keep-alive**: Optional persistent keepalives for NAT traversal
+1. Handshake (Noise framework)
+2. Mutual auth with key pairs
+3. Encrypted tunnel
+4. Roaming just works
+5. Optional keepalive for NAT
 
 ## Installation
 
@@ -115,7 +97,7 @@ cat privatekey
 cat publickey
 ```
 
-**Key Management Reality**: There's no built-in PKI. You're generating keys, distributing them, and tracking which key belongs to whom. For 10 users? A spreadsheet works. For 1000? You need automation (Ansible with Vault, or at minimum a bash script).
+**Key management reality**: No built‑in PKI. You generate keys, distribute them, and keep track. For a small lab, a spreadsheet is fine. For anything bigger, automate it.
 
 ### Server Configuration
 
@@ -160,7 +142,7 @@ AllowedIPs = 0.0.0.0/0, ::/0
 PersistentKeepalive = 25
 ```
 
-**Important Note**: For clients behind NAT (basically everyone), `PersistentKeepalive=25` isn't optional. Without it, stateful firewalls drop the mapping after 30-180 seconds of inactivity, causing "random disconnections."
+**Note**: For clients behind NAT, `PersistentKeepalive=25` usually prevents idle timeouts.
 
 ### Configuration Parameters
 
@@ -218,7 +200,7 @@ sudo wg show wg0 dump
 watch -n 1 sudo wg show
 ```
 
-**Monitoring**: Forget ping checks. Monitor handshake age instead:
+**Monitoring**: Don’t rely on ping alone. Track handshake age:
 
 ```bash
 #!/bin/bash
@@ -233,9 +215,9 @@ if [ $AGE -gt $THRESHOLD ]; then
 fi
 ```
 
-For traffic analysis, `/proc/net/dev` gives you real-time stats without the overhead of tcpdump. Parse it, graph it, alert on anomalies.
+For traffic stats, `/proc/net/dev` is lightweight and easy to graph.
 
-**Silent Failures**: WireGuard doesn't log connection attempts by design, it prevents enumeration attacks. Great for security, terrible for debugging. Your monitoring needs to be proactive: check handshake timestamps, not connection states.
+**Silent failures**: WireGuard doesn’t log connection attempts by design. Good for security, bad for debugging. Use handshake timestamps as your signal.
 
 ### Dynamic Configuration
 
@@ -254,7 +236,7 @@ sudo wg set wg0 listen-port 51821
 
 ### Hub-and-Spoke
 
-Forget the peer-to-peer mesh dreams for now. Start with a central node:
+Simple lab pattern: one box with a public endpoint, everyone else dials in.
 
 ```ini
 [Interface]
@@ -272,7 +254,7 @@ AllowedIPs = 10.10.0.2/32
 
 ### Site-to-Site VPN
 
-Connect two networks together by routing specific subnets through the tunnel:
+Connect two LANs by routing specific subnets through the tunnel:
 
 ```ini
 # Site A
@@ -286,9 +268,9 @@ AllowedIPs = 192.168.2.0/24, 10.0.0.5/32
 PersistentKeepalive = 25
 ```
 
-**Critical Detail**: That second AllowedIP (10.0.0.5/32) is the WireGuard interface address of the remote peer. Miss it, and you'll spend hours debugging.
+**Critical detail**: That second AllowedIP (10.0.0.5/32) is the WireGuard interface address of the remote peer. Miss it and you waste time.
 
-Traditional site-to-site setups route entire subnets through the tunnel. With WireGuard, you're explicit about everything:
+Traditional site-to-site setups route whole subnets. With WireGuard, you are explicit about everything:
 
 ```ini
 [Peer]
@@ -318,7 +300,7 @@ PersistentKeepalive = 25
 
 ### Peer-to-Peer
 
-Direct connection between two hosts:
+Two hosts, direct tunnel:
 
 ```ini
 # Host A
@@ -332,28 +314,27 @@ Endpoint = host-b.example.com:51820
 AllowedIPs = 10.0.0.2/32
 ```
 
+## Gotchas
 
-### MTU Issues
+### MTU
 
-**Problem**: Default MTU of 1420 works until it doesn't. If you're tunneling over a connection with its own overhead (PPPoE, another VPN), you'll hit fragmentation.
-
-**Symptoms**: SSH works fine, but large transfers hang mysteriously.
-
-**Solution**: Drop MTU to 1280 and work your way up:
+If SSH works but big transfers hang, drop MTU and work back up:
 
 ```ini
 [Interface]
 MTU = 1280
 ```
 
-### DNS Leaks
+### DNS
 
-Test with `dig @10.10.0.1 example.com` to verify your queries actually go through the tunnel. Configure DNS manually for non-wg-quick setups.
+Quick check:
+`dig @10.10.0.1 example.com`
 
+For non `wg-quick` setups, set DNS manually.
 
 ### Performance
 
-On high-traffic nodes, CPU affinity matters:
+On busy nodes, CPU affinity can help:
 
 ```bash
 # Bind WireGuard kernel threads to specific cores
@@ -366,29 +347,16 @@ Enable UDP offloading if your NIC supports it:
 ethtool -K eth0 rx-udp_tunnel-port-offload on
 ```
 
-## Security Best Practices
+## Security Notes
 
-### Key Management
-- Generate unique keys for each peer
-- Store private keys securely with proper file permissions (600)
-- Never share or transmit private keys
-- Rotate keys periodically for long-term deployments
-
-### Network Configuration
-- Use firewall rules to restrict access to WireGuard port
-- Implement rate limiting to prevent DoS attacks
-- Use PresharedKey for post-quantum security
-- Regularly update WireGuard to latest version
-
-### Access Control
-- Limit AllowedIPs to minimum required ranges
-- Use separate tunnels for different security zones
-- Implement monitoring and logging
-- Regular security audits of peer configurations
+- One keypair per peer
+- `chmod 600` on private keys
+- Do not share private keys
+- Keep AllowedIPs minimal
+- Add `PresharedKey` if you want extra insurance
+- Keep WireGuard up to date
 
 ## Troubleshooting
-
-### Connection Issues
 
 ```bash
 # Check if interface is up
@@ -409,43 +377,39 @@ ping -I wg0 10.0.0.1
 
 ### Common Problems
 
-#### No handshake occurring
-- Verify firewall allows UDP traffic on WireGuard port
-- Check endpoint address and port are correct
-- Ensure public keys are correctly configured
-- Verify NAT traversal with PersistentKeepalive
+#### No handshake
+- UDP port open?
+- Endpoint correct?
+- Keys match?
+- NAT? Add keepalive.
 
-#### Handshake completes but no traffic
-- Check AllowedIPs configuration (most common issue)
-- Verify routing table entries
-- Ensure no IP conflicts
-- Check PostUp/PostDown scripts for errors
+#### Handshake but no traffic
+- AllowedIPs wrong (most common)
+- Routing table
+- IP conflicts
+- PostUp/PostDown errors
 
-#### Performance issues
-- Adjust MTU size (typically 1420 for WireGuard, 1280 for problematic networks)
-- Check for fragmentation
-- Verify hardware acceleration support
-- CPU usage during transfers
+#### Slow or flaky
+- Try MTU 1280
+- Check fragmentation
+- Watch CPU
 
-#### Random disconnections
-- Add or verify `PersistentKeepalive = 25` for clients behind NAT
-- Check firewall timeout settings
-- Monitor handshake age
-
+#### Random disconnects
+- Add/verify `PersistentKeepalive = 25`
+- Check firewall timeouts
+- Watch handshake age
 
 ## When NOT to Use WireGuard
 
-WireGuard isn't the right choice for every scenario:
-
-- You need detailed connection logging for audit purposes (WireGuard is silent by design)
-- Dynamic certificate-based authentication is non-negotiable (WireGuard uses static keys)
-- Legacy integration requirements demand OpenVPN or IPsec compatibility
+- You need detailed connection logs (WireGuard is quiet by design)
+- You need cert-based auth (WireGuard uses static keys)
+- You must integrate with legacy OpenVPN/IPsec setups
 
 ## Integration Examples
 
-### Docker Container
+### Docker
 
-WireGuard's in a docker container (not tested too much in my lab)
+WireGuard in Docker (not heavily tested on my side):
 
 ```bash
 # Run WireGuard in Docker
@@ -466,7 +430,7 @@ docker run -d \
   linuxserver/wireguard
 ```
 
-### Systemd Network Manager
+### NetworkManager
 
 ```bash
 # Enable NetworkManager integration
@@ -476,15 +440,9 @@ nmcli connection import type wireguard file /etc/wireguard/wg0.conf
 nmcli connection up wg0
 ```
 
-## Performance Tuning
-
-1. **NIC Offloading**: Enable UDP offloading if your network card supports it
-
-2. **Monitoring**: Use `/proc/net/dev` for low-overhead traffic statistics
-
 ## Useful Resources
 
-- Official documentation: [wireguard.com](https://www.wireguard.com)
-- Protocol specification: [WireGuard whitepaper](https://www.wireguard.com/papers/wireguard.pdf)
-- Configuration examples: [WireGuard examples](https://github.com/pirate/wireguard-docs)
-- Quick start guide: [WireGuard Quick Start](https://www.wireguard.com/quickstart/)
+- Official docs: [wireguard.com](https://www.wireguard.com)
+- Whitepaper: [wireguard.com/papers/wireguard.pdf](https://www.wireguard.com/papers/wireguard.pdf)
+- Examples: [github.com/pirate/wireguard-docs](https://github.com/pirate/wireguard-docs)
+- Quick start: [wireguard.com/quickstart](https://www.wireguard.com/quickstart/)

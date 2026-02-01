@@ -550,11 +550,39 @@ html[data-mode='dark'] #mode-toggle:focus-visible {
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.4);
 }
 
+.content {
+  line-height: 1.55;
+}
+
 .content h2,
-.content h3 {
+.content h3,
+.content h4 {
   color: var(--text-title);
-  margin-top: 1.2rem;
-  margin-bottom: 0.4rem;
+  line-height: 1.32;
+}
+
+.content h2 {
+  margin-top: 1.6rem;
+  margin-bottom: 1.1rem;
+  line-height: 1.25;
+}
+
+.content h3 {
+  margin-top: 1.6rem;
+  margin-bottom: 1.05rem;
+}
+
+.content h4 {
+  margin-top: 1.4rem;
+  margin-bottom: 0.9rem;
+}
+
+.content p {
+  margin-bottom: 0.6rem;
+}
+
+.content p:last-child {
+  margin-bottom: 0;
 }
 
 .content ul {

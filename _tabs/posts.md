@@ -23,7 +23,7 @@ order: 1
             <div class="post-meta flex-grow-1 d-flex align-items-end">
               <div class="me-auto">
                 <i class="far fa-calendar fa-fw me-1"></i>
-                {{ post.date | date: site.data.locales[lang].date_format.short }}
+                {% include datetime.html date=post.date lang=lang %}
                 {% if post.categories.size > 0 %}
                   <i class="far fa-folder-open fa-fw me-1"></i>
                   <span class="categories">

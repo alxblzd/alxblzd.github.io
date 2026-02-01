@@ -1,0 +1,10 @@
+{%- comment -%}
+Override Chirpy datetime include to show only the creation date (no updated tooltip).
+{%- endcomment -%}
+
+{%- assign dt = include.date | default: page.date -%}
+{%- if dt -%}
+  <time datetime="{{ dt | date_to_xmlschema }}">
+    {{ dt | date: "%b %-d, %Y" }}
+  </time>
+{%- endif -%}
