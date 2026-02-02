@@ -1,5 +1,5 @@
 ---
-title: "OSI layer basics"
+title: "OSI Layer Basics"
 article_type: post
 date: 2024-04-28 23:10:00 +0200
 categories: [Networking, Concepts]
@@ -8,86 +8,90 @@ render_with_liquid: false
 alt: "OSI logo"
 ---
 
-## OSI Model Layers
+## OSI Model (Quick, Practical View)
 
-### Layer 1: Physical layer
-Handles the physical equipment for data transfer, like cables and switches. Converts data into a bit stream of 1s and 0s, ensuring a common signal convention for transmission and reception.
+The OSI model is just a way to slice networking into layers. Mental map when troubleshooting: start low, move up.
 
-- medium selection, wired, wireless, fiber etc..
-- multiplexing, physical media specificity
+## Layer 1: Physical
 
-### Layer 2: Data link layer
+The raw signal level. Cables, fiber, radio, voltages, light pulses.
 
-Defines the protocol to establish and terminate a connection between two physically connected devices. It also defines the protocol for flow control between them.
+- Media: copper, fiber, wireless
+- Signal encoding, timing, modulation
+- Hubs, repeaters, PHY chips
 
-The Data Link Layer of the 802.11 standard is composed of two sublayers:
+## Layer 2: Data Link
 
-- The Logical Link Control (LLC) sublayer
-- The Media Access Control (MAC) sublayer
+Local network delivery. Frames, MAC addresses, and how devices share the medium.
 
-The MAC layer defines two different access methods:
-- CSMA/CA method fulfilling the Distributed Coordination Function (DCF)
-- The Point Coordination Function (PCF)
+- Ethernet, Wi‑Fi (802.11)
+- MAC addresses (48‑bit)
+- Switches live here
 
-The access method used by wired machines is CSMA/CD (Carrier Sense Multiple Access with Collision Detection), where each machine is free to communicate when the network is clear (no ongoing signals).
+802.11 splits L2 into:
 
-In a wireless environment, this method is not usable because it is complex to listen to the medium during its own transmission.
+- LLC (Logical Link Control)
+- MAC (Media Access Control)
 
-MAC Address -> 6 bytes
-OUI -> Organizational Unit Identifier -> First 3 bytes
+Access methods:
 
+- Wired: CSMA/CD
+- Wireless: CSMA/CA (can’t listen while transmitting)
 
-### Layer 3: Network layer
-Enable communication between devices across different networks. It divides data into smaller units known as packets and handles the routing of these packets to their destination. 
+MAC address structure:
 
-This layer ensures efficient data transmission by determining the best physical path for the packets to travel. 
+- First 3 bytes: OUI (vendor)
+- Last 3 bytes: device ID
 
-Protocols used at level 3:
-- IP, ARP, ICMP, IGMP, IPSEC, BGP, RIP, OSPF
+## Layer 3: Network
 
-#### IP (Internet Protocol) 
-Addresse and routing packets across networks, ensuring delivery to the correct destination.
-- IPV4 -> 32 bits
-- IPV6 -> 128 bits 
+Routing between networks. Packets, IP addresses, and path selection.
 
-#### ARP (Address Resolution Protocol)
-- mapping IP addresses to MAC addresses in a local area network (LAN).
-- ARP helps discover other devices on the same network by associating a hardware address (MAC) with an IP address, by using ARP broadcast
+Common protocols:
 
-#### ICMP (Internet Control Message Protocol)
-Reporting errors and providing diagnostic information for communications.
-- ICMP messages are encapsulated within IP packets
-- Used for diagnostic and error reporting
+- IP (v4/v6)
+- ARP
+- ICMP
+- IGMP
+- IPsec
+- Routing protocols (OSPF, BGP, RIP)
 
-#### IGMP (Internet Group Management Protocol)
-Manages multicast group memberships in IP networks, enabling distribution of data to multiple recipients.
+Quick notes:
 
-#### IPSEC suite
-Authentication and encryption for IP packets, ensuring confidentiality and integrity during transmission.
-- encryption algorithms like AES and authentication mechanisms like HMAC
-- widely used in VPN
+- IPv4 = 32 bits, IPv6 = 128 bits
+- ARP maps IP → MAC on local networks
+- ICMP is for errors and diagnostics (ping, traceroute)
+- IGMP handles multicast group membership
+- IPsec provides encryption and authentication at L3
 
-### Layer 4: Transport layer
-Ensures end-to-end communication between devices. Segments data into manageable chunks called segments. Handles flow and error control to optimize transmission speed and data integrity.
-- TCP -> use 3 way handshakes to establish connextion
-- UDP -> no ACK or control overhead, lighter, most of the time faster
-- The Transport layer can implement QoS mecanisms
+## Layer 4: Transport
 
-### Layer 5: Session layer
-Controls opening, managing, and closing of communication sessions between devices. Synchronizes data transfer with checkpoints to optimize efficiency and reliability.
-- Handles the negotiation and establishment of sessions
-- Initiates session termination procedures
-- Maintain session state informations
-- Optimizes data transfer
+End‑to‑end delivery. Ports, reliability, and flow control.
 
-### Layer 6: Presentation layer
-Prepares data for the application layer, translating, encrypting, and compressing it as needed. Ensures compatibility between different systems and improves communication efficiency.
-- Converts data into a format suitable for transmission
-- encryption and compression over the newrtok
-- standardize data formats and protocol
+- TCP: reliable, ordered, 3‑way handshake
+- UDP: lightweight, no guarantee, low overhead
+- QoS can be implemented here
 
-### Layer 7: Application layer
-Interacts directly with user applications, managing content requests and returns in the required format. Responsible for initiating communications and providing protocols for data manipulation, ensuring meaningful data presentation to users.
-- authentication and authorization mecanisms
--  enable users to interact with data and applications
-- protocols such as HTTP, FTP, and SMTP
+## Layer 5: Session
+
+Manages conversations between hosts.
+
+- Establish, maintain, and close sessions
+- Checkpointing and recovery
+- Less visible today, but still a useful concept
+
+## Layer 6: Presentation
+
+Makes data readable by the application.
+
+- Encoding/decoding
+- Encryption/decryption
+- Compression
+
+## Layer 7: Application
+
+Where applications live and speak.
+
+- HTTP, FTP, SMTP, DNS, SSH, etc.
+- Auth and user‑level interaction
+- The part humans usually see

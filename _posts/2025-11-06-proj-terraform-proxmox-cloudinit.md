@@ -9,44 +9,36 @@ image: /assets/img/proxmox/proxmox1.webp
 
 ---
 
-## Terraform + Proxmox Automation
+## Why I Built This Flow
 
-Terraform spins up VMs in Proxmox without clicking through the web UI every time. Define the VMs in code and let Terraform do the work.
+I finally hit the point where the Proxmox UI was slowing me down more than it was helping. I needed everything as code so I could review changes, a lab that rebuilds the same every time, and boxes that are SSH-ready in minutes instead of half an hour.
 
-- Uses the BPG [Proxmox Provider](https://github.com/bpg/terraform-provider-proxmox)
-- Cloud-Init handles initial setup
+This post is the workflow I use in my homelab. It is intentionally simple and repeatable: one base template, Terraform to clone it, and Cloud-Init to finish the bootstrapping.
 
-This is the homelab pattern I use to go from zero to SSH-ready VMs with almost no manual clicks.
+Full working example: [https://github.com/alxblzd/proxmox-terraform-pbks/tree/main](https://github.com/alxblzd/proxmox-terraform-pbks/tree/main)
 
-Full working example on [https://github.com/alxblzd/proxmox-terraform-pbks/tree/main](https://github.com/alxblzd/proxmox-terraform-pbks/tree/main)
+## The Flow (At a Glance)
 
+1. Build a Debian template with Cloud-Init installed.
+2. Clone it into a Terraform-friendly template (no Cloud-Init drive attached).
+3. Terraform clones the template and attaches Cloud-Init configuration.
+4. The VM boots and is ready for SSH.
 
-## How It Works
+That is it. All the clicks are now code.
 
-### Template-Based Setup
+## Prerequisites
 
-Instead of installing from ISO every time, create one template and clone it. Much faster. The template is a base Debian image with Cloud-Init installed.
+- A Proxmox node you can SSH into
+- A VM template datastore (I use `vmdata`)
+- A `snippets` datastore (I use `local`)
+- Terraform installed locally
 
-### What Cloud-Init Does
+## Step 1: Proxmox API User (Terraform)
 
-On first boot, Cloud-Init handles:
-1. **Network** - sets static IPs, DNS, whatever you need
-2. **Users** - adds SSH keys, creates accounts
-3. **Packages** - installs initial software
-4. and more
+I use a dedicated Proxmox user and token instead of my personal account. That keeps access scoped and makes logs cleaner.
 
-### How a VM Gets Created
+![Proxmox API permissions screenshot](/assets/img/proxmox/proxmox_permissions.webp)
 
-1. Start with your template (base Debian image with cloud-init)
-2. Terraform clones it to a new VM
-3. Cloud-Init config (Proxmox snippet) gets attached as an ISO
-4. VM boots and Cloud-Init does its thing
-5. You SSH in with your key and start working
-
-### Prerequisites
-
-#### Proxmox Setup
-Run this once on Proxmox to give Terraform the right scope without using your own account:
 ```bash
 # Create API token for Terraform
 pveum user add terraform@pve
@@ -54,15 +46,18 @@ sudo pveum role add Terraform -privs "Realm.AllocateUser, VM.PowerMgmt, VM.Guest
 sudo pveum aclmod / -user terraform@pve -role Terraform
 sudo pveum user token add terraform@pve provider --privsep=0
 
-# Note the token - you'll need it for later
+# Note the token - you'll need it for Terraform
 ```
 
+If you are stricter about RBAC, trim the privileges down. I went wide to avoid surprises.
 
-#### Snippets creation 
+## Step 2: Create a Cloud-Init Snippet
 
-Proxmox snippets inject cloud-init configurations into VMs at deployment time. They set initial parameters without logging into each VM.
+Snippets are small YAML files Proxmox can attach as Cloud-Init data. I keep a base snippet at:
 
-I keep this tiny snippet at `/var/lib/vz/snippets/base_vm.yaml`:
+`/var/lib/vz/snippets/base_vm.yaml`
+
+![Proxmox snippets screenshot](/assets/img/proxmox/proxmox_snippet.webp)
 
 ```yaml
 #cloud-config
@@ -74,7 +69,17 @@ power_state:
   timeout: 30
 ```
 
-#### Template Creation
+This is intentionally minimal. I keep most customization in Terraform variables.
+
+## Step 3: Build the Debian Template
+
+I use a short script to build two templates:
+
+- `9110` includes a Cloud-Init drive for direct Proxmox usage
+- `9100` removes the Cloud-Init drive for Terraform cloning
+
+![Proxmox template screenshot](/assets/img/proxmox/proxmox_template.webp)
+
 ```bash
 #!/bin/bash
 # Creates two Debian 13 templates:
@@ -111,23 +116,21 @@ fi
 qm template $VMID_WITH
 echo "Created template $VMID_WITH with cloudinit"
 
-# Clone for terraform (no cloudinit drive)
+# Clone for Terraform (no cloudinit drive)
 qm clone $VMID_WITH $VMID_WITHOUT --name debian13-cloud-template --full
 qm set $VMID_WITHOUT --delete ide2
 qm template $VMID_WITHOUT
-echo "Created template $VMID_WITHOUT without cloudinit (for terraform)"
+echo "Created template $VMID_WITHOUT without cloudinit (for Terraform)"
 
 rm debian-13-generic-amd64.qcow2
 echo "Done"
 ```
 
-This script works fine for a few templates. If you need to manage a bunch of different OS templates, check out Packer instead. Run it directly on the Proxmox shell and tweak the bridge/storage IDs for your setup.
+If you need lots of different OS templates, consider Packer. For a handful, this script is enough.
 
-## Configuration
+## Step 4: Terraform Provider Setup
 
-### Provider Setup
-
-Create `main.tf`:
+`main.tf`:
 
 ```hcl
 terraform {
@@ -151,10 +154,13 @@ provider "proxmox" {
 }
 ```
 
-Pinning provider versions like this keeps upgrades from surprising you later.
+I pin versions so upgrades are explicit.
 
+## Step 5: VM Resource Definition
 
-### VM Resource Definition
+This is the core: clone the template, attach Cloud-Init, set networking, and boot.
+
+![Proxmox Cloud-Init screenshot](/assets/img/proxmox/proxmox_cloudinit.webp)
 
 ```hcl
 resource "proxmox_virtual_environment_vm" "vm" {
@@ -197,8 +203,6 @@ resource "proxmox_virtual_environment_vm" "vm" {
     vlan_id = var.vlan_id
   }
 
-  # Cloud-Init configuration - this is where the magic happens
-
   initialization {
     interface           = var.cloud_init_interface
     type                = "nocloud"
@@ -231,80 +235,199 @@ resource "proxmox_virtual_environment_vm" "vm" {
 }
 ```
 
-### Configuration Parameters
+Notes:
 
-#### Proxmox Connection
-- **endpoint**: Your Proxmox URL (https://proxmox.example.com:8006/)
-- **api_token**: The token you created earlier (user@realm!token=secret)
-- **insecure**: Set to true for self-signed certs (fine for homelab)
-- **node_name**: Which Proxmox node to put the VMs on
+- `vendor_data_file_id` is the Proxmox file ID for a snippet (see Step 7 for an example).
+- `cloud_init_interface` is the OS interface name Cloud-Init configures. On most Proxmox Debian images this is `ens18`, but some images still use `eth0`.
+- The gateway logic assumes the first host in the subnet (for `10.0.100.50/24` it becomes `10.0.100.1`). If your gateway is different, pass it explicitly in your per-VM config and use it directly.
 
-#### Cloud-Init Settings
-- **username**: Default user to create
-- **ssh_keys**: Public SSH key for passwordless login
-- **ip_address**: Static IP in CIDR format (10.0.100.10/24, etc.)
-- **dns_servers**: DNS servers (router or Pi-hole, usually)
-- **vendor_data**: Any custom Cloud-Init scripts you want to run
+## Step 6: Key Variables
 
-## Managing Your VMs
+Proxmox connection:
 
-### Deploying
+- `proxmox.endpoint`: `https://proxmox.example.com:8006/`
+- `proxmox.api_token`: `user@realm!token=secret`
+- `proxmox.insecure`: `true` for self-signed certs
+- `proxmox.node_name`: target Proxmox node
+
+Cloud-Init:
+
+- `cloud_init_username`: default user to create
+- `cloud_init_password`: optional password (I usually leave it empty)
+- `vendor_data_file_id`: snippet file ID (for example `local:snippets/base_vm.yaml`)
+- `dns_servers`: DNS servers for the VM
+
+VM list:
+
+- `vms`: array of per-VM configs (name, cpu, memory, IP, bridge)
+
+## Step 7: Variables + Outputs (Minimal Working Example)
+
+These snippets make the examples above runnable without guesswork. Replace the placeholders to match your lab.
+
+`variables.tf`:
+
+```hcl
+variable "proxmox" {
+  type = object({
+    endpoint    = string
+    api_token   = string
+    insecure    = bool
+    node_name   = string
+    template_id = number
+  })
+}
+
+variable "datastore_id" {
+  type    = string
+  default = "vmdata"
+}
+
+variable "clone_retries" {
+  type    = number
+  default = 3
+}
+
+variable "agent_timeout" {
+  type    = number
+  default = 60
+}
+
+variable "disk_size_gb" {
+  type    = number
+  default = 20
+}
+
+variable "disk_interface" {
+  type    = string
+  default = "scsi0"
+}
+
+variable "vlan_id" {
+  type    = number
+  default = null
+}
+
+variable "tags" {
+  type    = list(string)
+  default = []
+}
+
+variable "cloud_init_interface" {
+  type    = string
+  default = "ens18"
+}
+
+variable "dns_servers" {
+  type    = list(string)
+  default = ["10.0.100.1"]
+}
+
+variable "cloud_init_username" {
+  type    = string
+  default = "alex"
+}
+
+variable "cloud_init_password" {
+  type    = string
+  default = ""
+}
+
+variable "vendor_data_file_id" {
+  type = string
+}
+
+variable "vms" {
+  type = list(object({
+    name       = string
+    cpu_cores  = number
+    memory_mb  = number
+    disk_gb    = optional(number)
+    ip_address = string
+    bridge     = string
+  }))
+}
+```
+
+`terraform.tfvars`:
+
+```hcl
+proxmox = {
+  endpoint    = "https://proxmox.example.com:8006/"
+  api_token   = "terraform@pve!provider=YOUR_TOKEN"
+  insecure    = true
+  node_name   = "pve01"
+  template_id = 9100
+}
+
+datastore_id         = "vmdata"
+cloud_init_interface = "ens18"
+dns_servers          = ["10.0.100.1"]
+cloud_init_username  = "alex"
+vendor_data_file_id  = "local:snippets/base_vm.yaml"
+
+vms = [
+  {
+    name       = "debian13-01"
+    cpu_cores  = 2
+    memory_mb  = 2048
+    disk_gb    = 20
+    ip_address = "10.0.100.20/24"
+    bridge     = "vmbr0"
+  }
+]
+```
+
+`outputs.tf`:
+
+```hcl
+output "ssh_commands" {
+  value = [
+    for vm in var.vms :
+    "ssh ${var.cloud_init_username}@${split(\"/\", vm.ip_address)[0]}"
+  ]
+}
+```
+
+`data` source for your SSH public key (referenced in the VM resource):
+
+```hcl
+data "local_file" "ssh_pub" {
+  filename = pathexpand("~/.ssh/id_ed25519.pub")
+}
+```
+
+Notes:
+
+- `vmdata`, `local`, `vmbr2`, and `vmbr0` are lab-specific names. Use whatever your Proxmox storage and bridge names are.
+- `vendor_data_file_id` expects the Proxmox snippet ID in `storage:snippets/file.yaml` form. If you upload snippets with Terraform, use the `.id` from `proxmox_virtual_environment_file`.
+
+## Daily Operations
+
+Deploy:
 
 ```bash
-# Initialize providers
 terraform init
-
-# See what will change
 terraform plan
-
-# Deploy the VMs
 terraform apply
-
-# Get SSH commands
 terraform output ssh_commands
 ```
 
-### Checking Status
+Note: `-target` is useful for one-off changes, but do not make it your default. It can skip dependencies and hide drift. Once you are comfortable, a normal `terraform apply` is safer.
+
+Inspect:
 
 ```bash
-# See what Terraform knows about
 terraform show
-
-# List all your VMs
 terraform state list
-
-# Get details on a specific VM
 terraform state show proxmox_virtual_environment_vm.vm["debian13-01"]
 
-# Check Proxmox directly
 pvesh get /nodes/pve01/qemu --output-format json | jq
 ```
 
+## Common Patterns I Use
 
-### Adding More VMs
-
-```bash
-# Add another VM to your setup
-cat >> terraform.tfvars <<EOF
-  {
-    name       = "debian13-03"
-    cpu_cores  = 4
-    memory_mb  = 4096
-    ip_address = "10.0.100.50/24"
-    bridge     = "vmbr0"
-  }
-EOF
-
-# Apply only the new VM
-terraform apply -target='proxmox_virtual_environment_vm.vm["debian13-03"]'
-```
-> `cat >>` appends to `terraform.tfvars`; double-check before committing it.
-
-## Common Use Cases
-
-### Testing/Dev VMs
-
-Spin up a bunch of identical VMs for testing:
+### Quick Dev/Test Fleet
 
 ```hcl
 locals {
@@ -325,11 +448,8 @@ vms = local.dev_vms
 
 ### Kubernetes Cluster
 
-Set up a whole K8s cluster:
-
 ```hcl
 vms = concat(
-  # Control plane nodes
   [for i in range(1, 4) : {
     name       = "k8s-master-${format("%02d", i)}"
     cpu_cores  = 4
@@ -338,7 +458,6 @@ vms = concat(
     ip_address = "10.0.100.${10 + i}/24"
     bridge     = "vmbr0"
   }],
-  # Worker nodes
   [for i in range(1, 6) : {
     name       = "k8s-worker-${format("%02d", i)}"
     cpu_cores  = 8
@@ -350,18 +469,18 @@ vms = concat(
 )
 ```
 
-### Storage Optimization
+### SSD Optimization
 
-If you're running on SSDs, enable TRIM support:
+Enable TRIM in Terraform:
 
 ```hcl
 disk {
-  discard = "on"  # Enable TRIM support
-  ssd     = true   # Optimize for SSD storage
+  discard = "on"
+  ssd     = true
 }
 ```
 
-Then in Cloud-Init:
+And schedule `fstrim` with Cloud-Init:
 
 ```yaml
 #cloud-config
@@ -371,26 +490,19 @@ runcmd:
 
 ## Security Notes
 
-### API Token
-- Create a dedicated user for Terraform
-- Use token authentication instead of passwords
-- Don't commit tokens to Git (use environment variables or .gitignore)
+- Use a dedicated Proxmox user and API token.
+- Never commit tokens or passwords.
+- Disable root SSH login in your template.
+- Update the template before cloning so new VMs are patched on first boot.
 
-### Template Security
-- Remove any default passwords from your template
-- Disable root SSH login (use sudo instead)
-- Run updates before creating the template so new VMs start fresh
+## Cloud-Init and VyOS (Advanced)
 
-## Cloud-Init and VyOS
+VyOS does not support standard Cloud-Init keys like `users` or `packages`. It only accepts:
 
-If you're also running VyOS, you can deploy it with cloud-init, but the format differs from standard Linux. VyOS only supports two top-level keys:
+- `vyos_config_commands`
+- `write_files`
 
-- **vyos_config_commands**: VyOS CLI commands executed on first boot
-- **write_files**: Custom files written to the system
-
-### VyOS Cloud-Init Format
-
-Here's what a VyOS cloud-init snippet looks like:
+Example snippet:
 
 ```yaml
 #cloud-config
@@ -407,16 +519,14 @@ vyos_config_commands:
   - save
 ```
 
-**Important:** Standard cloud-init directives like `users:`, `packages:`, or `runcmd:` don't work with VyOS. You must use VyOS configuration commands.
+### Upload Snippets with Terraform
 
-### Uploading Cloud-Init Snippets with Terraform
-
-Instead of manually creating snippets on the Proxmox server, you can upload them directly using Terraform. The BPG Proxmox provider includes a `proxmox_virtual_environment_file` resource for this:
+Instead of manually placing snippet files on the Proxmox host, you can upload them with Terraform:
 
 ```hcl
 resource "proxmox_virtual_environment_file" "vyos_userdata" {
   for_each     = { for vm in var.vyos_vms : vm.name => vm }
-  datastore_id = "local"  # Or your snippets datastore
+  datastore_id = "local"
   node_name    = "pve01"
   content_type = "snippets"
 
@@ -447,7 +557,6 @@ resource "proxmox_virtual_environment_vm" "vyos" {
     full  = true
   }
 
-  # Reference the uploaded cloud-init snippet
   initialization {
     type              = "nocloud"
     datastore_id      = "local"
@@ -456,27 +565,19 @@ resource "proxmox_virtual_environment_vm" "vyos" {
 }
 ```
 
-### Benefits of Terraform-Managed Snippets
+For a complete example with VyOS deployment and zone-based firewall configuration, see:
+[https://github.com/alxblzd/deploy-vyos-stack](https://github.com/alxblzd/deploy-vyos-stack)
 
-- Snippets are version-controlled alongside your Terraform code
-- No manual SSH access to Proxmox needed
-- Easy to template snippets with different variables per VM
-- Terraform tracks snippet changes and updates them automatically
-
-For a complete working example with VyOS deployment and zone-based firewall configuration, check out the [deploy-vyos-stack](https://github.com/alxblzd/deploy-vyos-stack) repository.
-
-## Troubleshooting
-These are the first checks I run when something feels off:
+## Troubleshooting Checklist
 
 ```bash
-# Test if Proxmox API is reachable
+# Test Proxmox API reachability
 curl -k -H "Authorization: PVEAPIToken=terraform@pve!terraform=your-token" \
   https://proxmox.example.com:8006/api2/json/nodes
 
-# Check Cloud-Init logs inside a VM
+# Cloud-Init logs inside a VM
 sudo cat /var/log/cloud-init.log
 sudo cloud-init status --long
-
 ```
 
-Once those pass, the usual culprit is a typo in variables or a missing snippet reference. Checking `terraform plan` again usually shows it.
+If those pass, the usual culprit is a typo in variables or a missing snippet reference. A fresh `terraform plan` usually makes it obvious.

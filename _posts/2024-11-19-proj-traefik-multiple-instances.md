@@ -1,5 +1,5 @@
 ---
-title: "Traefik Multiple instances"
+title: "Traefik Multiple Instances on One IP"
 article_type: post
 date: 2024-11-19 22:27:00 +0100
 categories: [Project, Networking]
@@ -8,36 +8,52 @@ render_with_liquid: false
 alt: "Traefik logo"
 ---
 
+## Why I Needed This
 
-## Issue
+I run more than one server, and I like keeping my “stable” services separate from my “try‑new‑stuff” stack. The problem is simple: the router can only forward ports **80** and **443** to one internal host. So how do you run two Traefik instances behind a single public IP?
 
-Traefik requires ports 80 and 443 for routing traffic to its applications, a router can forward these ports to only one internal host
+My answer: make the primary Traefik the gatekeeper, and let it pass TLS traffic to a secondary Traefik based on SNI.
 
-The challenge arises when you have multiple servers running Traefik and you want them to serve different domains but are limited to one external IP
+## The Problem (In One Sentence)
 
-You want to host different services under different domains (`example1.com` and `example2.com`), each managed by a separate instance of Traefik, but you’re restricted by having only one IP address and the need to forward ports **80** and **443**.  
+Multiple Traefik instances want ports **80/443**, but one public IP can only forward those ports to a single host.
 
+## The Idea
 
-**Schematic to make**
+Use a **TCP router** on the primary Traefik to pass through TLS requests for the secondary domain. The primary Traefik keeps control of the public ports, and only forwards specific domains to the secondary instance.
 
+Think of it as “one front door, multiple houses.”
 
-### Concrete example
+## My Concrete Example
 
-You are running a primary Traefik instance on your home server, which handles the main domains (* . webguardx . com). 
-This server hosts services that are in current use. You want to set up a secondary Traefik instance on a other server to test new services like a development version of a website with a domain like : (* . test . webguardx . com)
+- Primary Traefik: runs on my main server and serves `*.webguardx.com`
+- Secondary Traefik: runs on a second server (NAS) and serves `*.test.webguardx.com`
+- Public IP: only one, only one port forward
 
-### Solution: 
+## Steps
 
-Using Traefik TCP Router The solution to this limitation is to use a **Traefik TCP router** on the primary instance, which acts as a passthrough for traffic to the secondary instance. 
+## How Traefik Config Is Organized
 
-The primary Traefik acts as the "gatekeeper" for both domains.  
+Think of Traefik config in two buckets:
 
-### Primary Traefik Instance
+- **Static**: how Traefik boots (entrypoints, providers, logging, ACME). This lives in `traefik.yml` (or `traefik.toml` / CLI flags) and only changes on restart.
+- **Dynamic**: how traffic gets routed (routers, services, middlewares). This can change on the fly and usually lives in `dynamic/*.yml` or comes from Docker labels.
 
-1. **Port Forwarding Configuration**: Set up your router to forward ports **80** and **443** to the primary instance of Traefik running on your main server.  
+Files you’ll bump into a lot:
 
-2. **Primary Traefik Configuration**: On the primary server, configure a **TCP router** to handle requests meant for the secondary domain. This router will then forward those requests to the secondary instance on your NAS.  3. **YAML Configuration File**: Create a file, such as `tcp-router.yml`, in the rules folder of your primary Traefik instance:     
+- `traefik.yml` for static config
+- `dynamic/*.yml` for routers/services/middlewares
+- `acme.json` for stored certificates
 
+In this setup the primary Traefik boots with its static config, then just watches `tcp-router.yml` in the dynamic folder. The secondary Traefik is separate and owns TLS for the test domain.
+
+### 1. Router Port Forwarding
+
+Forward **80** and **443** to the primary Traefik host.
+
+### 2. Add a TCP Router on the Primary
+
+Create a file like `tcp-router.yml` in your primary Traefik rules folder:
 
 ```yaml
 tcp:
@@ -57,7 +73,16 @@ services:
         - address: "192.168.1.254:443"
 ```
 
-- **entryPoints**: Define the HTTPS entry point.
-- **rule**: Matches requests to the second domain or its subdomains.
-- **tls.passthrough**: Forwards the request without terminating TLS.
-- **loadBalancer**: Points to the second Traefik instance (e.g., the Synology NAS).
+What matters here:
+
+- `rule`: Match the secondary domain and its subdomains.
+- `tls.passthrough: true`: Do **not** terminate TLS on the primary. The secondary Traefik must handle certificates.
+- `servers.address`: Point to the secondary Traefik host.
+
+### 3. Secondary Traefik Handles TLS
+
+Because we passthrough TLS, the secondary Traefik must:
+
+- Listen on `:443`
+- Have its own certificates (ACME, DNS challenge, or manual)
+- Serve the services for that domain
