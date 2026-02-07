@@ -119,19 +119,29 @@ Some aliases :
 
 ```bash
 alias v='vi' # Vim is named vi on Fedora, it uses vi as a symbolic name for vim. 
-alias ipa='ip a'
-alias s='sudo '
-alias ll='ls -lah'
-alias gs='git status'
+alias df='df -h'
+alias .='cd ..'
+alias ..='cd ../..'
+alias ...='cd ../../..'
 alias ll='ls -lah --color=auto'
 alias ls='ls -lhF --color=auto'
-alias k=kubectl
+alias c='clear'
+alias mkdir='mkdir -pv'
+
+
+alias k='kubectl'
 alias kgp='kubectl get pods'
-alias kl='kubectl logs'
+alias kl='kubectl logs -f'
 alias kex='kubectl exec -it'
-alias p=podman
-alias ps='podman ps -a'
+alias kga='kubectl get all'
+alias kd='kubectl describe'
+
+alias p='podman'
+alias pps='podman ps -a'
 alias pr='podman run -it'
+
+alias gs='git status -sb'
+
 ```
 
 ### 6. VScodium setup
