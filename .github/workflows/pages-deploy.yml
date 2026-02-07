@@ -1,39 +1,30 @@
-name: "Build and Deploy"
+name: "CI and Deploy"
+
 on:
   push:
-    branches:
-      - main
-      - master
-    paths-ignore:
+    branches: &deploy_branches [main]
+    paths-ignore: &ignore_paths
       - .gitignore
       - README.md
       - LICENSE
-
-  # Allows you to run this workflow manually from the Actions tab
+  pull_request:
+    branches: *deploy_branches
+    paths-ignore: *ignore_paths
   workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow one concurrent deployment
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      JEKYLL_ENV: production
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # submodules: true
-          # If using the 'assets' git submodule from Chirpy Starter, uncomment above
-          # (See: https://github.com/cotes2020/chirpy-starter/tree/main/assets)
 
       - name: Setup Pages
         id: pages
@@ -42,26 +33,37 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ruby
+          ruby-version: .ruby-version
           bundler-cache: true
 
+      - name: Set site dir
+        run: echo "SITE_DIR=_site${{ steps.pages.outputs.base_path }}" >> "$GITHUB_ENV"
+
       - name: Build site
-        run: bundle exec jekyll b -d "_site${{ steps.pages.outputs.base_path }}"
-        env:
-          JEKYLL_ENV: "production"
+        run: bundle exec jekyll b -d "${{ env.SITE_DIR }}"
 
       - name: Test site
         run: |
-          bundle exec htmlproofer _site \
-            \-\-disable-external \
-            \-\-ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
+          bundle exec htmlproofer "${{ env.SITE_DIR }}" \
+            --disable-external \
+            --ignore-urls "/^http:\/\/127.0.0.1/,/^http:\/\/0.0.0.0/,/^http:\/\/localhost/"
 
       - name: Upload site artifact
+        if: github.event_name == 'push' && github.ref_name == 'main'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "_site${{ steps.pages.outputs.base_path }}"
+          path: "${{ env.SITE_DIR }}"
 
   deploy:
+    if: github.event_name == 'push' && github.ref_name == 'main'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    # Allow one concurrent deployment
+    concurrency:
+      group: pages
+      cancel-in-progress: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
