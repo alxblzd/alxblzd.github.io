@@ -48,6 +48,9 @@ The root filesystem is read-only by default.
 
 If you need system-level packages, you layer RPMs.
 Layering means rpm-ostree rebuilds the OS image with those packages included, instead of modifying the running system.
+```bash
+rpm-ostree install restic
+```
 
 The new image (after update or layering rpms) becomes active only after reboot:
 ```bash
@@ -127,7 +130,8 @@ alias ll='ls -lah --color=auto'
 alias ls='ls -lhF --color=auto'
 alias c='clear'
 alias mkdir='mkdir -pv'
-
+alias icat='kitty +kitten icat --align left'
+alias tb='toolbox run -- bash -i '
 
 alias k='kubectl'
 alias kgp='kubectl get pods'
@@ -141,7 +145,6 @@ alias pps='podman ps -a'
 alias pr='podman run -it'
 
 alias gs='git status -sb'
-
 ```
 
 ### 6. VScodium setup
@@ -191,19 +194,11 @@ vi dotf-stow/.config/swappy/config
 then
 ```bash
 [Default]
-save_dir=$HOME/Desktop
+save_dir=$HOME/Pictures
 save_filename_format=screenshot-%Y%m%d-%H%M%S.png
-show_panel=false
-line_size=5
-text_size=20
-text_font=sans-serif
-paint_mode=brush
-early_exit=false
+show_panel=true
+paint_mode=rectangle
 fill_shape=false
-auto_save=false
-custom_color=rgba(193,125,17,1)
-transparent=false
-transparency=50
 ```
 and to finish, add this to sway : 
 ```bash
@@ -215,6 +210,82 @@ bindsym $mod+Shift+a exec grim -g "$(slurp)" - | swappy -f -
 look at this beautiful screenshot of my screenshot tool,swappy ! 
 
 ![swappy_screenshot](assets/img/swappy_screenshot.webp)
+
+### 8. Restic for encrypted backup
+
+On my laptop
+
+```bash
+rpm-ostree install restic
+
+```
+
+On my backup server : 
+```bash
+sudo apt update && sudo apt install restic
+
+# Dedicated user for backups 
+sudo adduser --disabled-password --gecos "" bkpuser
+
+# Base backup directory
+sudo mkdir -p /backups
+sudo chmod 711 /backups
+
+# Restic repository location
+sudo mkdir -p /backups/laptop
+sudo chown -R bkpuser:bkpuser /backups/laptop
+sudo chmod 700 /backups/laptop
+
+# Reuse an already provisioned SSH public key
+sudo mkdir -p /home/bkpuser/.ssh
+sudo cat /home/ansible/.ssh/authorized_keys >> /home/bkpuser/.ssh/authorized_keys
+
+# Permissions required by sshd
+sudo chown -R bkpuser:bkpuser /home/bkpuser/.ssh
+sudo chmod 700 /home/bkpuser/.ssh
+sudo chmod 600 /home/bkpuser/.ssh/authorized_keys
+```
+
+Create the script  :
+
+```bash
+#!/usr/bin/env bash
+
+REPO="sftp:bkpuser@myserverdomain.tld:/backups/laptop"
+
+echo "Checking repo..."
+if ! restic -r "$REPO" cat config >/dev/null 2>&1; then
+  echo "Repository not found, creating"
+  restic -r "$REPO" init
+fi
+
+echo "Running backup"
+restic -r "$REPO" backup \
+  "$HOME/Documents" \
+  "$HOME/Desktop" \
+  "$HOME/Pictures" \
+  "$HOME/dotf-stow" \
+  "$HOME/.ssh" \
+  "$HOME/.local/share/keyrings"
+
+echo "Cleaning old backups"
+restic -r "$REPO" forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --prune
+
+echo "OK - Backup finished"
+
+```
+
+executable and run : 
+``` bash
+chmod +x ~/restic-bkp.sh
+./restic-bkp.sh
+```
+
+Restic will prompt:
+``` 
+enter password for repository:
+```
+![restic_output](assets/img/restic_backup.webp)
 
 
 And the complete desk : 
