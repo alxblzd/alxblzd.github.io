@@ -96,6 +96,40 @@ stow .
 ```
 Stow links ~/dotf-stow/.bashrc → ~/.bashrc
 
+#### Gitleaks pre-commit guard
+
+I also use gitleaks to block secrets before they land in Git history.
+
+Install it in the environment where you commit (toolbox for me):
+```bash
+toolbox enter
+sudo dnf install gitleaks
+```
+
+The repo ships a versioned hook:
+```bash
+ls -l ~/dotf-stow/.githooks/pre-commit
+```
+
+Hook content:
+```bash
+#!/usr/bin/env sh
+set -e
+gitleaks git --staged --redact --verbose --exit-code 1
+```
+
+Tell Git to use the repo hooks directory:
+```bash
+git config core.hooksPath .githooks
+```
+
+Quick test (commit should fail):
+```bash
+echo "ghp_123456789012345678901234567890123456" > leak.txt
+git add leak.txt
+git commit -m "test gitleaks"
+```
+
 ### 5. Alias handling, .zshrc, .bashrc
 
 I treat my aliases like this: when the shell starts, ~/.bashrc or ~/.zshrc loads and immediately hands off to main.sh.
