@@ -64,7 +64,9 @@ Layer a package only if it's system level something needed at boot, before login
 If you don't want to reboot, don't layer it.
 
 You have two main options:
+
 Dev tools and Cli → use a container with Toolbox
+
 Desktop apps  → use Flatpak
 
 Toolbox is a way to run a mutable Fedora environment on top of an immutable system, it use podman. It creates a container that looks and feels like a normal Fedora install.
@@ -77,7 +79,8 @@ Apps run sandboxed, with isolated dependencies and independent updates.
 ```bash
 flatpak install flathub org.mozilla.Firefox
 ```
-Together, Toolbox and Flatpak keep the OS clean while giving you flexibility.
+
+Toolbox and Flatpak keep the OS clean while giving flexibility.
 
 
 ### 4. I and everyone dotfiles handling
@@ -181,34 +184,120 @@ alias pr='podman run -it'
 alias gs='git status -sb'
 ```
 
-### 6. VScodium setup
-Installed as a flatpak, so running sandboxed. The integrated terminal in VSCodium runs the sandboxed shell not your host shell.
+### 6. VSCodium setup
 
-It means limited filesystem and system access and doesn't see tools installed on the host. On Fedora Atomic, this is expected.
+There are multiple ways to install VSCodium on Fedora Atomic. I tested three approaches:
 
-You can work over SSH or use the terminal as a launcher and spawn commands on the host:
+1. Flatpak (sandboxed)
+2. RPM layered package
+3. Inside a Toolbox container
+
+Each method works, but each comes with trade-offs.
+
+#### Option 1: Flatpak install
+
+Install with Flatpak:
+
 ```bash
-flatpak-spawn hostname
+flatpak install flathub com.vscodium.codium
 ```
 
-a great combo is to run the container toolbox we talked about before :
+Installed as a Flatpak, VSCodium runs sandboxed. The integrated terminal runs inside the Flatpak sandbox, not your host shell.
+
+That means:
+
+- Limited filesystem and system access
+- Host-installed tools are not directly visible
+
+You can spawn commands on the host:
 
 ```bash
-flatpak-spawn toolbox run -- bash -i
+flatpak-spawn --host hostname
 ```
-And even better we can make it as a default integrated terminal, in vscodium you can use a new profile inside your settings.json for user : 
+
+A better workflow is to open a Toolbox shell from the integrated terminal:
+
 ```bash
-
-        "toolbox": {
-            "path": "flatpak-spawn",
-            "args": ["--host", "toolbox", "run", "--", "bash", "-i"]
-        }
-    },
-    "terminal.integrated.defaultProfile.linux": "toolbox",
+flatpak-spawn --host toolbox run -- bash -i
 ```
-![fedora_vscodium](assets/img/fedora_vscodium.webp)
 
-Perfect ! 
+To make this the default integrated terminal, add this to `settings.json`:
+
+```json
+{
+  "terminal.integrated.profiles.linux": {
+    "toolbox": {
+      "path": "flatpak-spawn",
+      "args": ["--host", "toolbox", "run", "--", "bash", "-i"]
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "toolbox"
+}
+```
+
+Issues I hit with Flatpak:
+
+- Environment variables not matching the host
+- Extensions not detecting system compilers
+- File permission quirks
+
+It works, but usually needs extra workarounds.
+
+#### Option 2: RPM layered install
+
+Install with `rpm-ostree`:
+
+```bash
+sudo rpm-ostree install codium
+systemctl reboot
+```
+
+This installs VSCodium directly into the host image.
+
+Advantages:
+
+- Full host filesystem access (no Flatpak sandbox)
+- Integrated terminal behaves normally
+- Extensions detect host compilers and tools
+- No `flatpak-spawn` bridge needed
+
+Issues:
+
+- Requires a reboot after install
+- Adds layering to the base image
+- Updates rebuild the deployment
+
+Layering too many RPMs goes against the container-first philosophy of Atomic systems.
+
+#### Option 3: Install inside Toolbox
+
+Instead of installing on the host, install inside your Toolbox:
+
+```bash
+toolbox enter
+sudo dnf install codium
+```
+
+Run it from inside Toolbox (with Wayland/X11 support enabled).
+
+Advantages:
+
+- Keeps the host image clean
+- Full access to development toolchain
+- No Flatpak sandbox restrictions
+- Feels close to native for development
+
+Issues:
+
+- GUI app from container are less integrated
+- Must launch from Toolbox (or via aliases)
+- I run a potatoe amd noticed a big performance overhead
+
+For my setup, performance was not good enough and I also prefer editing host config files directly.
+
+#### Recommendation
+
+The smoothest experience for me was RPM layering, one reboot and a near-native setup with minimal extra work.
 
 ### 7. Screenshot setup
 Now lets talk about setting up a near perfect screenshot utilie, swappy, Prerequisite it to have : 
