@@ -14,7 +14,7 @@ alt: "HAProxy, Coraza, and CRS"
 
 ## Why I built this
 
-HAProxy is still my preferred edge proxy. It's fast, stable, and behaves predictably under load.
+HAProxy is still my preferred edge proxy. It's fast, stable, and behaves predictably.
 
 I wanted proper WAF protection, but I also wanted to understand how a WAF actually works under the hood. Not just "enable it and hope for the best." I didn't want a heavy, all-in-one stack or something that hides the logic behind too many layers.
 
@@ -39,8 +39,6 @@ So the only stable path was:
 1. Build AWS-LC
 2. Build HAProxy 3.3 against AWS-LC with QUIC
 
-Building it was not the hardest part. Getting clean runtime behavior was.
-
 Quick context before the build steps:
 
 - **AWS-LC** is Amazon's crypto library (OpenSSL-compatible API) with very good performance and modern TLS support.
@@ -49,12 +47,12 @@ Quick context before the build steps:
 For a great deep dive on TLS stack choices and tradeoffs, I strongly recommend this HAProxy article:
 <https://www.haproxy.com/blog/state-of-ssl-stacks>
 
-I chose this mostly because I wanted the challenge and wanted to really understand the full chain in production: TLS library choice, HTTP/3 behavior, logging, WAF decisions, and ban enforcement.
+I chose this mostly because I wanted the challenge and wanted to really understand the full chain: TLS library choice, HTTP/3 behavior, logging, WAF decisions, and ban enforcement.
 
 ## 1. Install HAProxy 3.3 with AWS-LC and QUIC (ARM)
 
 On ARM, I now default to building from source directly.
-It is the most reliable way to get HAProxy 3.3 + AWS-LC + QUIC in a predictable way.
+It is a reliable way to get HAProxy 3.3 + AWS-LC + QUIC on my oracle free tier arm server.
 
 
 ### 1.1 Build AWS-LC
@@ -194,7 +192,7 @@ For Nextcloud, I use the official plugin:
 I also keep narrow, path-specific exclusions when needed.
 No broad bypasses.
 
-## 6. Real QUIC pain points in production
+## 6 QUIC pain points 
 
 ### 6.1 Source build side effects
 
