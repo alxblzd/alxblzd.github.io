@@ -18,13 +18,61 @@ What it gives me:
 - Coraza-SPOA as the WAF engine
 - OWASP CRS for sensible, battle-tested rules
 
-## 1. Install HAProxy (Debian Trixie)
+## Update (2026): QUIC + AWS-LC on ARM
 
-`haproxy.debian.net` is a wizard that helps you choose the right repo for your OS and the HAProxy version you want. In my case, I am running Debian Trixie (13) and wanted HAProxy `3.0-stable (LTS)`, so I installed the packaged 3.0 series.
+This stack evolved a lot since the initial write-up. The edge now runs HAProxy 3.3 with QUIC enabled, linked against AWS-LC, on ARM instances.
+
+The main issue: `haproxy-awslc` was not available as a prebuilt package for my ARM target, so I had to compile HAProxy from source against a locally built AWS-LC.
+
+Result after build validation:
+
+- `+OPENSSL_AWSLC`
+- `+QUIC`
+- QUIC listener on UDP `:443`
+
+## 1. Install HAProxy 3.3 with AWS-LC and QUIC (ARM)
+
+I still configure the HAProxy repository first, but on ARM the AWS-LC package may be missing. In that case, build from source is the reliable path.
+
+### 1.1 Repository setup
 
 ```bash
-apt-get update
-apt-get install haproxy=3.0.*
+sudo install -d -m 0755 /usr/share/keyrings
+sudo wget -qO /usr/share/keyrings/HAPROXY-key-community.asc https://pks.haproxy.com/linux/community/RPM-GPG-KEY-HAProxy
+echo "deb [arch=arm64 signed-by=/usr/share/keyrings/HAPROXY-key-community.asc] https://www.haproxy.com/download/haproxy/performance/ubuntu/ha33 noble main" | sudo tee /etc/apt/sources.list.d/haproxy.list
+sudo apt-get update
+```
+
+### 1.2 Build AWS-LC
+
+```bash
+sudo apt-get install -y build-essential cmake git libpcre2-dev zlib1g-dev
+cd /usr/local/src
+sudo git clone --branch v1.68.0 --depth 1 https://github.com/aws/aws-lc.git
+cd aws-lc
+sudo cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/aws-lc
+sudo cmake --build build --parallel "$(nproc)"
+sudo cmake --install build
+```
+
+### 1.3 Build HAProxy 3.3 against AWS-LC with QUIC
+
+```bash
+cd /usr/local/src
+sudo wget -O haproxy-3.3.4.tar.gz https://www.haproxy.org/download/3.3/src/haproxy-3.3.4.tar.gz
+sudo tar xzf haproxy-3.3.4.tar.gz
+cd haproxy-3.3.4
+
+sudo make -j"$(nproc)" \
+  ERR=1 CC=gcc TARGET=linux-glibc \
+  USE_OPENSSL_AWSLC=1 USE_QUIC=1 \
+  USE_PCRE2=1 USE_ZLIB=1 \
+  SSL_INC=/opt/aws-lc/include \
+  SSL_LIB=/opt/aws-lc/lib \
+  ADDLIB="-Wl,-rpath,/opt/aws-lc/lib"
+
+sudo make install PREFIX=/usr SBINDIR=/usr/sbin
+haproxy -vv | grep -Ei 'OPENSSL_AWSLC|QUIC'
 ```
 
 ## 2. Install Coraza-SPOA
@@ -62,7 +110,7 @@ mkdir -p /etc/coraza-spoa
 cd /etc/coraza-spoa
 
 # Check latest version: https://github.com/coreruleset/coreruleset/releases
-sudo wget https://github.com/coreruleset/coreruleset/archive/refs/tags/v4.10.0.zip
+sudo wget https://github.com/coreruleset/coreruleset/archive/refs/tags/v4.24.0.zip
 
 mkdir -p /var/log/coraza-spoa /var/log/coraza-spoa/audit
 touch /var/log/coraza-spoa/server.log /var/log/coraza-spoa/error.log /var/log/coraza-spoa/audit.log /var/log/coraza-spoa/debug.log
@@ -142,7 +190,7 @@ How they fit in:
 - CRS rules run
 - Plugin rules run after CRS
 
-For Nextcloud I use the official rule exclusion plugin:
+For Nextcloud I use the official rule exclusion plugin, plus a narrow exclusion for `/web/config.json` to avoid noisy false positives on that path:
 
 `https://github.com/coreruleset/nextcloud-rule-exclusions-plugin`
 
@@ -155,9 +203,12 @@ Quick install idea:
 
 If you run multiple apps behind the same proxy, you can conditionally enable the plugin per host using a rule in the plugin config (I use the `Host` header for Coraza).
 
+## Automation Note
+
+I also keep this deployment automated with Ansible roles (HAProxy, Coraza, fail2ban, WireGuard, ACME), but the core of this setup is still the same architecture: HAProxy + Coraza-SPOA + OWASP CRS.
+
 ## Next Steps I Want to Add
 
-- Ansible playbook
 - Log handling and rotation
 - Rule exclusions and IP exceptions
 - IP reputation or blocklists
