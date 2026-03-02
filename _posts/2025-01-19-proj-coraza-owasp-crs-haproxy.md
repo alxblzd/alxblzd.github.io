@@ -3,38 +3,46 @@ title: "Coraza-SPOA and OWASP CRS on HAProxy"
 article_type: post
 date: 2025-01-19 15:28:00 +0100
 categories: [Project, Security]
-tags: [haproxy, coraza, waf, owasp, security]
+tags: [haproxy, coraza, waf, owasp, security, quic, http3]
 render_with_liquid: false
 alt: "HAProxy, Coraza, and CRS"
 ---
 
-## Why This Setup
+## Repositories
 
-The old mighty HAProxy is still my go-to gatekeeper. I needed a fast, reliable frontend for my site, and then I wanted real WAF coverage without dragging in a heavyweight stack. I considered CrowdSec and BunkerWeb, but I preferred the hard-way setup to learn the basics properly. So I paired HAProxy with Coraza-SPOA and the OWASP Core Rule Set. This is the exact setup I run in my lab.
+- Automation: <https://github.com/alxblzd/ansible-oracle-haproxy-edge>
 
-What it gives me:
+## Why I built this
 
-- HAProxy as the edge proxy
+HAProxy is still my favorite edge proxy. It is fast, stable, and easy to reason about.
+
+I wanted real WAF coverage, but I did not want a huge stack. So I went with:
+
+- HAProxy at the edge
 - Coraza-SPOA as the WAF engine
-- OWASP CRS for sensible, battle-tested rules
+- OWASP CRS as the rules baseline
+- Fail2ban for automatic bans
 
-## Update (2026): QUIC + AWS-LC on ARM
+I looked at options like CrowdSec and BunkerWeb too, but this setup gave me more control and helped me understand what is really happening.
 
-This stack evolved a lot since the initial write-up. The edge now runs HAProxy 3.3 with QUIC enabled, linked against AWS-LC, on ARM instances.
+## 2026 update: QUIC + AWS-LC on ARM
 
-The main issue: `haproxy-awslc` was not available as a prebuilt package for my ARM target, so I had to compile HAProxy from source against a locally built AWS-LC.
+The big change since the first version is HTTP/3 (QUIC) on ARM nodes with HAProxy 3.3 + AWS-LC.
 
-Result after build validation:
+Main issue: on ARM, `haproxy-awslc` was not always available as a package in my environment.
+So the reliable path was:
 
-- `+OPENSSL_AWSLC`
-- `+QUIC`
-- QUIC listener on UDP `:443`
+1. Build AWS-LC
+2. Build HAProxy 3.3 against AWS-LC with QUIC
+3. Check features in `haproxy -vv` (`+OPENSSL_AWSLC`, `+QUIC`)
+
+Building it was not the hardest part. Getting clean runtime behavior was.
 
 ## 1. Install HAProxy 3.3 with AWS-LC and QUIC (ARM)
 
-I still configure the HAProxy repository first, but on ARM the AWS-LC package may be missing. In that case, build from source is the reliable path.
+I still configure the HAProxy repo first. If the ARM package is missing, I build from source.
 
-### 1.1 Repository setup
+### 1.1 Repo setup
 
 ```bash
 sudo install -d -m 0755 /usr/share/keyrings
@@ -55,7 +63,7 @@ sudo cmake --build build --parallel "$(nproc)"
 sudo cmake --install build
 ```
 
-### 1.3 Build HAProxy 3.3 against AWS-LC with QUIC
+### 1.3 Build HAProxy against AWS-LC with QUIC
 
 ```bash
 cd /usr/local/src
@@ -77,9 +85,9 @@ haproxy -vv | grep -Ei 'OPENSSL_AWSLC|QUIC'
 
 ## 2. Install Coraza-SPOA
 
-Coraza-SPOA is written in Go. I install Go, build the agent, and run it as a system user.
+Coraza-SPOA is in Go. I install Go, build the binary, and run it as a dedicated system user.
 
-Install Go (grab the latest stable from `go.dev/dl/`):
+Install Go (pick a current stable release from `go.dev/dl/`):
 
 ```bash
 wget https://go.dev/dl/go1.23.5.linux-amd64.tar.gz
@@ -96,7 +104,6 @@ Build and install Coraza-SPOA:
 sudo apt install git make gcc pkg-config wget unzip
 git clone https://github.com/corazawaf/coraza-spoa.git
 cd ./coraza-spoa
-
 go run mage.go build
 
 addgroup --quiet --system coraza-spoa
@@ -108,8 +115,6 @@ Create directories, fetch CRS, and adjust config:
 ```bash
 mkdir -p /etc/coraza-spoa
 cd /etc/coraza-spoa
-
-# Check latest version: https://github.com/coreruleset/coreruleset/releases
 sudo wget https://github.com/coreruleset/coreruleset/archive/refs/tags/v4.24.0.zip
 
 mkdir -p /var/log/coraza-spoa /var/log/coraza-spoa/audit
@@ -123,38 +128,36 @@ sed -i 's/bind: 0.0.0.0:9000/bind: 127.0.0.1:9000/' /etc/coraza-spoa/config.yaml
 sed -i 's|log_file:.*|log_file: /var/log/coraza-spoa/coraza-agent.log|' /etc/coraza-spoa/config.yaml
 ```
 
-At this point, Coraza-SPOA is installed and ready.
+## 3. How Coraza works with HAProxy
 
-## 3. Wire Coraza into HAProxy
+Quick refresher:
 
-A quick terminology refresher:
+- **SPOE**: Stream Processing Offload Engine (HAProxy side)
+- **SPOA**: Stream Processing Offload Agent (Coraza side)
+- **SPOP**: protocol between the two
 
-- SPOE: Stream Processing Offload Engine (HAProxy side)
-- SPOA: Stream Processing Offload Agent (Coraza side)
-- SPOP: Stream Processing Offload Protocol (wire protocol)
-- WAF: Web Application Firewall
+Request flow:
 
-HAProxy sends request data to Coraza via SPOE/SPOP, Coraza evaluates rules, and HAProxy allows or blocks based on that decision.
+1. Request hits HAProxy.
+2. HAProxy sends request context to Coraza over SPOE/SPOP.
+3. Coraza evaluates rules (CRS + plugin rules + custom exclusions).
+4. Coraza returns a decision (allow / deny / redirect / drop).
+5. HAProxy enforces the decision.
+
+Important point: Coraza does not replace HAProxy. HAProxy still controls traffic. Coraza is the WAF decision engine.
 
 ![Coraza engine flow](/assets/img/coraza_spoa_flow.webp)
 
-### Configuration files
+### Main config files
 
-- `/etc/haproxy/haproxy.cfg` for HAProxy core config
-- `/etc/haproxy/coraza.cfg` for HAProxy SPOE config
-- `/etc/coraza-spoa/config.yaml` for Coraza-SPOA config
-- `/etc/coraza-spoa/coraza.conf` for the Coraza engine config
+- `/etc/haproxy/haproxy.cfg`
+- `/etc/haproxy/coraza.cfg`
+- `/etc/coraza-spoa/config.yaml`
+- `/etc/coraza-spoa/coraza.conf`
 
-## 4. CRS Rules Primer
+## 4. CRS rules quick primer
 
-Coraza uses ModSecurity-style rules (`SecRule`). A rule has four parts:
-
-- Variables (targets)
-- Operators (how to match)
-- Transformations (normalize input)
-- Actions (what to do when it matches)
-
-Structure:
+Coraza uses ModSecurity-style syntax:
 
 ```text
 SecRule VARIABLES "OPERATOR" "TRANSFORMATIONS,ACTIONS"
@@ -166,52 +169,116 @@ Example:
 SecRule REQUEST_URI "@streq /index.php" "id:1,phase:1,t:lowercase,deny"
 ```
 
-### Rule Phases
+Phases are:
 
-ModSecurity processes rules in phases:
-
-- Request Headers
-- Request Body
-- Response Headers
-- Response Body
+- Request headers
+- Request body
+- Response headers
+- Response body
 - Logging
 
-Reference: https://github.com/owasp-modsecurity/ModSecurity/wiki/Reference-Manual-(v2.x)-Processing-Phases
+Reference: <https://github.com/owasp-modsecurity/ModSecurity/wiki/Reference-Manual-(v2.x)-Processing-Phases>
 
-## CRS Plugins (Nextcloud Example)
+## 5. CRS plugins (Nextcloud example)
 
-Plugins are optional rule packs that extend CRS or disable noisy rules for a specific app. I keep the core ruleset lean and add plugins only when I need them. It reduces false positives and keeps the “attack window” small.
+For Nextcloud, I use the official plugin:
 
-How they fit in:
+<https://github.com/coreruleset/nextcloud-rule-exclusions-plugin>
 
-- CRS config loads first
-- Plugin config loads next
-- Plugin rules run before CRS
-- CRS rules run
-- Plugin rules run after CRS
+I also keep narrow, path-specific exclusions when needed.
+No broad bypasses.
 
-For Nextcloud I use the official rule exclusion plugin, plus a narrow exclusion for `/web/config.json` to avoid noisy false positives on that path:
+## 6. Real QUIC pain points in production
 
-`https://github.com/coreruleset/nextcloud-rule-exclusions-plugin`
+### 6.1 Source build side effects
 
-Quick install idea:
+With source-built HAProxy, distro defaults may be missing:
 
-- Ensure a `crs/plugins/` folder exists
-- Copy the plugin files there (or symlink them)
-- Rename any `*.example` config to `*.conf`
-- Reload HAProxy/Coraza
+- `haproxy` user/group
+- systemd unit
+- `/etc/haproxy/errors/*.http`
 
-If you run multiple apps behind the same proxy, you can conditionally enable the plugin per host using a rule in the plugin config (I use the `Host` header for Coraza).
+So you can have a good binary and still fail at startup/validation.
 
-## Automation Note
+### 6.2 Logging quality
 
-I also keep this deployment automated with Ansible roles (HAProxy, Coraza, fail2ban, WireGuard, ACME), but the core of this setup is still the same architecture: HAProxy + Coraza-SPOA + OWASP CRS.
+If forwarded headers and Coraza real-IP handling are not aligned, logs can show loopback instead of real client IPs.
+That makes incident response much harder.
 
-## Next Steps I Want to Add
+### 6.3 Correctly banning abusive QUIC clients
 
-- Log handling and rotation
-- Rule exclusions and IP exceptions
-- IP reputation or blocklists
-- CRS tuning for Nextcloud and other apps
-- Phase 1 vs Phase 2 explanation
-- Deeper breakdown of each config file
+This part was trickier than expected.
+
+At first, bans looked active in Fail2ban, but abusive HTTP/3 traffic could still show up.
+It is not just “TCP bad / UDP good”.
+
+For bans to work reliably, several conditions must be met at the same time:
+
+1. HAProxy must log sufficient context for correlation (client IP, status code, request path, timing).
+2. Coraza decisions must be clearly and consistently recorded in the logs.
+3. Fail2ban filters must match the actual log format (journald vs file-based logs, correct regex).
+4. The ban action must block all transport paths used by clients (both TCP and UDP on port 443).
+5. nftables rules must be verified in the active chains or sets after Fail2ban reloads.
+
+If one link is wrong, enforcement looks enabled but is incomplete.
+
+## Enforcement model
+
+Attacker (HTTP/3 over UDP/443)  
+→ HAProxy frontend  
+→ Coraza deny / 403  
+→ Fail2ban catches repeated events  
+→ nftables bans source for **TCP and UDP**
+
+Two important things:
+
+- Fail2ban does not inspect QUIC packets directly, it reacts to log events.
+- If logging is incomplete or delayed, enforcement will be delayed too.
+
+
+### Fail2ban pattern that worked
+
+```ini
+[coraza]
+action = nftables[type=allports, protocol=tcp, name=coraza-tcp]
+         nftables[type=allports, protocol=udp, name=coraza-udp]
+
+[haproxy-rate]
+action = nftables[type=allports, protocol=tcp, name=haproxy-rate-tcp]
+         nftables[type=allports, protocol=udp, name=haproxy-rate-udp]
+```
+
+Then check three simple things:
+
+1. Make sure the jails are actually loaded and running:
+    - fail2ban-client status
+    - fail2ban-client status coraza
+    - fail2ban-client status haproxy-rate
+
+2. Verify that nftables really has the ban rules in place (and that they apply to both TCP and UDP).
+
+3. Test it for real, from a banned IP, try hitting the server over HTTP/2 and HTTP/3 and confirm it's blocked.
+
+Also, be realistic about QUIC. Because it reuses connections and retries differently than TCP, a client might still look “active” for a short moment right after being banned. New connections should be dropped, but existing ones can linger briefly.
+
+
+## 7. False positives and exclusion strategy
+
+What stayed stable for me:
+
+1. Keep CRS enabled.
+2. Add official app plugin when available.
+3. Add small, narrow exclusions only for proven false positives.
+4. Keep scanner probes blocked (`/.ssh/id_rsa`, generic probes, etc.).
+
+For Nextcloud DAV, parser-related false positives can happen. Handle them with URI + method scoped exclusions.
+
+## 8. Automation note
+
+Everything is deployed with Ansible roles (WireGuard, Fail2ban, Coraza, ACME, HAProxy and post-checks) so the setup stays reproducible. Doing it by hand each time would be painful and easy to mess up.
+
+On an Oracle Cloud free tier 4-core ARM instance, a full build takes about 10 minutes end to end. After the build, a redeployement take around 2-3mn max
+
+## 9. Final thoughts
+
+Enabling HTTP/3 is the not so easy part (if you are on arm :') ). Keeping enforcement and observability correct under HTTP/3 is a little challenge.
