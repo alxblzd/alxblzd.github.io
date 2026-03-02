@@ -10,48 +10,54 @@ alt: "HAProxy, Coraza, and CRS"
 
 ## Repositories
 
-- Automation: <https://github.com/alxblzd/ansible-oracle-haproxy-edge>
+- Public repo : <https://github.com/alxblzd/ansible-oracle-haproxy-edge>
 
 ## Why I built this
 
-HAProxy is still my favorite edge proxy. It is fast, stable, and easy to reason about.
+HAProxy is still my preferred edge proxy. It's fast, stable, and behaves predictably under load.
 
-I wanted real WAF coverage, but I did not want a huge stack. So I went with:
+I wanted proper WAF protection, but I also wanted to understand how a WAF actually works under the hood. Not just "enable it and hope for the best." I didn't want a heavy, all-in-one stack or something that hides the logic behind too many layers.
 
-- HAProxy at the edge
-- Coraza-SPOA as the WAF engine
-- OWASP CRS as the rules baseline
-- Fail2ban for automatic bans
+This setup forces you to understand the flow: how requests move through HAProxy, how Coraza evaluates rules, and how decisions are applied. It's not plug-and-play, but that's part of the point. You see what is happening, and you stay in control.
 
-I looked at options like CrowdSec and BunkerWeb too, but this setup gave me more control and helped me understand what is really happening.
+So I built the stack around:
+
+- **HAProxy** at the edge
+- **Coraza-SPOA** as the WAF engine
+
+I also looked at CrowdSec and BunkerWeb, but this combination gave me clearer visibility into what was blocked and why, and it was easier to tune when something needed adjustment.
 
 ## 2026 update: QUIC + AWS-LC on ARM
 
 The big change since the first version is HTTP/3 (QUIC) on ARM nodes with HAProxy 3.3 + AWS-LC.
 
-Main issue: on ARM, `haproxy-awslc` was not always available as a package in my environment.
-So the reliable path was:
+HAProxy also provides official Performance Packages (HAProxy 3.2+ with modern crypto libraries): <https://www.haproxy.com/downloads>.
+
+Main issue: on ARM, `haproxy-awslc` was not available in my environment, and I could not find a reliable prebuilt package.
+So the only stable path was:
 
 1. Build AWS-LC
 2. Build HAProxy 3.3 against AWS-LC with QUIC
-3. Check features in `haproxy -vv` (`+OPENSSL_AWSLC`, `+QUIC`)
 
 Building it was not the hardest part. Getting clean runtime behavior was.
 
+Quick context before the build steps:
+
+- **AWS-LC** is Amazon's crypto library (OpenSSL-compatible API) with very good performance and modern TLS support.
+- **QUIC** is the transport behind HTTP/3 (UDP-based), useful for lower latency and better behavior on unstable networks.
+
+For a great deep dive on TLS stack choices and tradeoffs, I strongly recommend this HAProxy article:
+<https://www.haproxy.com/blog/state-of-ssl-stacks>
+
+I chose this mostly because I wanted the challenge and wanted to really understand the full chain in production: TLS library choice, HTTP/3 behavior, logging, WAF decisions, and ban enforcement.
+
 ## 1. Install HAProxy 3.3 with AWS-LC and QUIC (ARM)
 
-I still configure the HAProxy repo first. If the ARM package is missing, I build from source.
+On ARM, I now default to building from source directly.
+It is the most reliable way to get HAProxy 3.3 + AWS-LC + QUIC in a predictable way.
 
-### 1.1 Repo setup
 
-```bash
-sudo install -d -m 0755 /usr/share/keyrings
-sudo wget -qO /usr/share/keyrings/HAPROXY-key-community.asc https://pks.haproxy.com/linux/community/RPM-GPG-KEY-HAProxy
-echo "deb [arch=arm64 signed-by=/usr/share/keyrings/HAPROXY-key-community.asc] https://www.haproxy.com/download/haproxy/performance/ubuntu/ha33 noble main" | sudo tee /etc/apt/sources.list.d/haproxy.list
-sudo apt-get update
-```
-
-### 1.2 Build AWS-LC
+### 1.1 Build AWS-LC
 
 ```bash
 sudo apt-get install -y build-essential cmake git libpcre2-dev zlib1g-dev
@@ -63,7 +69,7 @@ sudo cmake --build build --parallel "$(nproc)"
 sudo cmake --install build
 ```
 
-### 1.3 Build HAProxy against AWS-LC with QUIC
+### 1.2 Build HAProxy against AWS-LC with QUIC
 
 ```bash
 cd /usr/local/src
