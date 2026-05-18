@@ -27,75 +27,116 @@ So I built the stack around:
 
 I also looked at CrowdSec and BunkerWeb, but this combination gave me clearer visibility into what was blocked and why, and it was easier to tune when something needed adjustment.
 
-## 2026 update: QUIC + AWS-LC on ARM
+## May 2026 update: official HAProxy AWS-LC packages
 
-The big change since the first version is HTTP/3 (QUIC) on ARM nodes with HAProxy 3.3 + AWS-LC.
+The big change since the first version is that I no longer build HAProxy and AWS-LC from source by default.
 
-HAProxy also provides official Performance Packages (HAProxy 3.2+ with modern crypto libraries): <https://www.haproxy.com/downloads>.
+HAProxy now provides official Community Performance Packages built with AWS-LC:
 
-Main issue: on ARM, `haproxy-awslc` was not available in my environment, and I could not find a reliable prebuilt package.
-So the only stable path was:
+- Official downloads: <https://www.haproxy.com/downloads>
+- Release announcement: <https://www.haproxy.com/company/news/haproxy-technologies-announces-availability-of-haproxy-community-performance-packages-compiled-with-aws-lc>
 
-1. Build AWS-LC
-2. Build HAProxy 3.3 against AWS-LC with QUIC
+That changes the operational decision.
 
-Quick context before the build steps:
+In January 2025, the source build made sense for my Oracle ARM edge node because the package path was not available in my environment. I wanted HAProxy 3.3, QUIC, and AWS-LC, and compiling both AWS-LC and HAProxy was the reliable way to get there.
 
-- **AWS-LC** is Amazon's crypto library (OpenSSL-compatible API) with very good performance and modern TLS support.
-- **QUIC** is the transport behind HTTP/3 (UDP-based), useful for lower latency and better behavior on unstable networks.
+In May 2026, that is no longer the right default. The `haproxy-awslc` package gives me the same practical target:
+
+- HAProxy 3.3
+- AWS-LC TLS runtime
+- QUIC / HTTP/3 support
+- distro package management
+- a normal upgrade and rollback path
+
+Current version in my test Oracle ARM deployment:
+
+- HAProxy `3.3.10-0+ha33+ubuntu24.04u1`
+- Running SSL library: `AWS-LC 3.3.0`
+- Build flags include `USE_OPENSSL_AWSLC=1` and `USE_QUIC=1`
+- Coraza-SPOA `v0.7.2`
+- OWASP CRS `v4.26.0`
+
+The source build was useful, but was operationnally harder:
+
+- I had to manage `/usr/local/src/aws-lc`, `/opt/aws-lc`, HAProxy source trees, and build markers.
+- Upgrades were manual.
+
+So the new rule is simple:
+
+- Use `haproxy-awslc` from the HAProxy performance repository when the package exists for the target distro and architecture.
+- Keep source builds only as a fallback for unsupported platforms or lab experiments.
+- Clean up old source build artifacts, but do not remove packaged runtime libraries.
+
+Quick context:
+
+- **AWS-LC** is Amazon's crypto library with an OpenSSL-compatible API and strong TLS performance.
+- **QUIC** is the UDP-based transport behind HTTP/3.
 
 For a great deep dive on TLS stack choices and tradeoffs, I strongly recommend this HAProxy article:
 <https://www.haproxy.com/blog/state-of-ssl-stacks>
 
-I chose this mostly because I wanted the challenge and wanted to really understand the full chain: TLS library choice, HTTP/3 behavior, logging, WAF decisions, and ban enforcement.
+I still like understanding the full chain: TLS library choice, HTTP/3 behavior, logging, WAF decisions, and ban enforcement. I just do not want the production edge node to be a custom compiler pipeline when an official package now exists.
 
-## 1. Install HAProxy 3.3 with AWS-LC and QUIC (ARM)
+## 1. Install HAProxy 3.3 with AWS-LC and QUIC
 
-On ARM, I now default to building from source directly.
-It is a reliable way to get HAProxy 3.3 + AWS-LC + QUIC on my oracle free tier arm server.
-
-
-### 1.1 Build AWS-LC
+On Ubuntu 24.04 ARM, I now use the HAProxy performance repository and install `haproxy-awslc`.
 
 ```bash
-sudo apt-get install -y build-essential cmake git libpcre2-dev zlib1g-dev
-cd /usr/local/src
-sudo git clone --branch v1.68.0 --depth 1 https://github.com/aws/aws-lc.git
-cd aws-lc
-sudo cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/aws-lc
-sudo cmake --build build --parallel "$(nproc)"
-sudo cmake --install build
+sudo apt-get install -y ca-certificates gnupg socat wget
+sudo install -d -m 0755 /usr/share/keyrings
+sudo wget -O /usr/share/keyrings/HAPROXY-key-community.asc \
+  https://pks.haproxy.com/linux/community/RPM-GPG-KEY-HAProxy
+
+echo "deb [arch=arm64 signed-by=/usr/share/keyrings/HAPROXY-key-community.asc] https://www.haproxy.com/download/haproxy/performance/ubuntu/ha33 noble main" \
+  | sudo tee /etc/apt/sources.list.d/haproxy.list
+
+sudo apt-get update
+sudo apt-get install -y haproxy-awslc
+haproxy -vv | grep -Ei 'HAProxy version|OPENSSL_AWSLC|QUIC|AWS-LC'
 ```
 
-### 1.2 Build HAProxy against AWS-LC with QUIC
+On my test Oracle ARM edge, that reports:
+
+```text
+HAProxy version 3.3.10-0+ha33+ubuntu24.04u1
+OPTIONS = USE_OPENSSL=1 USE_OPENSSL_AWSLC=1 ... USE_QUIC=1 ...
+Built with SSL library version : OpenSSL 1.1.1 (compatible; AWS-LC 3.3.0)
+Running on SSL library version : AWS-LC 3.3.0
+```
+
+If HAProxy is started by systemd as the `haproxy` user, QUIC on UDP/443 still needs the binary to keep the privileged bind capability:
 
 ```bash
-cd /usr/local/src
-sudo wget -O haproxy-3.3.4.tar.gz https://www.haproxy.org/download/3.3/src/haproxy-3.3.4.tar.gz
-sudo tar xzf haproxy-3.3.4.tar.gz
-cd haproxy-3.3.4
-
-sudo make -j"$(nproc)" \
-  ERR=1 CC=gcc TARGET=linux-glibc \
-  USE_OPENSSL_AWSLC=1 USE_QUIC=1 \
-  USE_PCRE2=1 USE_ZLIB=1 \
-  SSL_INC=/opt/aws-lc/include \
-  SSL_LIB=/opt/aws-lc/lib \
-  ADDLIB="-Wl,-rpath,/opt/aws-lc/lib"
-
-sudo make install PREFIX=/usr SBINDIR=/usr/sbin
-haproxy -vv | grep -Ei 'OPENSSL_AWSLC|QUIC'
+sudo apt-get install -y libcap2-bin
+sudo setcap cap_net_bind_service=+ep /usr/sbin/haproxy
+sudo getcap /usr/sbin/haproxy
 ```
+
+Without that, HAProxy can start but log this after a restart:
+
+```text
+Permission error on QUIC socket binding for proxy front_webservers.
+```
+
+Also keep `nbthread` aligned with the actual CPU count. My current production Oracle edge has one CPU, so the HAProxy global section uses:
+
+```haproxy
+nbthread 1
+```
+
+If `nbthread` is too high, HAProxy warns that several threads are bound to the same CPU and performance can degrade.
+
+The Ansible role now also removes legacy source build paths such as `/usr/local/src/haproxy-*` and old build-state markers. It intentionally refuses to clean `/opt/aws-lc`, because the packaged HAProxy AWS-LC runtime uses that path.
 
 ## 2. Install Coraza-SPOA
 
 Coraza-SPOA is in Go. I install Go, build the binary, and run it as a dedicated system user.
 
-Install Go (pick a current stable release from `go.dev/dl/`):
+Install Go (pick a current stable release from `go.dev/dl/` and use the right architecture for your host):
 
 ```bash
-wget https://go.dev/dl/go1.23.5.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.23.5.linux-amd64.tar.gz
+wget https://go.dev/dl/go1.23.5.linux-arm64.tar.gz
+sudo tar -C /usr/local -xzf go1.23.5.linux-arm64.tar.gz
 export PATH=$PATH:/usr/local/go/bin
 echo 'export GOPATH=$HOME/go' >> ~/.bashrc
 source ~/.bashrc
@@ -119,7 +160,7 @@ Create directories, fetch CRS, and adjust config:
 ```bash
 mkdir -p /etc/coraza-spoa
 cd /etc/coraza-spoa
-sudo wget https://github.com/coreruleset/coreruleset/archive/refs/tags/v4.24.0.zip
+sudo wget https://github.com/coreruleset/coreruleset/archive/refs/tags/v4.25.0.zip
 
 mkdir -p /var/log/coraza-spoa /var/log/coraza-spoa/audit
 touch /var/log/coraza-spoa/server.log /var/log/coraza-spoa/error.log /var/log/coraza-spoa/audit.log /var/log/coraza-spoa/debug.log
@@ -192,7 +233,7 @@ For Nextcloud, I use the official plugin:
 I also keep narrow, path-specific exclusions when needed.
 No broad bypasses.
 
-## 6 QUIC pain points 
+## 6. QUIC pain points
 
 ### 6.1 Source build side effects
 
@@ -201,6 +242,7 @@ With source-built HAProxy, distro defaults may be missing:
 - `haproxy` user/group
 - systemd unit
 - `/etc/haproxy/errors/*.http`
+- Linux capabilities for binding QUIC on UDP/443 as a non-root worker
 
 So you can have a good binary and still fail at startup/validation.
 
@@ -281,8 +323,56 @@ For Nextcloud DAV, parser-related false positives can happen. Handle them with U
 
 Everything is deployed with Ansible roles (WireGuard, Fail2ban, Coraza, ACME, HAProxy and post-checks) so the setup stays reproducible. Doing it by hand each time would be painful and easy to mess up.
 
-On an Oracle Cloud free tier 4-core ARM instance, a full build takes about 10 minutes end to end. After the build, a redeployement take around 2-3mn max
+The private deployment is now focused on Oracle edge hosts:
 
-## 9. Final thoughts
+- `prod-edge-oci-01`
+- `test-edge-oci-01`
 
-Enabling HTTP/3 is the not so easy part (if you are on arm :') ). Keeping enforcement and observability correct under HTTP/3 is a little challenge.
+The HAProxy role also keeps the operational fixes in place:
+
+- `haproxy_global_nbthread: 1` for the current 1 CPU production edge VM
+- `cap_net_bind_service=+ep` on `/usr/sbin/haproxy` when QUIC is enabled
+- `haproxy-awslc` from the official HAProxy performance repository
+- cleanup for old source-build directories without deleting the packaged AWS-LC runtime
+
+This makes redeployments much cleaner. The old source build path spent several minutes compiling AWS-LC and HAProxy, and it left more moving parts behind. With the package path, the edge role can converge through normal APT operations and focus on config validation, certs, Coraza, Fail2ban, and service health.
+
+## 9. Runtime verification
+
+These are the checks I use after deploying or rebuilding:
+
+```bash
+systemctl status coraza-spoa haproxy fail2ban
+ss -ltnp | egrep '(:80|:443|:9000)'
+ss -lunp | egrep ':443'
+haproxy -vv | egrep 'HAProxy version|OPENSSL_AWSLC|QUIC|AWS-LC'
+fail2ban-client status coraza
+```
+
+For a quick local WAF test:
+
+```bash
+curl -H 'Host: xyz.domain.com' -D - http://127.0.0.1/.env
+```
+
+Expected result:
+
+```text
+HTTP/1.1 403 Forbidden
+waf-block: request
+```
+
+That confirms the request is reaching HAProxy, going through Coraza over SPOE, and being denied by the WAF path.
+
+## 10. Final thoughts
+
+The hard part is no longer compiling HAProxy with the right TLS library on ARM. The official AWS-LC performance package solved that part for my setup.
+
+The harder work is now operational:
+
+- keep HAProxy, Coraza, ACME, Fail2ban, and the host firewall aligned;
+- verify HTTP/2 and HTTP/3 behavior;
+- make sure WAF decisions are logged clearly enough for bans;
+- avoid hiding production state inside one-off source builds.
+
+That is a better place to spend time than maintaining a custom HAProxy compiler path on every edge rebuild.
