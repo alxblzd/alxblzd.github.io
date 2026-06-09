@@ -16,15 +16,13 @@ I recently started coming across more people making videos about running local L
 
 My goal was to put together a one-card GPU setup for AI inference experiments, benchmarking, and general GPU testing in my homelab.
 
-This was meant to be a small test setup
-
 The card I bought is a Zotac P102-100. It is a mining GPU from the Pascal generation, equivalent to a GTX 1080 10gb, with one very important detail: it has no physical display outputs.
 
 No HDMI, no DisplayPort, nothing. That means it only really makes sense in a headless setup.
 
-This is not a normal gaming GPU. Some people have tried using cards like this for remote, headless gaming setups with tools like Parsec and custom drivers. That is technically possible, and difficult, but it is not my use case, at least not yet.
+This is not a gaming GPU at all. Some people have tried and not failed, by using headless gaming setups with tools like Parsec for remote access and custom drivers. That is technically possible, and difficult, its not my use case.
 
-I bought it mainly to see whether it could be useful as a cheap inference card for local AI experiments.
+I bought it to see whether it could be a cheap inference card for local AI.
 
 ### 1. Why this weird card
 
@@ -44,13 +42,13 @@ I also came across this Compelling Bytes video:
 
 https://www.youtube.com/watch?v=6TnUwsxziD4&t=1s
 
-The video is called "Dirt Cheap Local AI: RAG with a Nvidia P102-100 Mining GPU", and it gave me a useful reference point for the card. The setup in the video used a P102-100 with Qwen 2.5 7B Instruct, a 6-bit quant, a llama.cpp CUDA backend container, and a documentation RAG corpus with 186,000 chunks from nine projects. I havent reach the RAG or the quant tinkering yet jsut deployed on my second proxmox node for a smoke test.
+The video is called "Dirt Cheap Local AI...", and it gave me a useful reference point for the card. The setup in the video used a P102-100 with Qwen 2.5 7B Instruct, a 6-bit quant, a llama.cpp CUDA backend container, and a documentation RAG corpus with 186,000 chunks from nine projects. I havent reach the RAG or the quant tinkering yet jsut deployed on my second proxmox node for a smoke test.
 
-That was close enough to what I had in mind to be useful, but different enough that I still wanted to test it myself. My goal was not to copy the exact RAG setup. I wanted to see if a cheap local LLM could have a practical use case in my own homelab, and whether it would be worth investing later in a bigger graphics card if the workflow proved useful, maintainable, and maybe fine-tunable.
+My goal was not to copy the exact RAG setup. I wanted to see if a cheap local LLM could have a practical use case in my own homelab, and whether it would be worth investing later in a bigger graphics card if the workflow proved useful, maintainable, and maybe fine-tunable.
 
 There are obvious trade-offs. It is old, it is Pascal, it has no display output, and it was never meant to be a nice consumer desktop card.
 
-For a headless VM or server, no display output is not really a problem. The card is used remotely, so display output is not part of the test.
+For a headless VM or server, no display output is not really a problem.
 
 For this setup, only an access to the `nvidia-smi` mattered more than display output:
 
@@ -84,14 +82,14 @@ The card shows up as a P102-100, but these mining cards are a little special. A 
 So the basic checklist was:
 
 ```bash
-lspci -nnk | grep -A4 -Ei 'vga|3d|display|nvidia'
-lsmod | grep -E 'nvidia|nouveau' || true
-nvidia-smi || true
+lspci -nnk | grep -A4 -Ei 'nvidia'
+lsmod | grep -E 'nvidia|nouveau' 
+nvidia-smi 
 ```
 
-Nouveau getting involved is also something to watch for. If Nouveau grabs the card first, the NVIDIA driver will usually fail or behave in a confusing way.
+Nouveau getting involved is also something to watch for. If Nouveau grabs the card first, the NVIDIA driver will usually fail or behave in a confusing way
 
-The failure modes were easy to separate: PCIe detection, driver binding, and CUDA visibility.
+I had to blacklist the nouveau driver and switch to a dedicated patch for these cars just below.
 
 ### 4. Driver patching
 
