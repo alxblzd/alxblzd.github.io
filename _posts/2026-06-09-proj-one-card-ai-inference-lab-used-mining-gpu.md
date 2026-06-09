@@ -1,5 +1,5 @@
 ---
-title: "Small local llm Lab with an old mining GPU"
+title: "Small local LLM Lab with an old mining GPU"
 article_type: post
 date: 2026-06-09 21:45:00 +0100
 categories: [AI, Homelab, Hardware]
@@ -16,23 +16,23 @@ I recently started coming across more people making videos about running local L
 
 My goal was to put together a one-card GPU setup for AI inference experiments, benchmarking, and general GPU testing in my homelab.
 
-The card I bought is a Zotac P102-100. It is a mining GPU from the Pascal generation, equivalent to a GTX 1080 10gb, with one very important detail: it has no physical display outputs.
+The card I bought is a Zotac P102-100. It is a mining GPU from the Pascal generation, equivalent to a GTX 1080 10 GB, with one very important detail: it has no physical display outputs.
 
 No HDMI, no DisplayPort, nothing. That means it only really makes sense in a headless setup.
 
-This is not a gaming GPU at all. Some people have tried and not failed, by using headless gaming setups with tools like Parsec for remote access and custom drivers. That is technically possible, and difficult, its not my use case.
+This is not a gaming GPU at all. Some people have tried and not failed, by using headless gaming setups with tools like Parsec for remote access and custom drivers. That is technically possible, and difficult, it's not my use case.
 
 I bought it to see whether it could be a cheap inference card for local AI.
 
 ### 1. Why this weird card
 
-well wwell well, price, challenge and VRAM !
+Well well well, price, challenge and VRAM !
 
 I paid only 47 euros on eBay for a GPU with 10 GB of VRAM. For AI testing, that is an interesting amount of memory for the money.
 
 ![gp102_100_card](assets/img/gp102_100_card.png)
 
-eBay listing photo of the Zotac P102-10 card
+eBay listing photo of the Zotac P102-100 card
 
 The card is listed here on TechPowerUp:
 
@@ -42,7 +42,7 @@ I also came across this Compelling Bytes video:
 
 https://www.youtube.com/watch?v=6TnUwsxziD4&t=1s
 
-The video is called "Dirt Cheap Local AI...", and it gave me a useful reference point for the card. The setup in the video used a P102-100 with Qwen 2.5 7B Instruct, a 6-bit quant, a llama.cpp CUDA backend container, and a documentation RAG corpus with 186,000 chunks from nine projects. I havent reach the RAG or the quant tinkering yet jsut deployed on my second proxmox node for a smoke test.
+The video is called "Dirt Cheap Local AI...", and it gave me a useful reference point for the card. The setup in the video used a P102-100 with Qwen 2.5 7B Instruct, a 6-bit quant, a llama.cpp CUDA backend container, and a documentation RAG corpus with 186,000 chunks from nine projects. I haven't reached the RAG or the quant tinkering yet just deployed on my second Proxmox node for a smoke test.
 
 My goal was not to copy the exact RAG setup. I wanted to see if a cheap local LLM could have a practical use case in my own homelab, and whether it would be worth investing later in a bigger graphics card if the workflow proved useful, maintainable, and maybe fine-tunable.
 
@@ -50,18 +50,18 @@ There are obvious trade-offs. It is old, it is Pascal, it has no display output,
 
 For a headless VM or server, no display output is not really a problem.
 
-For this setup, only an access to the `nvidia-smi` mattered more than display output:
+For this setup, only access to the `nvidia-smi` mattered more than display output:
 
-And whether an inference workload could actually lands on the GPU instead of quietly falling back to CPU.
+And whether an inference workload could actually land on the GPU instead of quietly falling back to CPU.
 
 ### 2. Test environment
 
 This was not a full performance review. It was a compatibility and usability test for cheap local inference.
 
-The smoke test setup is :
+The smoke test setup is:
 
 ```text
-a Debian 13 proxmox vm, 24gb of ram, 8 cpu
+a Debian 13 Proxmox VM, 24 GB of RAM, 8 CPU
 Kernel: 6.12.90+deb13.1-amd64
 
 NVIDIA driver: 580.159.04 -> more later
@@ -87,9 +87,9 @@ lsmod | grep -E 'nvidia|nouveau'
 nvidia-smi 
 ```
 
-Nouveau getting involved is also something to watch for. If Nouveau grabs the card first, the NVIDIA driver will usually fail or behave in a confusing way
+Nouveau getting involved is also something to watch for. If Nouveau grabs the card first, the NVIDIA driver will usually fail or behave in a confusing way.
 
-I had to blacklist the nouveau driver and switch to a dedicated patch for these cars just below.
+I had to blacklist the nouveau driver and switch to a dedicated patch for these cards just below.
 
 ### 4. Driver patching
 
@@ -123,7 +123,7 @@ required_driver="570 or newer"
 
 With the old 550 driver, Ollama could still see the card, but it used the Vulkan backend instead of CUDA. Not what I wanted for the setup at all.
 
-With the patched 580.159.04 driver, Ollama selected CUDA. I
+With the patched 580.159.04 driver, Ollama selected CUDA.
 
 ### 5. Ollama and Qwen Coder
 
@@ -159,17 +159,17 @@ I also installed `nvtop` because it was a new tool I had to use to see how the g
 
 ![nvtop_screenshot](assets/img/nvtop_screenshot.png)
 
-`nvtop` is nice and faniliar like `htop` when you want to watch the card live while the model is running.
+`nvtop` is nice and familiar like `htop` when you want to watch the card live while the model is running.
 
 ```bash
 nvtop
 ```
 
-It shows memory usage, utilization, Pow and the process using the GPU
+It shows memory usage, utilization, power and the process using the GPU.
 
 ### 7. What worked
 
-The best result without too much suspend was with the patched NVIDIA 580 driver.
+The best result without too much suspense was with the patched NVIDIA 580 driver.
 
 Ollama detected the card as CUDA capable, loaded the model on the GPU, and the model ran with the card actually doing work.
 
@@ -245,7 +245,7 @@ So the trade-off is clear:
 
 It is useful for testing, but limited by age, Pascal architecture, and driver maintenance. It gives me a cheap way to test GPU passthrough, NVIDIA drivers, Ollama, Qwen Coder, and monitoring tools without buying a much more expensive card.
 
-I still have a better conscience using this card for experiments. It is basically e-waste hardware now, not useful for normal gaming, too old to be interesting for mining, awkward that most people would skip it.
+I still have a better conscience using this card for experiments. It is basically e-waste hardware now, not useful for normal gaming, too old to be interesting for mining, awkward enough that most people would skip it.
 
 For a homelab AI proof of concept though, that is exactly why it makes sense.
 
