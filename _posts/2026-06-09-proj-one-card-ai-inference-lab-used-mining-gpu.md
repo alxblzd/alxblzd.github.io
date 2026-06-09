@@ -1,12 +1,12 @@
 ---
-title: "Old mining gpu for a small AI Inference Lab"
+title: "Small local llm Lab with an old mining GPU"
 article_type: post
 date: 2026-06-09 21:45:00 +0100
 categories: [AI, Homelab, Hardware]
 tags: [ai, ollama, nvidia, gpu, mining, homelab, benchmark]
 render_with_liquid: false
 alt: "Zotac P102-100 mining GPU for AI inference testing"
-image: /assets/img/gp102_100_card.png
+image: /assets/img/zotac_card.jpg
 ---
 
 
