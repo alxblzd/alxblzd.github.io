@@ -1,4 +1,4 @@
-- title: One Card AI Inference Lab with a Used Mining GPU
+- title: Small local llm lab with an old mining GPU
   description: Testing a cheap headless mining GPU as a local AI inference card for Ollama and homelab benchmarks.
   url: /posts/proj-one-card-ai-inference-lab-used-mining-gpu/
   image: /assets/img/zotac_card.jpg
@@ -8,7 +8,7 @@
     - Ollama
     - Homelab
 
-- title: Fedora Atomic Sway as a Daily Driver
+- title: Fedora atomic sway as a daily driver
   description: Moving my workstation to Fedora Atomic with Sway for a boring, predictable, and fast daily workflow.
   url: /posts/proj-fedora-daily-driver/
   image: /assets/img/fedora_atomic.webp
@@ -27,7 +27,7 @@
     - Security engineering
     - High availability
 
-- title: Automating Proxmox with Terraform + Cloud-Init
+- title: Automating proxmox with terraform + cloud-init
   description: Declaratively cloning VMs from templates, wiring Cloud-Init snippets, and pushing configs straight through the Proxmox API.
   url: /posts/proj-terraform-proxmox-cloudinit/
   image: /assets/img/proxmox/proxmox1.webp
