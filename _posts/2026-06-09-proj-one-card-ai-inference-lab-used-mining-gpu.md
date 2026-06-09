@@ -1,5 +1,5 @@
 ---
-title: "One Card AI Inference Lab with a Used Mining GPU"
+title: "Old mining gpu for a small AI Inference Lab"
 article_type: post
 date: 2026-06-09 21:45:00 +0100
 categories: [AI, Homelab, Hardware]
