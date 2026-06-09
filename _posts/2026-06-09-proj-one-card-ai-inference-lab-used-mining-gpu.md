@@ -12,21 +12,23 @@ image: /assets/img/gp102_100_card.png
 
 ## One Card AI Inference Lab with a Used Mining GPU !
 
-I wanted a one-card GPU setup for AI inference experiments, benchmarking, and general GPU testing in the homelab.
+I recently started coming across more people making videos about running local LLMs and doing infrastructure work around them. I also found the LocalLLaMA subreddit on Reddit, which made me want to try building a small local setup myself.
 
-This was meant to be a small homelab test setup, at the price of inconveniance and unusual enough to make the driver setup not plug and play.
+My goal was to put together a one-card GPU setup for AI inference experiments, benchmarking, and general GPU testing in my homelab.
 
-The card I buyed is a Zotac P102-100. It's a mining graphics card, in the Pascal/GTX 1080 family, and with a very important detail, no physical display output.
+This was meant to be a small test setup
 
-no HDMI or DisplayPort, so it only makes sense in a headless setup.
+The card I bought is a Zotac P102-100. It is a mining GPU from the Pascal generation, equivalent to a GTX 1080 10gb, with one very important detail: it has no physical display outputs.
 
-This is not a normal gaming GPU. Some people have tried using cards like this for remote headless gaming setups with tools like Parsec and custom drivers. That is possible(and hard), but its not my use case     yet.
+No HDMI, no DisplayPort, nothing. That means it only really makes sense in a headless setup.
 
-I bought it to see if it could be useful as a cheap inference card.
+This is not a normal gaming GPU. Some people have tried using cards like this for remote, headless gaming setups with tools like Parsec and custom drivers. That is technically possible, and difficult, but it is not my use case, at least not yet.
+
+I bought it mainly to see whether it could be useful as a cheap inference card for local AI experiments.
 
 ### 1. Why this weird card
 
-The main reason was simple: price, challenge and VRAM.
+well wwell well, price, challenge and VRAM !
 
 I paid only 47 euros on eBay for a GPU with 10 GB of VRAM. For AI testing, that is an interesting amount of memory for the money.
 

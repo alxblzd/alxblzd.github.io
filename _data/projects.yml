@@ -1,3 +1,13 @@
+- title: One Card AI Inference Lab with a Used Mining GPU
+  description: Testing a cheap headless mining GPU as a local AI inference card for Ollama and homelab benchmarks.
+  url: /posts/proj-one-card-ai-inference-lab-used-mining-gpu/
+  image: /assets/img/gp102_100_card.png
+  tags:
+    - AI
+    - GPU
+    - Ollama
+    - Homelab
+
 - title: Fedora Atomic Sway as a Daily Driver
   description: Moving my workstation to Fedora Atomic with Sway for a boring, predictable, and fast daily workflow.
   url: /posts/proj-fedora-daily-driver/
@@ -26,12 +36,3 @@
     - Proxmox
     - Cloud-Init
     - Automation
-
-- title: Raspberry Pi INA226 Sensor Board
-  description: Building a compact power-monitoring HAT for Raspberry Pi with clean telemetry for lab automation.
-  url: /posts/proj-raspberry-pi-ina226-sensor/
-  image: /assets/img/rpi_ups.webp
-  tags:
-    - Hardware
-    - Telemetry
-    - Raspberry Pi
