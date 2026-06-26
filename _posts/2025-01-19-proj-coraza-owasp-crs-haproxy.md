@@ -10,7 +10,7 @@ alt: "HAProxy, Coraza, and CRS"
 
 ## Repositories
 
-- Public repo : <https://github.com/alxblzd/ansible-oracle-haproxy-edge>
+- Public repo available
 
 ## Why I built this
 
@@ -222,13 +222,11 @@ Phases are:
 - Response body
 - Logging
 
-Reference: <https://github.com/owasp-modsecurity/ModSecurity/wiki/Reference-Manual-(v2.x)-Processing-Phases>
+Reference: [ModSecurity Processing Phases Documentation](https://github.com/owasp-modsecurity/ModSecurity/wiki/Reference-Manual-(v2.x)-Processing-Phases)
 
 ## 5. CRS plugins (Nextcloud example)
 
-For Nextcloud, I use the official plugin:
-
-<https://github.com/coreruleset/nextcloud-rule-exclusions-plugin>
+For Nextcloud, I use the [official OWASP CRS Nextcloud plugin](https://github.com/coreruleset/nextcloud-rule-exclusions-plugin).
 
 I also keep narrow, path-specific exclusions when needed.
 No broad bypasses.

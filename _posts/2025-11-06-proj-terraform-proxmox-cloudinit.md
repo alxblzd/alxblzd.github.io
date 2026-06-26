@@ -15,8 +15,6 @@ I finally hit the point where the Proxmox UI was slowing me down more than it wa
 
 This post is the workflow I use in my homelab. It is intentionally simple and repeatable: one base template, Terraform to clone it, and Cloud-Init to finish the bootstrapping.
 
-Full working example: [https://github.com/alxblzd/proxmox-terraform-pbks/tree/main](https://github.com/alxblzd/proxmox-terraform-pbks/tree/main)
-
 ## The Flow (At a Glance)
 
 1. Build a Debian template with Cloud-Init installed.
@@ -565,8 +563,7 @@ resource "proxmox_virtual_environment_vm" "vyos" {
 }
 ```
 
-For a complete example with VyOS deployment and zone-based firewall configuration, see:
-[https://github.com/alxblzd/deploy-vyos-stack](https://github.com/alxblzd/deploy-vyos-stack)
+For a complete example with VyOS deployment and zone-based firewall configuration, additional examples are available.
 
 ## Troubleshooting Checklist
 

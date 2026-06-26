@@ -93,9 +93,7 @@ I had to blacklist the nouveau driver and switch to a dedicated patch for these 
 
 ### 4. Driver patching
 
-For this card I used the NVIDIA patcher project:
-
-https://github.com/dartraiden/NVIDIA-patcher
+For this card I used the [NVIDIA patcher project](https://github.com/dartraiden/NVIDIA-patcher):
 
 The Linux instructions use a runfile patching workflow rather than Debian packages.
 
